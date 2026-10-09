@@ -96,9 +96,6 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 | **[Standalone WAF Proxy Daemon](#1-standalone-waf-reverse-proxy-zero-rust-required)** | Node.js, Python, Go, PHP, WordPress, Ruby, Java | Sits in front of any HTTP service as a reverse proxy shield | `30 seconds` |
 | **[Native Rust Library](#2-native-rust-library-integration)** | Axum, Actix-web, Tower, Hyper | Embedded directly into your Rust web service binary | `2 minutes` |
 
-> 🛡️ **Looking for L3/L4 DNS Perimeter Defense?**  
-> Pair `phylax` with **[`aegis`](https://github.com/xuoxod/aegis)**, our sovereign microsecond authoritative & defensive sinkhole DNS daemon that neutralizes botnet C2s, tracking networks, and DNS reflection amplification attacks before any connection reaches your web gateway.
-
 ---
 
 ## Architecture: Fail-Fast Cost Hierarchy
