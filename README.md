@@ -96,6 +96,15 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 | **[Standalone WAF Proxy Daemon](#1-standalone-waf-reverse-proxy-zero-rust-required)** | Node.js, Python, Go, PHP, WordPress, Ruby, Java | Sits in front of any HTTP service as a reverse proxy shield | `30 seconds` |
 | **[Native Rust Library](#2-native-rust-library-integration)** | Axum, Actix-web, Tower, Hyper | Embedded directly into your Rust web service binary | `2 minutes` |
 
+> 🛡️ **Architectural Advisory: The Defense-in-Depth Paradigm & L7 Boundaries**  
+> `phylax` delivers enterprise-grade mathematical asymmetry, honeypots, and cognitive defense at the HTTP application layer. However, every systems engineer must understand boundary separation:  
+> *No application-layer shield can protect what the upstream network wire fails to filter.*  
+> To achieve complete, impenetrable defense across your infrastructure, operators must deploy a layered defense-in-depth architecture:  
+> 1. **Upstream DNS Perimeter (L3/L4)**: Deploy authoritative DNS rate limiting (BCP 153 RRL) and threat sinkholing to neutralize botnets and volumetric reflection floods before TCP handshakes occur.  
+> 2. **Kernel & Wire Firewalling (L4)**: Harden OS kernel network buffers (`sysctl`) and deploy packet filters (eBPF/XDP, stateful firewall rules) to drop invalid TCP flags and volumetric floods in microseconds.  
+> 3. **L7 Edge Gateway**: Place an ultra-low-latency reverse proxy (such as [**`propylea`**](https://github.com/xuoxod/propylea)) at your edge to terminate TLS, validate request framing, and drop decoy path scanners in $<15\text{ns}$.  
+> 4. **Application Shielding (`phylax`)**: Embed `phylax` in your application core to eliminate crawlers, AI scrapers, credential stuffing, and brute-force abuse with zero CPU overhead.
+
 ---
 
 ## Architecture: Fail-Fast Cost Hierarchy
