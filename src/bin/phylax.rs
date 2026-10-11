@@ -24,7 +24,7 @@ use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 #[derive(Parser, Debug)]
 #[command(
     name = "phylax",
-    author = "Rick <xuoxod@gmail.com>",
+    author = "Rick <rick@rmediatech.com>",
     version,
     about = "Sovereign 12-layer edge defense, honeypot tarpit, and autonomous anti-bot WAF",
     long_about = "Phylax (φύλαξ) provides sub-microsecond edge security against credential stuffing, automated bots, Tor/datacenter crawlers, and Slowloris attacks with zero external telemetry."

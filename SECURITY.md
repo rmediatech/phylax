@@ -13,7 +13,7 @@ Security and zero-compromise sovereignty are fundamental to Phylax. We deeply ap
 If you believe you have discovered a vulnerability, bypass, denial-of-service vector, or security issue in Phylax:
 
 1. **Do not open a public GitHub issue.**
-2. Please email details to: **`xuoxod@gmail.com`**
+2. Please email details to: **`rick@rmediatech.com`**
 3. In your report, please include:
    - Description of the vulnerability and its potential impact.
    - Minimal reproducible test case, curl command, or Rust harness demonstrating the issue.

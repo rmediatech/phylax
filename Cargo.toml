@@ -2,7 +2,7 @@
 name = "phylax"
 version = "0.2.4"
 edition = "2021"
-authors = ["Rick <xuoxod@gmail.com>", "RMediaTech Contributors"]
+authors = ["Rick <rick@rmediatech.com>", "RMediaTech Contributors"]
 license = "MIT OR Apache-2.0"
 description = "Sovereign 14-layer zero-telemetry edge defense, honeypot traps, timing guard, and anti-bot engine for Rust."
 repository = "https://github.com/xuoxod/phylax"
