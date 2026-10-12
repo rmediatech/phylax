@@ -1,9 +1,13 @@
-# phylax (φύ拉ξ)
+# phylax (φύλαξ)
 
-[![CI](https://github.com/xuoxod/phylax/actions/workflows/ci.yml/badge.svg)](https://github.com/xuoxod/phylax/actions/workflows/ci.yml)
-[![License: MIT OR Apache-2.0](https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE-MIT)
-[![Rust: 1.75+](https://img.shields.io/badge/rust-1.75%2B-orange.svg)](https://www.rust-lang.org)
-[![Zero-Telemetry](https://img.shields.io/badge/telemetry-zero-success.svg)](https://github.com/xuoxod/phylax)
+<p align="center">
+  <a href="https://github.com/xuoxod/phylax/actions/workflows/ci.yml"><img src="https://github.com/xuoxod/phylax/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <img src="https://img.shields.io/badge/Language-Pure%20Rust%202021-orange.svg" alt="Pure Rust" />
+  <img src="https://img.shields.io/badge/TDD%20Tests-114%2F114%20Passed-brightgreen.svg" alt="Tests" />
+  <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
+  <a href="https://github.com/xuoxod/phylax/releases/tag/v0.2.4"><img src="https://img.shields.io/badge/Release-v0.2.4-green.svg" alt="Release" /></a>
+  <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
+</p>
 
 > **φύλαξ** (*phýlax* — ancient Greek for *"watcher, sentinel, guardian"*): A sovereign, zero-telemetry edge defense, honeypot tarpit, and autonomous threat neutralization engine written in pure Rust.  
 > 🛡️ *"From the wire to the RAM / 'Til the kernel drops that spam."*
