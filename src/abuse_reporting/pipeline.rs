@@ -114,8 +114,14 @@ impl InformantEngine {
         let safe_ip = scrub_ansi_and_control(&dossier.client_ip);
 
         // 2. Check deduplication & daily quota cooldown
-        if !self.cooldown_governor.should_report(&safe_ip, dossier.timestamp_ms) {
-            tracing::debug!("🛑 [INFORMANT] Incident report suppressed by cooldown for IP '{}'", safe_ip);
+        if !self
+            .cooldown_governor
+            .should_report(&safe_ip, dossier.timestamp_ms)
+        {
+            tracing::debug!(
+                "🛑 [INFORMANT] Incident report suppressed by cooldown for IP '{}'",
+                safe_ip
+            );
             return InformantVerdict::SuppressedCooldown;
         }
 
@@ -126,10 +132,17 @@ impl InformantEngine {
         if self.config.dry_run {
             tracing::info!(
                 "🧪 [INFORMANT DRY-RUN] Formatted abuse report for IP '{}' (categories: {}): \n{}",
-                safe_ip, categories, comment
+                safe_ip,
+                categories,
+                comment
             );
-            self.cooldown_governor.record_reported(&safe_ip, dossier.timestamp_ms);
-            return InformantVerdict::DryRunReported { ip: safe_ip, categories, comment };
+            self.cooldown_governor
+                .record_reported(&safe_ip, dossier.timestamp_ms);
+            return InformantVerdict::DryRunReported {
+                ip: safe_ip,
+                categories,
+                comment,
+            };
         }
 
         // 4. Dispatch via configured sink
@@ -137,13 +150,23 @@ impl InformantEngine {
             Ok(receipt) => {
                 tracing::info!(
                     "📡 [INFORMANT] Successfully dispatched incident for IP '{}' via {} ({})",
-                    safe_ip, receipt.sink_name, receipt.detail
+                    safe_ip,
+                    receipt.sink_name,
+                    receipt.detail
                 );
-                self.cooldown_governor.record_reported(&safe_ip, dossier.timestamp_ms);
-                InformantVerdict::Reported { ip: safe_ip, confidence_score: 0 }
+                self.cooldown_governor
+                    .record_reported(&safe_ip, dossier.timestamp_ms);
+                InformantVerdict::Reported {
+                    ip: safe_ip,
+                    confidence_score: 0,
+                }
             }
             Err(e) => {
-                tracing::error!("❌ [INFORMANT] Failed to dispatch report for IP '{}': {}", safe_ip, e);
+                tracing::error!(
+                    "❌ [INFORMANT] Failed to dispatch report for IP '{}': {}",
+                    safe_ip,
+                    e
+                );
                 InformantVerdict::Error(e.to_string())
             }
         }
@@ -187,15 +210,10 @@ mod tests {
         let config = InformantConfig {
             enabled: true,
             dry_run: false,
-            api_key: None,
-            webhook_url: None,
-            webhook_auth: None,
-            syslog_cef: false,
-            cooldown: CooldownConfig::default(),
+            ..Default::default()
         };
         let mock = Arc::new(MockAbuseReporterTransport::new());
         let engine = InformantEngine::new(config, mock);
-
         let dossier = ForensicDossier {
             client_ip: "1.2.3.4".to_string(),
             timestamp_ms: 1000,
@@ -206,7 +224,6 @@ mod tests {
             user_agent: None,
             evidence_notes: "notes".to_string(),
         };
-
         let verdict = engine.process_incident(&dossier).await;
         assert!(matches!(verdict, InformantVerdict::Error(_)));
     }
@@ -216,11 +233,7 @@ mod tests {
         let config = InformantConfig {
             enabled: true,
             dry_run: false,
-            api_key: None,
-            webhook_url: None,
-            webhook_auth: None,
-            syslog_cef: false,
-            cooldown: CooldownConfig::default(),
+            ..Default::default()
         };
         let mock_sink = Arc::new(MockIncidentSink::new());
         let engine = InformantEngine::with_sink(config, mock_sink.clone());

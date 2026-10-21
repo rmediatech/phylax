@@ -38,41 +38,20 @@ pub struct ShieldPipeline {
     pub(crate) informant: Option<Arc<crate::abuse_reporting::InformantEngine>>,
 }
 
+#[rustfmt::skip]
 impl ShieldPipeline {
-    pub fn builder() -> ShieldPipelineBuilder {
-        ShieldPipelineBuilder::default()
-    }
-    pub fn decoy_uri(&self) -> &DecoyUriSentinel {
-        &self.decoy_uri
-    }
-    pub fn threat_harvester(&self) -> &crate::threat_harvester::ThreatHarvesterEngine {
-        &self.threat_harvester
-    }
-    pub fn record_anomalous_uri(
-        &self,
-        raw_path: &str,
-        client_ip: std::net::IpAddr,
-        now_ms: u64,
-    ) -> Option<crate::threat_harvester::PromotionVerdict> {
+    pub fn builder() -> ShieldPipelineBuilder { ShieldPipelineBuilder::default() }
+    pub fn decoy_uri(&self) -> &DecoyUriSentinel { &self.decoy_uri }
+    pub fn threat_harvester(&self) -> &crate::threat_harvester::ThreatHarvesterEngine { &self.threat_harvester }
+    pub fn record_anomalous_uri(&self, raw_path: &str, client_ip: std::net::IpAddr, now_ms: u64) -> Option<crate::threat_harvester::PromotionVerdict> {
         self.threat_harvester.ingest_anomalous_uri(raw_path, client_ip, now_ms)
     }
-    pub fn record_anomalous_uri_str(
-        &self,
-        raw_path: &str,
-        client_ip_str: &str,
-        now_ms: u64,
-    ) -> Option<crate::threat_harvester::PromotionVerdict> {
+    pub fn record_anomalous_uri_str(&self, raw_path: &str, client_ip_str: &str, now_ms: u64) -> Option<crate::threat_harvester::PromotionVerdict> {
         self.threat_harvester.ingest_anomalous_uri_str(raw_path, client_ip_str, now_ms)
     }
-    pub fn tarpit(&self) -> &TarpitGovernor {
-        &self.tarpit
-    }
-    pub fn adaptive_pow(&self) -> &AdaptivePowEngine {
-        &self.adaptive_pow
-    }
-    pub fn quarantine(&self) -> &AutonomousQuarantine {
-        &self.quarantine
-    }
+    pub fn tarpit(&self) -> &TarpitGovernor { &self.tarpit }
+    pub fn adaptive_pow(&self) -> &AdaptivePowEngine { &self.adaptive_pow }
+    pub fn quarantine(&self) -> &AutonomousQuarantine { &self.quarantine }
     pub fn maintenance_manager(&self) -> crate::maintenance::MaintenanceManager {
         crate::maintenance::MaintenanceManager::new(self.quarantine.clone(), self.adaptive_pow.clone())
             .with_threat_harvester(self.threat_harvester.clone())
@@ -84,22 +63,29 @@ impl ShieldPipeline {
         self.maintenance_manager().spawn_background_worker(interval)
     }
     #[cfg(feature = "abuse-reporting")]
-    pub fn informant(&self) -> Option<&Arc<crate::abuse_reporting::InformantEngine>> {
-        self.informant.as_ref()
-    }
+    pub fn informant(&self) -> Option<&Arc<crate::abuse_reporting::InformantEngine>> { self.informant.as_ref() }
+}
 
+impl ShieldPipeline {
     pub fn issue_client_context(&self, now_ms: u64, seed_nonce: u64) -> ShieldClientContext {
         self.issue_client_context_for_ip("", now_ms, seed_nonce)
     }
 
-    pub fn issue_client_context_for_ip(&self, ip: &str, now_ms: u64, seed_nonce: u64) -> ShieldClientContext {
+    pub fn issue_client_context_for_ip(
+        &self,
+        ip: &str,
+        now_ms: u64,
+        seed_nonce: u64,
+    ) -> ShieldClientContext {
         let timing_token = self.timing.generate_token(now_ms);
         let difficulty = if ip.is_empty() {
             self.pow.difficulty_bits()
         } else {
             self.adaptive_pow.get_difficulty(ip, now_ms) as u8
         };
-        let (pow_seed, pow_challenge) = self.pow.issue_challenge_with_difficulty(now_ms, seed_nonce, difficulty);
+        let (pow_seed, pow_challenge) = self
+            .pow
+            .issue_challenge_with_difficulty(now_ms, seed_nonce, difficulty);
         ShieldClientContext {
             timing_token,
             pow_challenge,
@@ -117,7 +103,12 @@ impl ShieldPipeline {
         self.evaluate_flexible(req, false, false)
     }
 
-    pub fn evaluate_flexible(&self, req: &ShieldRequest, require_timing: bool, require_pow: bool) -> ShieldVerdict {
+    pub fn evaluate_flexible(
+        &self,
+        req: &ShieldRequest,
+        require_timing: bool,
+        require_pow: bool,
+    ) -> ShieldVerdict {
         if !req.client_ip.is_empty() && self.quarantine.is_quarantined(req.client_ip, req.now_ms) {
             return ShieldVerdict::Deny(DenialReason::SubnetBlocked {
                 ip: req.client_ip.to_string(),
@@ -126,10 +117,18 @@ impl ShieldPipeline {
         }
 
         if let Some(target_uri) = req.target_uri {
-            if let DecoyUriVerdict::Trapped { matched_path, category } = self.decoy_uri.evaluate(target_uri) {
+            if let DecoyUriVerdict::Trapped {
+                matched_path,
+                category,
+            } = self.decoy_uri.evaluate(target_uri)
+            {
                 if !req.client_ip.is_empty() {
                     self.quarantine.record_and_check(req.client_ip, req.now_ms);
-                    self.adaptive_pow.record_infraction(req.client_ip, InfractionSeverity::Hostile, req.now_ms);
+                    self.adaptive_pow.record_infraction(
+                        req.client_ip,
+                        InfractionSeverity::Hostile,
+                        req.now_ms,
+                    );
                     #[cfg(feature = "abuse-reporting")]
                     if let Some(ref informant) = self.informant {
                         let dossier = crate::abuse_reporting::ForensicDossier {
@@ -159,10 +158,16 @@ impl ShieldPipeline {
             }
         }
 
-        if let HoneypotVerdict::Trapped { field_name, .. } = self.honeypot.validate(req.submitted_fields) {
+        if let HoneypotVerdict::Trapped { field_name, .. } =
+            self.honeypot.validate(req.submitted_fields)
+        {
             if !req.client_ip.is_empty() {
                 self.quarantine.record_and_check(req.client_ip, req.now_ms);
-                self.adaptive_pow.record_infraction(req.client_ip, InfractionSeverity::Severe, req.now_ms);
+                self.adaptive_pow.record_infraction(
+                    req.client_ip,
+                    InfractionSeverity::Severe,
+                    req.now_ms,
+                );
                 #[cfg(feature = "abuse-reporting")]
                 if let Some(ref informant) = self.informant {
                     let dossier = crate::abuse_reporting::ForensicDossier {
@@ -188,9 +193,18 @@ impl ShieldPipeline {
         }
 
         if self.enable_subnet && !req.client_ip.is_empty() {
-            if let SubnetVerdict::Blocked { ip, matched_cidr } = self.subnet_guard.check_ip(req.client_ip) {
-                self.adaptive_pow.record_infraction(req.client_ip, InfractionSeverity::Hostile, req.now_ms);
-                return ShieldVerdict::Deny(DenialReason::SubnetBlocked { ip, cidr: matched_cidr });
+            if let SubnetVerdict::Blocked { ip, matched_cidr } =
+                self.subnet_guard.check_ip(req.client_ip)
+            {
+                self.adaptive_pow.record_infraction(
+                    req.client_ip,
+                    InfractionSeverity::Hostile,
+                    req.now_ms,
+                );
+                return ShieldVerdict::Deny(DenialReason::SubnetBlocked {
+                    ip,
+                    cidr: matched_cidr,
+                });
             }
         }
 
@@ -224,9 +238,14 @@ impl ShieldPipeline {
             match self.timing.verify_token(token, req.now_ms) {
                 TimingVerdict::Valid { elapsed_ms } => elapsed_timing_ms = Some(elapsed_ms),
                 TimingVerdict::TooFast { elapsed_ms, min_ms } => {
-                    return ShieldVerdict::Deny(DenialReason::SubmissionTooFast { elapsed_ms, min_ms });
+                    return ShieldVerdict::Deny(DenialReason::SubmissionTooFast {
+                        elapsed_ms,
+                        min_ms,
+                    });
                 }
-                TimingVerdict::Expired { .. } => return ShieldVerdict::Deny(DenialReason::SubmissionTimingExpired),
+                TimingVerdict::Expired { .. } => {
+                    return ShieldVerdict::Deny(DenialReason::SubmissionTimingExpired)
+                }
                 TimingVerdict::SignatureMismatch | TimingVerdict::Malformed => {
                     return ShieldVerdict::Deny(DenialReason::TimingSignatureInvalid);
                 }
@@ -242,7 +261,9 @@ impl ShieldPipeline {
             };
             match self.pow.verify_solution(token, nonce, req.now_ms) {
                 PowVerdict::Verified { .. } => {}
-                PowVerdict::InvalidSolution { .. } => return ShieldVerdict::Deny(DenialReason::PowInvalidSolution),
+                PowVerdict::InvalidSolution { .. } => {
+                    return ShieldVerdict::Deny(DenialReason::PowInvalidSolution)
+                }
                 PowVerdict::Expired { .. } => return ShieldVerdict::Deny(DenialReason::PowExpired),
                 PowVerdict::Replayed => return ShieldVerdict::Deny(DenialReason::PowReplayed),
                 PowVerdict::SignatureMismatch | PowVerdict::Malformed => {
@@ -251,7 +272,10 @@ impl ShieldPipeline {
             }
         }
 
-        ShieldVerdict::Allow { canonical_email, elapsed_timing_ms }
+        ShieldVerdict::Allow {
+            canonical_email,
+            elapsed_timing_ms,
+        }
     }
 }
 

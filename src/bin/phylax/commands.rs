@@ -56,7 +56,10 @@ pub fn run_challenge(args: ChallengeArgs) {
 }
 
 pub fn run_solve(args: SolveArgs) {
-    println!("🧩 Solving Proof-of-Work puzzle (Difficulty: {} bits)...", args.difficulty);
+    println!(
+        "🧩 Solving Proof-of-Work puzzle (Difficulty: {} bits)...",
+        args.difficulty
+    );
     let start = Instant::now();
     let (nonce, hash) = PowEngine::solve_challenge(&args.seed, args.difficulty);
     let elapsed = start.elapsed();
@@ -79,7 +82,10 @@ pub async fn run_check_ip(args: CheckIpArgs) -> Result<(), Box<dyn std::error::E
             println!("  • Perimeter Subnet Check: PASS (Residential / Standard IP)");
         }
         phylax::subnet_guard::SubnetVerdict::Blocked { matched_cidr, .. } => {
-            println!("  • Perimeter Subnet Check: BLOCKED (Matched CIDR: {})", matched_cidr);
+            println!(
+                "  • Perimeter Subnet Check: BLOCKED (Matched CIDR: {})",
+                matched_cidr
+            );
         }
         phylax::subnet_guard::SubnetVerdict::MalformedIp => {
             println!("  • Perimeter Subnet Check: ERROR (Invalid IP address syntax)");
@@ -105,9 +111,18 @@ pub async fn run_check_ip(args: CheckIpArgs) -> Result<(), Box<dyn std::error::E
             Ok(rep) => {
                 println!("  • Abuse Confidence:     {}%", rep.abuse_confidence_score);
                 println!("  • Total Reports:        {}", rep.total_reports);
-                println!("  • Country:              {}", rep.country_code.as_deref().unwrap_or("N/A"));
-                println!("  • ISP:                  {}", rep.isp.as_deref().unwrap_or("N/A"));
-                println!("  • Domain:               {}", rep.domain.as_deref().unwrap_or("N/A"));
+                println!(
+                    "  • Country:              {}",
+                    rep.country_code.as_deref().unwrap_or("N/A")
+                );
+                println!(
+                    "  • ISP:                  {}",
+                    rep.isp.as_deref().unwrap_or("N/A")
+                );
+                println!(
+                    "  • Domain:               {}",
+                    rep.domain.as_deref().unwrap_or("N/A")
+                );
                 println!("  • Is Tor Node:          {}", rep.is_tor);
                 println!("  • Is Whitelisted:       {}", rep.is_whitelisted);
             }
@@ -188,13 +203,32 @@ pub fn run_bench() {
     println!("┌────────────────────────────────────┬──────────────┐");
     println!("│ Defensive Operation                │ Mean Latency │");
     println!("├────────────────────────────────────┼──────────────┤");
-    println!("│ HoneypotValidator::validate        │ {:>7.2} ns   │", hp_ns);
-    println!("│ AutonomousQuarantine::is_banned    │ {:>7.2} ns   │", aq_ns);
-    println!("│ SubnetGuard::check_ip (Radix CIDR) │ {:>7.2} ns   │", subnet_ns);
-    println!("│ TimingGuard::verify_token (HMAC)   │ {:>7.2} ns   │", timing_ns);
+    println!(
+        "│ HoneypotValidator::validate        │ {:>7.2} ns   │",
+        hp_ns
+    );
+    println!(
+        "│ AutonomousQuarantine::is_banned    │ {:>7.2} ns   │",
+        aq_ns
+    );
+    println!(
+        "│ SubnetGuard::check_ip (Radix CIDR) │ {:>7.2} ns   │",
+        subnet_ns
+    );
+    println!(
+        "│ TimingGuard::verify_token (HMAC)   │ {:>7.2} ns   │",
+        timing_ns
+    );
     println!("└────────────────────────────────────┴──────────────┘");
 
     let total_ns = hp_ns + aq_ns + subnet_ns + timing_ns;
-    println!("\n  🚀 Total Perimeter Evaluation: {:.2} ns ({:.3} µs)", total_ns, total_ns / 1000.0);
-    println!("  ⚡ Estimated Capacity:          > {:.0} req/sec/core\n", 1_000_000_000.0 / total_ns);
+    println!(
+        "\n  🚀 Total Perimeter Evaluation: {:.2} ns ({:.3} µs)",
+        total_ns,
+        total_ns / 1000.0
+    );
+    println!(
+        "  ⚡ Estimated Capacity:          > {:.0} req/sec/core\n",
+        1_000_000_000.0 / total_ns
+    );
 }

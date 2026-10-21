@@ -37,8 +37,14 @@ pub const STANDARD_EXACT_TRAPS: &[(&str, DecoyCategory)] = &[
     // CMS & Admin Panels
     ("/wp-login.php", DecoyCategory::AdminCmsProbe),
     ("/xmlrpc.php", DecoyCategory::AdminCmsProbe),
-    ("/sites/default/settings.php.old", DecoyCategory::AdminCmsProbe),
-    ("/bitrix/modules/updater_partner.log", DecoyCategory::AdminCmsProbe),
+    (
+        "/sites/default/settings.php.old",
+        DecoyCategory::AdminCmsProbe,
+    ),
+    (
+        "/bitrix/modules/updater_partner.log",
+        DecoyCategory::AdminCmsProbe,
+    ),
     // Private Keys & Certificates
     ("/private.key", DecoyCategory::PrivateKey),
     ("/id_rsa", DecoyCategory::PrivateKey),

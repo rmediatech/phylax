@@ -14,18 +14,12 @@ use std::collections::{HashMap, HashSet};
 use std::net::IpAddr;
 use std::sync::Arc;
 
-/// Configuration for Autonomous Zero-Day Threat Harvester
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ThreatHarvesterConfig {
-    /// Whether autonomous threat harvesting is active (default: true)
     pub enabled: bool,
-    /// Number of distinct /24 or /48 subnets required to promote an anomalous path (default: 3)
     pub promotion_subnet_threshold: usize,
-    /// Sliding time window in milliseconds during which subnets must be observed (default: 3,600,000 ms = 1 hr)
     pub window_duration_ms: u64,
-    /// Maximum distinct anomalous paths tracked simultaneously to prevent memory exhaustion (default: 10,000)
     pub max_tracked_candidates: usize,
-    /// Maximum distinct candidate paths a single subnet may introduce in a window (anti-fuzzing quota, default: 25)
     pub max_paths_per_subnet: usize,
 }
 
@@ -149,7 +143,8 @@ impl ThreatHarvesterEngine {
                 let total_hits = record.hit_count;
                 let first_seen_ms = record.first_seen_ms;
 
-                self.sentinel.add_exact_trap_with_category(&normalized, category);
+                self.sentinel
+                    .add_exact_trap_with_category(&normalized, category);
                 return Some(PromotionVerdict {
                     path: normalized,
                     category,
@@ -204,7 +199,8 @@ impl ThreatHarvesterEngine {
             candidates.insert(normalized.clone(), record);
 
             if qualifies_immediately {
-                self.sentinel.add_exact_trap_with_category(&normalized, category);
+                self.sentinel
+                    .add_exact_trap_with_category(&normalized, category);
                 Some(PromotionVerdict {
                     path: normalized,
                     category,
@@ -235,7 +231,8 @@ impl ThreatHarvesterEngine {
         for path in paths {
             let normalized = DecoyUriSentinel::normalize_path(path);
             if !normalized.is_empty() && normalized != "/" {
-                self.sentinel.add_exact_trap_with_category(&normalized, category);
+                self.sentinel
+                    .add_exact_trap_with_category(&normalized, category);
                 count += 1;
             }
         }
@@ -249,7 +246,8 @@ impl ThreatHarvesterEngine {
         for (path, category) in catalog {
             let normalized = DecoyUriSentinel::normalize_path(path);
             if !normalized.is_empty() && normalized != "/" {
-                self.sentinel.add_exact_trap_with_category(&normalized, *category);
+                self.sentinel
+                    .add_exact_trap_with_category(&normalized, *category);
                 activated += 1;
             }
         }

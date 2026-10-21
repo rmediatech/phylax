@@ -118,17 +118,29 @@ impl DistGuard {
     }
 
     /// Issue a cryptographically signed, single-use download voucher for an asset
-    pub fn issue_voucher(&self, asset_id: &str, client_ip: &str, nonce: &str, now_s: u64) -> String {
+    pub fn issue_voucher(
+        &self,
+        asset_id: &str,
+        client_ip: &str,
+        nonce: &str,
+        now_s: u64,
+    ) -> String {
         let expires_at = now_s + self.config.voucher_ttl_s;
         let payload = format!("{}:{}:{}:{}", asset_id, client_ip, expires_at, nonce);
-        let mut mac = HmacSha256::new_from_slice(&self.secret_key).expect("HMAC can accept key of any size");
+        let mut mac =
+            HmacSha256::new_from_slice(&self.secret_key).expect("HMAC can accept key of any size");
         mac.update(payload.as_bytes());
         let sig = hex::encode(mac.finalize().into_bytes());
         BASE64_URL.encode(format!("{}.{}", payload, sig).as_bytes())
     }
 
     /// Validate a voucher when client requests `GET /dist/...`
-    pub fn validate_voucher(&self, voucher_token: &str, actual_ip: &str, now_s: u64) -> DistVerdict {
+    pub fn validate_voucher(
+        &self,
+        voucher_token: &str,
+        actual_ip: &str,
+        now_s: u64,
+    ) -> DistVerdict {
         let Ok(decoded_bytes) = BASE64_URL.decode(voucher_token.as_bytes()) else {
             return DistVerdict::Malformed;
         };
@@ -140,7 +152,8 @@ impl DistGuard {
         };
 
         // 1. Verify HMAC signature in constant time
-        let mut mac = HmacSha256::new_from_slice(&self.secret_key).expect("HMAC can accept key of any size");
+        let mut mac =
+            HmacSha256::new_from_slice(&self.secret_key).expect("HMAC can accept key of any size");
         mac.update(payload.as_bytes());
         let expected_sig = hex::encode(mac.finalize().into_bytes());
         if !bool::from(expected_sig.as_bytes().ct_eq(provided_sig.as_bytes())) {
@@ -194,7 +207,10 @@ impl DistGuard {
             *count += 1;
         }
 
-        DistVerdict::Permitted { asset_id, client_ip: actual_ip.to_string() }
+        DistVerdict::Permitted {
+            asset_id,
+            client_ip: actual_ip.to_string(),
+        }
     }
 
     /// Track and inspect HTTP `Range: bytes=...` requests to prevent chunk scraper abuse
@@ -235,27 +251,17 @@ mod hex {
 }
 
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     use super::*;
 
     #[test]
     fn test_dist_voucher_issuance_and_consumption() {
         let guard = DistGuard::new(b"dist_secret_voucher_key", DistGuardConfig::default());
-        let now = 1_000_000;
-        let ip = "192.0.2.55";
-        let asset = "rmediatech-desktop-1.0.0.AppImage";
-        let nonce = "unique_nonce_abc_1";
-
-        let voucher = guard.issue_voucher(asset, ip, nonce, now);
-
-        // 1. Valid download initiation
-        let res = guard.validate_voucher(&voucher, ip, now + 10);
-        assert_eq!(res, DistVerdict::Permitted { asset_id: asset.to_string(), client_ip: ip.to_string() });
-
-        // 2. Replay attack with same voucher -> Blocked
+        let (now, ip, asset) = (1_000_000, "192.0.2.55", "rmediatech-desktop-1.0.0.AppImage");
+        let voucher = guard.issue_voucher(asset, ip, "unique_nonce_abc_1", now);
+        assert_eq!(guard.validate_voucher(&voucher, ip, now + 10), DistVerdict::Permitted { asset_id: asset.to_string(), client_ip: ip.to_string() });
         assert_eq!(guard.validate_voucher(&voucher, ip, now + 15), DistVerdict::VoucherReplayed);
-
-        // 3. Release slot
         guard.finish_download(ip);
     }
 
@@ -264,32 +270,17 @@ mod tests {
         let guard = DistGuard::new(b"dist_secret_voucher_key", DistGuardConfig::default());
         let (now, original_ip, attacker_ip, asset) = (1_000_000, "192.0.2.55", "198.51.100.22", "rmediatech-installer.exe");
         let voucher = guard.issue_voucher(asset, original_ip, "nonce_2", now);
-
-        // Attacker attempts to redeem token generated for different IP
         assert!(matches!(guard.validate_voucher(&voucher, attacker_ip, now + 5), DistVerdict::IpMismatch { .. }));
-
-        // Expired voucher after TTL (default 300s)
         assert!(matches!(guard.validate_voucher(&voucher, original_ip, now + 301), DistVerdict::VoucherExpired { .. }));
     }
 
     #[test]
     fn test_dist_guard_detects_byte_range_chunk_scraping() {
-        let config = DistGuardConfig {
-            max_range_chunks_per_window: 5,
-            range_window_s: 10,
-            ..Default::default()
-        };
+        let config = DistGuardConfig { max_range_chunks_per_window: 5, range_window_s: 10, ..Default::default() };
         let guard = DistGuard::new(b"dist_secret_voucher_key", config);
-        let ip = "203.0.113.89";
-        let now = 1_000_000;
-
-        // 5 range chunks within 10 seconds -> OK
         for _ in 0..5 {
-            assert!(guard.check_range_request(ip, now).is_permitted());
+            assert!(guard.check_range_request("203.0.113.89", 1_000_000).is_permitted());
         }
-
-        // 6th range chunk -> Range abuse detected
-        let res = guard.check_range_request(ip, now + 1);
-        assert!(matches!(res, DistVerdict::RangeAbuseDetected { .. }));
+        assert!(matches!(guard.check_range_request("203.0.113.89", 1_000_001), DistVerdict::RangeAbuseDetected { .. }));
     }
 }

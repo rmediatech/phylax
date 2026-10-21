@@ -71,9 +71,17 @@ impl SubnetKey {
 pub fn categorize_candidate_heuristic(path: &str) -> DecoyCategory {
     let lower = path.to_ascii_lowercase();
 
-    if ["env", "secret", "credential", "token", "vault", "key", "config"]
-        .iter()
-        .any(|k| lower.contains(k))
+    if [
+        "env",
+        "secret",
+        "credential",
+        "token",
+        "vault",
+        "key",
+        "config",
+    ]
+    .iter()
+    .any(|k| lower.contains(k))
     {
         DecoyCategory::EnvironmentSecret
     } else if ["admin", "login", "wp-", "cms", "actuator", "console", "php"]
@@ -81,7 +89,10 @@ pub fn categorize_candidate_heuristic(path: &str) -> DecoyCategory {
         .any(|k| lower.contains(k))
     {
         DecoyCategory::AdminCmsProbe
-    } else if ["git", "svn", "hg", "repo"].iter().any(|k| lower.contains(k)) {
+    } else if ["git", "svn", "hg", "repo"]
+        .iter()
+        .any(|k| lower.contains(k))
+    {
         DecoyCategory::VersionControl
     } else if ["k8s", "kube", "docker", "aws", "azure", "terraform"]
         .iter()
@@ -138,12 +149,16 @@ mod tests {
 
         // Single IP 50 hits cannot promote
         for _ in 0..50 {
-            assert!(harvester.ingest_anomalous_uri("/api/v1/zero_day", ip1, now).is_none());
+            assert!(harvester
+                .ingest_anomalous_uri("/api/v1/zero_day", ip1, now)
+                .is_none());
         }
         assert!(!sentinel.contains_trap("/api/v1/zero_day"));
 
         // 2nd subnet still candidate
-        assert!(harvester.ingest_anomalous_uri("/api/v1/zero_day", ip2, now + 10).is_none());
+        assert!(harvester
+            .ingest_anomalous_uri("/api/v1/zero_day", ip2, now + 10)
+            .is_none());
         // 3rd subnet promotes into DecoyUriSentinel!
         let verdict = harvester
             .ingest_anomalous_uri("/api/v1/zero_day", ip3, now + 20)

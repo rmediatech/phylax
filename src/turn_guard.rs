@@ -23,23 +23,22 @@ pub struct TurnCredentials {
     pub uris: Vec<String>,
 }
 
-/// Verdict from TURN credential validation
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum TurnVerdict {
-    /// Relay allocation is authorized
-    Authorized { user_id: String, expires_at: u64 },
-    /// Token lifetime has expired
-    Expired { expired_at: u64, now_s: u64 },
-    /// Lifetime requested is beyond permitted maximum TTL
+    Authorized {
+        user_id: String,
+        expires_at: u64,
+    },
+    Expired {
+        expired_at: u64,
+        now_s: u64,
+    },
     ExcessiveTtl {
         requested_ttl_s: u64,
         max_ttl_s: u64,
     },
-    /// Cryptographic signature mismatch (forged or tampered credential)
     SignatureMismatch,
-    /// Malformed username syntax (expected `<timestamp>:<user_id>`)
     MalformedCredential,
-    /// Per-user concurrent relay allocation limit exceeded
     ConcurrentLimitExceeded {
         user_id: String,
         active: u32,
@@ -177,7 +176,11 @@ impl TurnGuard {
         mac.update(username.as_bytes());
         let expected_credential = BASE64.encode(mac.finalize().into_bytes());
 
-        if !bool::from(expected_credential.as_bytes().ct_eq(provided_credential.as_bytes())) {
+        if !bool::from(
+            expected_credential
+                .as_bytes()
+                .ct_eq(provided_credential.as_bytes()),
+        ) {
             return TurnVerdict::SignatureMismatch;
         }
 
@@ -195,7 +198,10 @@ impl TurnGuard {
             *count += 1;
         }
 
-        TurnVerdict::Authorized { user_id, expires_at }
+        TurnVerdict::Authorized {
+            user_id,
+            expires_at,
+        }
     }
 
     /// Release an active relay allocation when a WebRTC session closes
@@ -217,6 +223,7 @@ impl TurnGuard {
 }
 
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     use super::*;
 
@@ -225,20 +232,10 @@ mod tests {
         let guard = TurnGuard::new(b"turn_secret_key_testing", TurnGuardConfig::default());
         let now = 1_700_000_000;
         let creds = guard.issue_credentials("alice_operator", now, Some(300));
-
-        assert_eq!(creds.ttl_seconds, 300);
-        assert_eq!(creds.expires_at, now + 300);
-
+        assert_eq!((creds.ttl_seconds, creds.expires_at), (300, now + 300));
         let verdict = guard.validate_and_allocate(&creds.username, &creds.credential, now + 50);
-        assert_eq!(
-            verdict,
-            TurnVerdict::Authorized {
-                user_id: "alice_operator".to_string(),
-                expires_at: now + 300,
-            }
-        );
+        assert_eq!(verdict, TurnVerdict::Authorized { user_id: "alice_operator".to_string(), expires_at: now + 300 });
         assert_eq!(guard.active_relays_for("alice_operator"), 1);
-
         guard.release_relay("alice_operator");
         assert_eq!(guard.active_relays_for("alice_operator"), 0);
     }

@@ -132,7 +132,11 @@ impl DecoyUriSentinel {
     pub fn contains_trap(&self, raw_path: &str) -> bool {
         let normalized = Self::normalize_path(raw_path);
         self.exact_traps.read().contains_key(&normalized)
-            || self.prefix_traps.read().iter().any(|(p, _)| normalized.starts_with(p))
+            || self
+                .prefix_traps
+                .read()
+                .iter()
+                .any(|(p, _)| normalized.starts_with(p))
     }
 
     /// Total count of registered active traps
@@ -212,16 +216,34 @@ impl DecoyUriSentinel {
     /// Helper to assign appropriate category to exact matches
     pub fn categorize_path(&self, path: &str) -> DecoyCategory {
         let lower = path.to_ascii_lowercase();
-        if ["env", "pip.conf", "credentials", "auth.json", "secrets", "config"]
+        if [
+            "env",
+            "pip.conf",
+            "credentials",
+            "auth.json",
+            "secrets",
+            "config",
+        ]
+        .iter()
+        .any(|k| lower.contains(k))
+        {
+            DecoyCategory::EnvironmentSecret
+        } else if ["terraform", "aws", "k8s", "firebase"]
             .iter()
             .any(|k| lower.contains(k))
         {
-            DecoyCategory::EnvironmentSecret
-        } else if ["terraform", "aws", "k8s", "firebase"].iter().any(|k| lower.contains(k)) {
             DecoyCategory::CloudInfrastructure
-        } else if ["wp-", "xmlrpc", "phpmyadmin", "settings.php", "admin", "login", "console"]
-            .iter()
-            .any(|k| lower.contains(k))
+        } else if [
+            "wp-",
+            "xmlrpc",
+            "phpmyadmin",
+            "settings.php",
+            "admin",
+            "login",
+            "console",
+        ]
+        .iter()
+        .any(|k| lower.contains(k))
             || lower.ends_with(".php")
         {
             DecoyCategory::AdminCmsProbe
@@ -242,7 +264,14 @@ mod tests {
     #[test]
     fn test_clean_and_decoy_paths() {
         let sentinel = DecoyUriSentinel::default();
-        for path in ["/", "/auth/login", "/downloads", "/pricing", "/healthz", "/assets/main.css"] {
+        for path in [
+            "/",
+            "/auth/login",
+            "/downloads",
+            "/pricing",
+            "/healthz",
+            "/assets/main.css",
+        ] {
             assert_eq!(sentinel.evaluate(path), DecoyUriVerdict::Clean);
         }
         for (path, expected) in [
@@ -255,8 +284,13 @@ mod tests {
             ("/.git/config", DecoyCategory::VersionControl),
             ("/.aws/credentials", DecoyCategory::CloudInfrastructure),
         ] {
-            assert!(matches!(sentinel.evaluate(path), DecoyUriVerdict::Trapped { category, .. } if category == expected));
+            assert!(
+                matches!(sentinel.evaluate(path), DecoyUriVerdict::Trapped { category, .. } if category == expected)
+            );
         }
-        assert!(matches!(sentinel.evaluate("//.ENV?id=1"), DecoyUriVerdict::Trapped { .. }));
+        assert!(matches!(
+            sentinel.evaluate("//.ENV?id=1"),
+            DecoyUriVerdict::Trapped { .. }
+        ));
     }
 }

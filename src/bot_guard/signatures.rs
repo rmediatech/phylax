@@ -32,7 +32,10 @@ pub const AI_SCRAPER_SIGNATURES: &[(&str, &str)] = &[
     // Amazon AI
     ("amazonbot", "Amazonbot"),
     // Cohere AI
-    ("cohere-training-data-crawler", "cohere-training-data-crawler"),
+    (
+        "cohere-training-data-crawler",
+        "cohere-training-data-crawler",
+    ),
     ("cohere-ai", "cohere-ai"),
     // Common Crawl & Open Training Datasets
     ("omgilibot", "Omgilibot"),
@@ -167,16 +170,44 @@ mod tests {
         let guard = BotGuard::new();
         for (ua, expected_cat, expected_tok) in [
             ("ClaudeBot/1.0", BotCategory::AiScraper, "ClaudeBot"),
-            ("Mozilla/5.0 (compatible; Claude-SearchBot/1.0)", BotCategory::AiScraper, "Claude-SearchBot"),
-            ("Mozilla/5.0 (compatible; GPTBot/1.2)", BotCategory::AiScraper, "GPTBot"),
-            ("Mozilla/5.0 (compatible; OAI-SearchBot/1.0)", BotCategory::AiScraper, "OAI-SearchBot"),
-            ("Mozilla/5.0 (compatible; Google-Extended)", BotCategory::AiScraper, "Google-Extended"),
+            (
+                "Mozilla/5.0 (compatible; Claude-SearchBot/1.0)",
+                BotCategory::AiScraper,
+                "Claude-SearchBot",
+            ),
+            (
+                "Mozilla/5.0 (compatible; GPTBot/1.2)",
+                BotCategory::AiScraper,
+                "GPTBot",
+            ),
+            (
+                "Mozilla/5.0 (compatible; OAI-SearchBot/1.0)",
+                BotCategory::AiScraper,
+                "OAI-SearchBot",
+            ),
+            (
+                "Mozilla/5.0 (compatible; Google-Extended)",
+                BotCategory::AiScraper,
+                "Google-Extended",
+            ),
             ("BuiltWith/1.4", BotCategory::ReconScanner, "BuiltWith"),
-            ("CensysInspect/1.1", BotCategory::ReconScanner, "CensysInspect"),
+            (
+                "CensysInspect/1.1",
+                BotCategory::ReconScanner,
+                "CensysInspect",
+            ),
             ("ffuf/v2.1.0", BotCategory::AutomationTool, "ffuf"),
             ("nuclei - v3.1.0", BotCategory::AutomationTool, "Nuclei"),
-            ("metasploit-framework/v6.3", BotCategory::AutomationTool, "Metasploit"),
-            ("Mozilla/5.0 (compatible; Googlebot/2.1)", BotCategory::LegitimateSearch, "Googlebot"),
+            (
+                "metasploit-framework/v6.3",
+                BotCategory::AutomationTool,
+                "Metasploit",
+            ),
+            (
+                "Mozilla/5.0 (compatible; Googlebot/2.1)",
+                BotCategory::LegitimateSearch,
+                "Googlebot",
+            ),
         ] {
             let (cat, tok) = guard.classify(ua);
             assert_eq!(cat, expected_cat);
@@ -189,11 +220,20 @@ mod tests {
         let guard = BotGuard::new();
         let strange_ua = "ZeroDayScannerX/9.9 (Hostile Threat Actor)";
         assert_eq!(guard.classify(strange_ua).0, BotCategory::Unknown);
-        let token = guard.harvest_canary_probe(Some(strange_ua), "Tripped canary", 1_700_000_000_000);
+        let token =
+            guard.harvest_canary_probe(Some(strange_ua), "Tripped canary", 1_700_000_000_000);
         assert_eq!(token.as_deref(), Some("ZeroDayScannerX"));
-        assert!(guard.evaluate_perimeter(Some(strange_ua), "/pricing").is_blocked());
-        assert!(guard.evaluate_perimeter(Some("Claude-SearchBot/1.0"), "/robots.txt").is_allowed());
-        assert!(guard.evaluate_perimeter(Some("curl/8.5.0"), "/install/metaforge").is_allowed());
-        assert!(guard.evaluate_perimeter(Some("Claude-SearchBot/1.0"), "/").is_blocked());
+        assert!(guard
+            .evaluate_perimeter(Some(strange_ua), "/pricing")
+            .is_blocked());
+        assert!(guard
+            .evaluate_perimeter(Some("Claude-SearchBot/1.0"), "/robots.txt")
+            .is_allowed());
+        assert!(guard
+            .evaluate_perimeter(Some("curl/8.5.0"), "/install/metaforge")
+            .is_allowed());
+        assert!(guard
+            .evaluate_perimeter(Some("Claude-SearchBot/1.0"), "/")
+            .is_blocked());
     }
 }

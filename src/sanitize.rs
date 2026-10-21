@@ -35,7 +35,7 @@ fn scrub_internal(input: &str, allow_newlines: bool, max_len: usize) -> String {
                 match chars.peek().copied() {
                     Some('[') => {
                         chars.next(); // consume '['
-                        // CSI sequence: consume parameter/intermediate bytes until final byte (0x40..=0x7E)
+                                      // CSI sequence: consume parameter/intermediate bytes until final byte (0x40..=0x7E)
                         while let Some(&c) = chars.peek() {
                             chars.next();
                             if ('\x40'..='\x7e').contains(&c) {
@@ -45,7 +45,7 @@ fn scrub_internal(input: &str, allow_newlines: bool, max_len: usize) -> String {
                     }
                     Some(']') => {
                         chars.next(); // consume ']'
-                        // OSC sequence: consume until BEL (\x07) or ST (\x1b\\)
+                                      // OSC sequence: consume until BEL (\x07) or ST (\x1b\\)
                         while let Some(c) = chars.next() {
                             if c == '\x07' {
                                 break;
@@ -122,7 +122,8 @@ mod tests {
 
     #[test]
     fn test_scrub_ansi_csi_and_osc_sequences() {
-        let poisoned = "Mozilla/5.0 \x1b[31m\x1b[2JEvilBot\x1b]0;PwnedTitle\x07/1.0\r\nInjected: true";
+        let poisoned =
+            "Mozilla/5.0 \x1b[31m\x1b[2JEvilBot\x1b]0;PwnedTitle\x07/1.0\r\nInjected: true";
         let clean = scrub_ansi_and_control(poisoned);
         assert_eq!(clean, "Mozilla/5.0 EvilBot/1.0  Injected: true");
         assert!(!clean.contains('\x1b'));

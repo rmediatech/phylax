@@ -124,7 +124,12 @@ impl BotGuard {
         &self.dynamic_registry
     }
 
-    pub fn harvest_canary_probe(&self, user_agent: Option<&str>, reason: &str, now_ms: u64) -> Option<String> {
+    pub fn harvest_canary_probe(
+        &self,
+        user_agent: Option<&str>,
+        reason: &str,
+        now_ms: u64,
+    ) -> Option<String> {
         user_agent.and_then(|ua| self.dynamic_registry.harvest(ua, reason, now_ms))
     }
 
@@ -158,7 +163,10 @@ impl BotGuard {
             return (BotCategory::Unknown, None);
         }
         if trimmed.len() > 4096 {
-            return (BotCategory::AutomationTool, Some(Cow::Borrowed("Header-Exhaustion-Bomb")));
+            return (
+                BotCategory::AutomationTool,
+                Some(Cow::Borrowed("Header-Exhaustion-Bomb")),
+            );
         }
 
         let bytes = trimmed.as_bytes();
@@ -174,7 +182,10 @@ impl BotGuard {
         }
         for &(needle, display_name) in AUTOMATION_TOOL_SIGNATURES {
             if Self::contains_ignore_case(bytes, needle.as_bytes()) {
-                return (BotCategory::AutomationTool, Some(Cow::Borrowed(display_name)));
+                return (
+                    BotCategory::AutomationTool,
+                    Some(Cow::Borrowed(display_name)),
+                );
             }
         }
         if let Some(matched) = self.dynamic_registry.check_ua(trimmed) {
@@ -189,11 +200,17 @@ impl BotGuard {
         }
         for &(needle, display_name) in LEGITIMATE_SEARCH_SIGNATURES {
             if Self::contains_ignore_case(bytes, needle.as_bytes()) {
-                return (BotCategory::LegitimateSearch, Some(Cow::Borrowed(display_name)));
+                return (
+                    BotCategory::LegitimateSearch,
+                    Some(Cow::Borrowed(display_name)),
+                );
             }
         }
         if Self::contains_ignore_case(bytes, b"python") {
-            return (BotCategory::AutomationTool, Some(Cow::Borrowed("Python-Script")));
+            return (
+                BotCategory::AutomationTool,
+                Some(Cow::Borrowed("Python-Script")),
+            );
         }
         if Self::contains_ignore_case(bytes, b"mozilla/") {
             return (BotCategory::LegitimateBrowser, None);
@@ -203,11 +220,17 @@ impl BotGuard {
 
     pub fn evaluate_perimeter(&self, user_agent: Option<&str>, path: &str) -> BotVerdict {
         if path == "/robots.txt" {
-            return BotVerdict::Allowed { category: BotCategory::LegitimateSearch };
+            return BotVerdict::Allowed {
+                category: BotCategory::LegitimateSearch,
+            };
         }
         let ua = match user_agent {
             Some(u) if !u.trim().is_empty() => u.trim(),
-            _ => return BotVerdict::Allowed { category: BotCategory::Unknown },
+            _ => {
+                return BotVerdict::Allowed {
+                    category: BotCategory::Unknown,
+                }
+            }
         };
 
         let (category, matched_token) = self.classify(ua);

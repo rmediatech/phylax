@@ -170,7 +170,11 @@ impl ShieldPipelineBuilder {
         };
 
         let timing = TimingGuard::new(&*self.secret_key, self.timing_min_ms, self.timing_max_ms);
-        let pow = PowEngine::new(&*self.secret_key, self.pow_difficulty, self.pow_expiration_ms);
+        let pow = PowEngine::new(
+            &*self.secret_key,
+            self.pow_difficulty,
+            self.pow_expiration_ms,
+        );
         let email_guard = EmailPatternGuard::new(self.max_email_dots);
         let subnet_guard = SubnetGuard::default();
         let tarpit = TarpitGovernor::new(self.tarpit_config);

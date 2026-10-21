@@ -116,9 +116,21 @@ impl DynamicBotRegistry {
     fn is_protected_token(lower: &str) -> bool {
         matches!(
             lower,
-            "mozilla" | "chrome" | "safari" | "webkit" | "gecko" | "applewebkit"
-                | "edge" | "edg" | "curl" | "wget" | "googlebot" | "bingbot"
-                | "duckduckbot" | "yandexbot" | "baiduspider"
+            "mozilla"
+                | "chrome"
+                | "safari"
+                | "webkit"
+                | "gecko"
+                | "applewebkit"
+                | "edge"
+                | "edg"
+                | "curl"
+                | "wget"
+                | "googlebot"
+                | "bingbot"
+                | "duckduckbot"
+                | "yandexbot"
+                | "baiduspider"
         )
     }
 }

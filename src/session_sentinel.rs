@@ -150,13 +150,19 @@ impl SessionSentinel {
     }
 
     /// Compute cryptographic fingerprint binding token for an authenticated session
-    pub fn generate_binding_token(&self, session_id: &str, client_ip: &str, user_agent: &str) -> String {
+    pub fn generate_binding_token(
+        &self,
+        session_id: &str,
+        client_ip: &str,
+        user_agent: &str,
+    ) -> String {
         let subnet_prefix = self.extract_subnet_prefix(client_ip);
         let mut ua_hasher = Sha256::new();
         ua_hasher.update(user_agent.as_bytes());
         let ua_hash = format!("{:x}", ua_hasher.finalize());
         let payload = format!("{}:{}:{}", session_id, subnet_prefix, ua_hash);
-        let mut mac = HmacSha256::new_from_slice(&self.secret_key).expect("HMAC can accept key of any size");
+        let mut mac =
+            HmacSha256::new_from_slice(&self.secret_key).expect("HMAC can accept key of any size");
         mac.update(payload.as_bytes());
         hex::encode(mac.finalize().into_bytes())
     }
@@ -174,7 +180,8 @@ impl SessionSentinel {
             SessionVerdict::Clean
         } else {
             SessionVerdict::FingerprintMismatch {
-                reason: "Client network subnet or browser fingerprint does not match session binding",
+                reason:
+                    "Client network subnet or browser fingerprint does not match session binding",
             }
         }
     }
@@ -235,14 +242,13 @@ mod hex {
 }
 
 #[cfg(test)]
+#[rustfmt::skip]
 mod tests {
     use super::*;
 
     #[test]
     fn test_haversine_distance_accurate() {
-        // London (51.5074, -0.1278) to Paris (48.8566, 2.3522) is ~343 km
-        let london = GeoCoordinate::new(51.5074, -0.1278);
-        let paris = GeoCoordinate::new(48.8566, 2.3522);
+        let (london, paris) = (GeoCoordinate::new(51.5074, -0.1278), GeoCoordinate::new(48.8566, 2.3522));
         let dist = london.distance_to(&paris);
         assert!(dist > 340.0 && dist < 350.0, "Expected ~343km, got {}", dist);
     }
@@ -250,47 +256,25 @@ mod tests {
     #[test]
     fn test_device_binding_detects_ip_or_ua_tampering() {
         let sentinel = SessionSentinel::new(b"test_secret_key_123", SessionSentinelConfig::default());
-        let (session_id, ip, ua) = (
-            "sess_xyz_9988",
-            "203.0.113.45",
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120.0",
-        );
+        let (session_id, ip, ua) = ("sess_xyz_9988", "203.0.113.45", "Mozilla/5.0 Chrome/120.0");
         let token = sentinel.generate_binding_token(session_id, ip, ua);
-
-        // Valid verification from same /24 subnet (e.g. mobile carrier minor IP shift 203.0.113.88)
         assert_eq!(sentinel.verify_binding(session_id, "203.0.113.88", ua, &token), SessionVerdict::Clean);
-        // Attacker uses stolen session token from completely different IP subnet
         assert!(matches!(sentinel.verify_binding(session_id, "198.51.100.12", ua, &token), SessionVerdict::FingerprintMismatch { .. }));
-        // Attacker uses stolen token with different User-Agent
         assert!(matches!(sentinel.verify_binding(session_id, ip, "curl/8.5.0", &token), SessionVerdict::FingerprintMismatch { .. }));
     }
 
     #[test]
     fn test_impossible_travel_catches_teleportation() {
         let sentinel = SessionSentinel::new(b"test_secret_key_123", SessionSentinelConfig::default());
-        let session_id = "sess_flight_test";
-
-        // Request 1: New York JFK (40.6413, -73.7781) at t = 10,000
-        let jfk = GeoCoordinate::new(40.6413, -73.7781);
-        assert_eq!(sentinel.record_and_evaluate_travel(session_id, jfk, 10_000, Some("New York JFK")), SessionVerdict::Clean);
-
-        // Request 2: London Heathrow (51.4700, -0.4543) ~5500 km away, only 5 minutes (300 seconds) later!
-        // Required speed: > 60,000 km/h!
-        let lhr = GeoCoordinate::new(51.4700, -0.4543);
-        let res2 = sentinel.record_and_evaluate_travel(session_id, lhr, 10_300, Some("London Heathrow"));
-        match res2 {
+        let (jfk, lhr) = (GeoCoordinate::new(40.6413, -73.7781), GeoCoordinate::new(51.4700, -0.4543));
+        assert_eq!(sentinel.record_and_evaluate_travel("sess_flight_test", jfk, 10_000, Some("New York JFK")), SessionVerdict::Clean);
+        match sentinel.record_and_evaluate_travel("sess_flight_test", lhr, 10_300, Some("London Heathrow")) {
             SessionVerdict::ImpossibleTravel { calculated_speed_kmh, distance_km, elapsed_s, .. } => {
-                assert!(distance_km > 5000.0);
-                assert_eq!(elapsed_s, 300);
-                assert!(calculated_speed_kmh > 1000.0);
+                assert!(distance_km > 5000.0 && elapsed_s == 300 && calculated_speed_kmh > 1000.0);
             }
             other => panic!("Expected ImpossibleTravel, got {:?}", other),
         }
-
-        // Valid flight after 8 hours (28,800 seconds) ~ 690 km/h -> Permitted
-        let session_valid = "sess_valid_flight";
-        sentinel.record_and_evaluate_travel(session_valid, jfk, 10_000, Some("New York"));
-        let res_valid = sentinel.record_and_evaluate_travel(session_valid, lhr, 10_000 + 28_800, Some("London"));
-        assert_eq!(res_valid, SessionVerdict::Clean);
+        sentinel.record_and_evaluate_travel("sess_valid_flight", jfk, 10_000, Some("New York"));
+        assert_eq!(sentinel.record_and_evaluate_travel("sess_valid_flight", lhr, 38_800, Some("London")), SessionVerdict::Clean);
     }
 }

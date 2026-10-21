@@ -49,16 +49,26 @@ impl DenialReason {
     pub fn public_message(&self) -> &'static str {
         match self {
             DenialReason::HoneypotTrapped { .. } => "Automated submission detected (trap tripped).",
-            DenialReason::DecoyUriTrapped { .. } => "Access restricted: Automated reconnaissance probe detected.",
-            DenialReason::SubnetBlocked { .. } => "Perimeter access restricted: Tor exit node or hosting datacenter.",
+            DenialReason::DecoyUriTrapped { .. } => {
+                "Access restricted: Automated reconnaissance probe detected."
+            }
+            DenialReason::SubnetBlocked { .. } => {
+                "Perimeter access restricted: Tor exit node or hosting datacenter."
+            }
             DenialReason::EmailPatternSuspicious { .. } => "Invalid or suspicious email pattern.",
-            DenialReason::SubmissionTooFast { .. } => "Form submitted suspiciously fast. Please take your time.",
-            DenialReason::SubmissionTimingExpired => "Form session expired. Please refresh the page.",
+            DenialReason::SubmissionTooFast { .. } => {
+                "Form submitted suspiciously fast. Please take your time."
+            }
+            DenialReason::SubmissionTimingExpired => {
+                "Form session expired. Please refresh the page."
+            }
             DenialReason::TimingSignatureInvalid => "Form verification signature mismatch.",
             DenialReason::MissingTimingToken => "Missing security timing token.",
             DenialReason::PowInvalidSolution => "Proof of work puzzle verification failed.",
             DenialReason::PowExpired => "Proof of work puzzle expired. Please reload the page.",
-            DenialReason::PowReplayed => "Security token has already been consumed. Please refresh.",
+            DenialReason::PowReplayed => {
+                "Security token has already been consumed. Please refresh."
+            }
             DenialReason::MissingPowChallenge => "Missing proof of work security challenge.",
         }
     }
