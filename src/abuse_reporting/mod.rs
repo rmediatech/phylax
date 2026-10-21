@@ -6,6 +6,7 @@
 
 pub mod abuseipdb;
 pub mod category;
+pub mod config;
 pub mod cooldown;
 pub mod dossier;
 pub mod error;

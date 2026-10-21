@@ -29,6 +29,7 @@ pub mod honeypot;
 pub mod maintenance;
 pub mod pipeline;
 pub mod pow;
+pub mod sanitize;
 pub mod session_sentinel;
 pub mod stream_guard;
 pub mod subnet_guard;

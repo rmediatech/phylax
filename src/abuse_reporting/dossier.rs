@@ -2,6 +2,7 @@
 //! One-Job: Immutable incident data structure and RFC/AbuseIPDB compliant evidence serialization.
 
 use crate::abuse_reporting::category::AbuseCategory;
+use crate::sanitize::{neutralize_formula_injection, scrub_ansi_and_control, scrub_multiline_text};
 use serde::{Deserialize, Serialize};
 
 /// Immutable container holding forensic evidence for an abusive incident
@@ -22,23 +23,31 @@ pub struct DossierFormatter;
 
 impl DossierFormatter {
     /// Renders an evidence comment strictly capped at 1024 characters (AbuseIPDB requirement)
+    /// and scrubbed against ANSI CSI/OSC log poisoning and formula injection.
     pub fn render_incident_comment(dossier: &ForensicDossier) -> String {
+        let safe_ip = scrub_ansi_and_control(&dossier.client_ip);
+        let safe_method = scrub_ansi_and_control(&dossier.http_method);
+        let safe_uri = scrub_ansi_and_control(&dossier.target_uri);
+        let safe_notes = scrub_multiline_text(&dossier.evidence_notes, 1200);
+
         let mut comment = format!(
             "[Phylax Security Report] Type: {}\nSource IP: {}\nEndpoint: {} {}\nTimestamp: {} ms\nNotes: {}\n",
             dossier.category.name(),
-            dossier.client_ip,
-            dossier.http_method,
-            dossier.target_uri,
+            safe_ip,
+            safe_method,
+            safe_uri,
             dossier.timestamp_ms,
-            dossier.evidence_notes
+            safe_notes
         );
 
         if let Some(ref field) = dossier.trapped_field {
-            comment.push_str(&format!("Honeypot Decoy Field Tripped: '{}'\n", field));
+            let safe_field = scrub_ansi_and_control(field);
+            comment.push_str(&format!("Honeypot Decoy Field Tripped: '{}'\n", safe_field));
         }
 
         if let Some(ref ua) = dossier.user_agent {
-            comment.push_str(&format!("User-Agent: {}\n", ua));
+            let safe_ua = neutralize_formula_injection(ua);
+            comment.push_str(&format!("User-Agent: {}\n", safe_ua));
         }
 
         comment.push_str(
@@ -54,20 +63,51 @@ impl DossierFormatter {
         comment
     }
 
+    /// Renders a sanitized CSV row with formula injection neutralization on all user-controlled fields
+    pub fn render_csv_row(dossier: &ForensicDossier) -> String {
+        let ip = neutralize_formula_injection(&dossier.client_ip);
+        let method = neutralize_formula_injection(&dossier.http_method);
+        let uri = neutralize_formula_injection(&dossier.target_uri);
+        let category = neutralize_formula_injection(dossier.category.name());
+        let field = dossier
+            .trapped_field
+            .as_deref()
+            .map(neutralize_formula_injection)
+            .unwrap_or_default();
+        let ua = dossier
+            .user_agent
+            .as_deref()
+            .map(neutralize_formula_injection)
+            .unwrap_or_default();
+        let notes = neutralize_formula_injection(&dossier.evidence_notes);
+
+        format!(
+            "\"{}\",{},\"{}\",\"{}\",\"{}\",\"{}\",\"{}\",\"{}\"",
+            ip.replace('"', "\"\""),
+            dossier.timestamp_ms,
+            method.replace('"', "\"\""),
+            uri.replace('"', "\"\""),
+            category.replace('"', "\"\""),
+            field.replace('"', "\"\""),
+            ua.replace('"', "\"\""),
+            notes.replace('"', "\"\"")
+        )
+    }
+
     /// Renders standard JSON format (compatible with X-ARF / Network Abuse Reporting 2.0)
     pub fn render_xarf_json(dossier: &ForensicDossier) -> serde_json::Value {
         serde_json::json!({
             "version": "2.0.0",
             "report_type": "web_abuse",
-            "source_ip": dossier.client_ip,
+            "source_ip": scrub_ansi_and_control(&dossier.client_ip),
             "timestamp_ms": dossier.timestamp_ms,
-            "target_uri": dossier.target_uri,
-            "http_method": dossier.http_method,
+            "target_uri": scrub_ansi_and_control(&dossier.target_uri),
+            "http_method": scrub_ansi_and_control(&dossier.http_method),
             "category": dossier.category.name(),
             "category_ids": dossier.category.category_ids(),
-            "trapped_field": dossier.trapped_field,
-            "user_agent": dossier.user_agent,
-            "evidence": dossier.evidence_notes,
+            "trapped_field": dossier.trapped_field.as_deref().map(scrub_ansi_and_control),
+            "user_agent": dossier.user_agent.as_deref().map(scrub_ansi_and_control),
+            "evidence": scrub_multiline_text(&dossier.evidence_notes, 2048),
         })
     }
 }

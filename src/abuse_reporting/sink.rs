@@ -156,19 +156,28 @@ impl IncidentSink for SyslogCefSink {
     }
 
     async fn dispatch(&self, dossier: &ForensicDossier) -> Result<SinkReceipt, AbuseReportError> {
+        let safe_ip = crate::sanitize::scrub_ansi_and_control(&dossier.client_ip);
+        let safe_method = crate::sanitize::scrub_ansi_and_control(&dossier.http_method);
+        let safe_uri = crate::sanitize::scrub_ansi_and_control(&dossier.target_uri);
+        let safe_field = dossier
+            .trapped_field
+            .as_deref()
+            .map(crate::sanitize::scrub_ansi_and_control)
+            .unwrap_or_else(|| "none".to_string());
+
         let cef = format!(
             "CEF:0|Phylax|EdgeDefense|0.1.0|{}|{}|8|src={} requestMethod={} request={} cs1Label=HoneypotField cs1={}",
             dossier.category.name(),
             dossier.category.name(),
-            dossier.client_ip,
-            dossier.http_method,
-            dossier.target_uri,
-            dossier.trapped_field.as_deref().unwrap_or("none")
+            safe_ip,
+            safe_method,
+            safe_uri,
+            safe_field
         );
         tracing::warn!("🛡️ [CEF-AUDIT] {}", cef);
         Ok(SinkReceipt {
             sink_name: "SyslogCEF",
-            target_identifier: dossier.client_ip.clone(),
+            target_identifier: safe_ip,
             detail: cef,
         })
     }

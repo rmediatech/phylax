@@ -55,7 +55,7 @@ axum = "0.7"
 
 [[bin]]
 name = "phylax"
-path = "src/bin/phylax.rs"
+path = "src/bin/phylax/main.rs"
 required-features = ["cli"]
 
 [[example]]

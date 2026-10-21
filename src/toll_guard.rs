@@ -8,22 +8,8 @@ use std::sync::Arc;
 
 /// High-Risk International E.164 Prefixes targeted in SMS pumping and toll fraud
 pub const HIGH_RISK_PREFIXES: &[&str] = &[
-    "870", // Inmarsat Satellite
-    "881", // Globalstar Satellite
-    "882", // International Networks
-    "883", // International Networks
-    "888", // Disaster Relief / Premium
-    "247", // Ascension Island
-    "231", // Liberia
-    "252", // Somalia
-    "223", // Mali
-    "232", // Sierra Leone
-    "224", // Guinea
-    "248", // Seychelles
-    "269", // Comoros
-    "290", // Saint Helena
-    "674", // Nauru
-    "688", // Tuvalu
+    "870", "881", "882", "883", "888", // Satellite & International Premium Networks
+    "247", "231", "252", "223", "232", "224", "248", "269", "290", "674", "688",
 ];
 
 /// Verdict from TollGuard evaluation

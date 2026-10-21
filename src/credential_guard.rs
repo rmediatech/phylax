@@ -9,43 +9,11 @@ use std::sync::Arc;
 
 /// Seed list of universally compromised passwords (frequently sprayed in credential stuffing)
 pub const TOP_BREACHED_PASSWORDS_SEED: &[&str] = &[
-    "123456",
-    "password",
-    "12345678",
-    "qwerty",
-    "123456789",
-    "12345",
-    "1234",
-    "111111",
-    "1234567",
-    "dragon",
-    "welcome",
-    "123123",
-    "admin",
-    "admin123",
-    "root",
-    "toor",
-    "default",
-    "letmein",
-    "football",
-    "monkey",
-    "charlie",
-    "donald",
-    "shadow",
-    "master",
-    "trustno1",
-    "iloveyou",
-    "sunshine",
-    "princess",
-    "starwars",
-    "superman",
-    "password1",
-    "password123",
-    "secret",
-    "pass1234",
-    "qwertyuiop",
-    "login123",
-    "hunter2",
+    "123456", "password", "12345678", "qwerty", "123456789", "12345", "1234", "111111", "1234567",
+    "dragon", "welcome", "123123", "admin", "admin123", "root", "toor", "default", "letmein",
+    "football", "monkey", "charlie", "donald", "shadow", "master", "trustno1", "iloveyou",
+    "sunshine", "princess", "starwars", "superman", "password1", "password123", "secret",
+    "pass1234", "qwertyuiop", "login123", "hunter2",
 ];
 
 /// Zero-Allocation In-Memory Bloom Filter for Breached Passwords
@@ -221,22 +189,16 @@ impl CredentialGuard {
 
     /// Evaluate a candidate password against the zero-telemetry Bloom filter (<25ns)
     pub fn check_password_quality(&self, password: &str) -> CredentialVerdict {
-        let filter = self.bloom_filter.read();
-        if filter.contains(password) {
+        if self.bloom_filter.read().contains(password) {
             return CredentialVerdict::BreachedPasswordKnown {
-                reason:
-                    "This password appears in known security breach datasets and cannot be used.",
+                reason: "This password appears in known security breach datasets and cannot be used.",
             };
         }
         CredentialVerdict::Clean
     }
 
     /// Inspect target account velocity before executing expensive Argon2id or DB lookups
-    pub fn check_account_velocity(
-        &self,
-        target_identifier: &str,
-        now_ms: u64,
-    ) -> CredentialVerdict {
+    pub fn check_account_velocity(&self, target_identifier: &str, now_ms: u64) -> CredentialVerdict {
         let key = target_identifier.trim().to_lowercase();
         let mut vel = self.velocity.write();
 
@@ -257,11 +219,10 @@ impl CredentialGuard {
                         failed_attempts: entry.failed_attempts,
                         cooloff_remaining_s: remaining_ms.div_ceil(1000),
                     };
-                } else {
-                    // Cooldown expired, decay failed attempts
-                    entry.failed_attempts = self.config.max_failed_before_pow_elevation;
-                    entry.first_failed_ms = now_ms;
                 }
+                // Cooldown expired, decay failed attempts
+                entry.failed_attempts = self.config.max_failed_before_pow_elevation;
+                entry.first_failed_ms = now_ms;
             }
 
             // Elevated PoW check
@@ -271,7 +232,6 @@ impl CredentialGuard {
                 };
             }
         }
-
         CredentialVerdict::Clean
     }
 
@@ -290,9 +250,7 @@ impl CredentialGuard {
 
     /// Reset velocity counter upon successful authentication
     pub fn record_success(&self, target_identifier: &str) {
-        let key = target_identifier.trim().to_lowercase();
-        let mut vel = self.velocity.write();
-        vel.remove(&key);
+        self.velocity.write().remove(&target_identifier.trim().to_lowercase());
     }
 }
 
@@ -303,11 +261,7 @@ mod tests {
     #[test]
     fn test_bloom_filter_catches_breached_passwords_and_clears_strong_ones() {
         let filter = BreachedPasswordBloomFilter::default();
-
-        assert!(filter.contains("password123"));
-        assert!(filter.contains("qwertyuiop"));
-        assert!(filter.contains("admin123"));
-
+        assert!(filter.contains("password123") && filter.contains("qwertyuiop") && filter.contains("admin123"));
         // Unique high-entropy sovereign password must not be flagged
         assert!(!filter.contains("Sovereign#Def3nse!2026_xUoX"));
         assert!(!filter.contains("RMediaTech!Un1que99^%Key"));
@@ -316,40 +270,25 @@ mod tests {
     #[test]
     fn test_target_account_velocity_tracking_and_cooldown() {
         let guard = CredentialGuard::default();
-        let target = "victim_account@rmediatech.com";
-        let now = 1_000_000_000;
+        let (target, now) = ("victim_account@rmediatech.com", 1_000_000_000);
 
         // Clean initial state
-        assert_eq!(
-            guard.check_account_velocity(target, now),
-            CredentialVerdict::Clean
-        );
+        assert_eq!(guard.check_account_velocity(target, now), CredentialVerdict::Clean);
 
         // 3 failures -> Elevates PoW difficulty
         for i in 0..3 {
             guard.record_failure(target, now + i * 1000);
         }
-        let verdict_pow = guard.check_account_velocity(target, now + 5000);
-        assert!(matches!(
-            verdict_pow,
-            CredentialVerdict::PoWRequirementElevated { .. }
-        ));
+        assert!(matches!(guard.check_account_velocity(target, now + 5000), CredentialVerdict::PoWRequirementElevated { .. }));
 
         // 3 more failures (total 6) -> Locks into cooldown
         for i in 3..6 {
             guard.record_failure(target, now + i * 1000);
         }
-        let verdict_cool = guard.check_account_velocity(target, now + 8000);
-        assert!(matches!(
-            verdict_cool,
-            CredentialVerdict::TargetAccountThrottled { .. }
-        ));
+        assert!(matches!(guard.check_account_velocity(target, now + 8000), CredentialVerdict::TargetAccountThrottled { .. }));
 
         // Successful auth resets the target tracker
         guard.record_success(target);
-        assert_eq!(
-            guard.check_account_velocity(target, now + 10_000),
-            CredentialVerdict::Clean
-        );
+        assert_eq!(guard.check_account_velocity(target, now + 10_000), CredentialVerdict::Clean);
     }
 }

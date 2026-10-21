@@ -244,14 +244,7 @@ pub fn has_leading_zero_bits(bytes: &[u8], bits: u8) -> bool {
 
 mod hex {
     pub fn encode(data: impl AsRef<[u8]>) -> String {
-        const HEX_CHARS: &[u8; 16] = b"0123456789abcdef";
-        let bytes = data.as_ref();
-        let mut v = Vec::with_capacity(bytes.len() * 2);
-        for &byte in bytes {
-            v.push(HEX_CHARS[(byte >> 4) as usize]);
-            v.push(HEX_CHARS[(byte & 0x0f) as usize]);
-        }
-        unsafe { String::from_utf8_unchecked(v) }
+        data.as_ref().iter().map(|b| format!("{:02x}", b)).collect()
     }
 }
 

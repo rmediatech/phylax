@@ -177,11 +177,7 @@ impl TurnGuard {
         mac.update(username.as_bytes());
         let expected_credential = BASE64.encode(mac.finalize().into_bytes());
 
-        if !bool::from(
-            expected_credential
-                .as_bytes()
-                .ct_eq(provided_credential.as_bytes()),
-        ) {
+        if !bool::from(expected_credential.as_bytes().ct_eq(provided_credential.as_bytes())) {
             return TurnVerdict::SignatureMismatch;
         }
 
@@ -199,19 +195,14 @@ impl TurnGuard {
             *count += 1;
         }
 
-        TurnVerdict::Authorized {
-            user_id,
-            expires_at,
-        }
+        TurnVerdict::Authorized { user_id, expires_at }
     }
 
     /// Release an active relay allocation when a WebRTC session closes
     pub fn release_relay(&self, user_id: &str) {
         let mut relays = self.active_relays.write();
         if let Some(count) = relays.get_mut(user_id) {
-            if *count > 0 {
-                *count -= 1;
-            }
+            *count = count.saturating_sub(1);
             if *count == 0 {
                 relays.remove(user_id);
             }
