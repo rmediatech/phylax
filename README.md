@@ -3,13 +3,13 @@
 <p align="center">
   <a href="https://github.com/xuoxod/phylax/actions/workflows/ci.yml"><img src="https://github.com/xuoxod/phylax/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <img src="https://img.shields.io/badge/Language-Pure%20Rust%202021-orange.svg" alt="Pure Rust" />
-  <img src="https://img.shields.io/badge/TDD%20Tests-114%2F114%20Passed-brightgreen.svg" alt="Tests" />
+  <img src="https://img.shields.io/badge/TDD%20Tests-122%2F122%20Passed-brightgreen.svg" alt="Tests" />
   <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
-  <a href="https://github.com/xuoxod/phylax/releases/tag/v0.2.4"><img src="https://img.shields.io/badge/Release-v0.2.4-green.svg" alt="Release" /></a>
+  <a href="https://github.com/xuoxod/phylax/releases/tag/v0.2.5"><img src="https://img.shields.io/badge/Release-v0.2.5-green.svg" alt="Release" /></a>
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
 </p>
 
-> **φύλαξ** (*phýlax* — ancient Greek for *"watcher, sentinel, guardian"*): A sovereign, zero-telemetry edge defense, honeypot tarpit, and autonomous threat neutralization engine written in pure Rust.  
+> **φύλαξ** (*phýlax* — ancient Greek for *"watcher, sentinel, guardian"*): A sovereign, 14-layer zero-telemetry edge defense, honeypot tarpit, and autonomous threat neutralization engine written in pure Rust.  
 > 🛡️ *"From the wire to the RAM / 'Til the kernel drops that spam."*
 
 `phylax` shields web applications, APIs, and authentication endpoints against credential stuffing, automated bot swarms, Tor/datacenter crawlers, Slowloris starvation, and scraping—executing in **sub-microsecond memory operations** without sending a single byte of user telemetry to third parties.
@@ -74,7 +74,7 @@ flowchart LR
 
 `phylax` was not designed by committee, nor is it generated boilerplate. It is the tangible result of **sovereign human-AI pair programming**: uncompromising human architectural standards—One-Job-Principle boundaries, fail-fast cost hierarchies, and strict zero-telemetry guarantees—directed in continuous real-time flow with an advanced agentic thinking partner.
 
-When human discipline guides an AI collaborator with genuine systems reasoning, the result is code that is leaner, faster, and more secure than legacy corporate software: pure static Rust binaries, $<15\text{ns}$ bitwise lookups, and total mathematical sovereignty.
+When human discipline guides an AI collaborator with genuine systems reasoning, the result is code that is leaner, faster, and more secure than legacy corporate software: pure static Rust binaries, `< 15ns` bitwise lookups, and total mathematical sovereignty.
 
 ---
 
@@ -83,7 +83,7 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 | Chapter | Document | Focus |
 |---|---|---|
 | **Index** | [**Master Navigation Map**](docs/INDEX.md) | Full architectural map and Optimal Journey Path index. |
-| **01** | [**Architecture & Cost Hierarchy**](docs/01_ARCHITECTURE_AND_COST_HIERARCHY.md) | 12 defensive layers, nanosecond Radix CIDR, Bloom filters, fail-fast mechanics. |
+| **01** | [**Architecture & Cost Hierarchy**](docs/01_ARCHITECTURE_AND_COST_HIERARCHY.md) | 14 defensive layers, nanosecond Radix CIDR, Bloom filters, fail-fast mechanics. |
 | **02** | [**Stealth Deception & Active Defense**](docs/02_STEALTH_DECEPTION_AND_ACTIVE_DEFENSE.md) | Silent neutralization vs 403, Deceptive Black Holes, perimeter ghosting. |
 | **03** | [**Case Study: Matrix WebRTC Mesh**](docs/03_CASE_STUDY_MATRIX_PRODUCTION.md) | Real-world battlefield deployment protecting [`matrix.rmediatech.com`](https://matrix.rmediatech.com). |
 | **04** | [**Integration & Framework Guide**](docs/04_INTEGRATION_AND_FRAMEWORK_GUIDE.md) | Axum, Actix-web, Tower, standalone reverse proxy, frontend `phylax.js`. |
@@ -106,47 +106,44 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 > To achieve complete, impenetrable defense across your infrastructure, operators must deploy a layered defense-in-depth architecture:  
 > 1. **Upstream DNS Perimeter (L3/L4)**: Deploy authoritative DNS rate limiting (BCP 153 RRL) and threat sinkholing to neutralize botnets and volumetric reflection floods before TCP handshakes occur.  
 > 2. **Kernel & Wire Firewalling (L4)**: Harden OS kernel network buffers (`sysctl`) and deploy packet filters (eBPF/XDP, stateful firewall rules) to drop invalid TCP flags and volumetric floods in microseconds.  
-> 3. **L7 Edge Gateway**: Place an ultra-low-latency reverse proxy (such as [**`propylea`**](https://github.com/xuoxod/propylea)) at your edge to terminate TLS, validate request framing, and drop decoy path scanners in $<15\text{ns}$.  
+> 3. **L7 Edge Gateway**: Place an ultra-low-latency reverse proxy (such as [**`propylea`**](https://github.com/xuoxod/propylea)) at your edge to terminate TLS, validate request framing, and drop decoy path scanners in `< 15ns`.  
 > 4. **Application Shielding (`phylax`)**: Embed `phylax` in your application core to eliminate crawlers, AI scrapers, credential stuffing, and brute-force abuse with zero CPU overhead.
 
 ---
 
-## Architecture: Fail-Fast Cost Hierarchy
+## Architecture: 14-Layer Fail-Fast Cost Hierarchy
 
 `phylax` organizes defense into a strict **cost-hierarchical pipeline**. Inexpensive bitwise comparisons, radix-tree lookups, and Bloom checks execute first. If a malicious client triggers an early barrier, the request is denied or routed into an asymmetric tarpit before heavier cryptographic or stateful layers are reached.
 
 ```mermaid
-flowchart TD
-    REQ["Incoming HTTP / API Request"] --> L0["0. Autonomous Quarantine (Subnet CIDR) ~10ns"]
-    L0 -- Quarantined --> REJ["403 Forbidden / Tarpit"]
-    L0 -- Pass --> L05["0.5 Decoy URI Honeyroutes (DecoyUriSentinel) ~5-10ns"]
-    L05 -- Trapped --> GHOST["Stealth 404 / Forensic Dossier"]
-    L05 -- Pass --> L1["1. Honeypot Trap (HoneypotValidator) ~5ns"]
-    L1 -- Trapped --> TARPIT["Asymmetric Tarpit (Reverse Slowloris)"]
-    L1 -- Pass --> L2["2. Perimeter Defense (SubnetGuard Radix CIDR) ~15ns"]
-    L2 -- Blocked --> REJ
-    L2 -- Pass --> L3["3. Email Sanitizer (EmailPatternGuard) ~30ns"]
-    L3 -- Malformed / Disposable --> REJ
-    L3 -- Pass --> L4["4. Interaction Cadence (TimingGuard HMAC) ~200ns"]
-    L4 -- Sub-Second Script --> REJ
-    L4 -- Pass --> L5["5. Adaptive Micro-PoW (PowEngine SHA-256) ~500ns"]
-    L5 -- Invalid / Tampered Nonce --> REJ
-    L5 -- Pass --> L6["6. Breached Password Bloom (CredentialGuard) <25ns"]
-    L6 -- Breached Credential --> REJ
-    L6 -- Pass --> L7["7. Account Velocity Shield (CredentialGuard) ~40ns"]
-    L7 -- Rate Exceeded --> REJ
-    L7 -- Pass --> L8["8. Impossible Travel Sentinel (SessionSentinel) ~150ns"]
-    L8 -- Drift Violation --> REJ
-    L8 -- Pass --> L9["9. WebRTC / COTURN Leeching Guard (TurnGuard) ~100ns"]
-    L9 -- Quota Exceeded --> REJ
-    L9 -- Pass --> L10["10. Download Voucher Guard (DistGuard) ~100ns"]
-    L10 -- Replay / Scrape --> REJ
-    L10 -- Pass --> L11["11. Stream & Slowloris Guard (StreamGuard) ~50ns"]
-    L11 -- Trickle Flood --> REJ
-    L11 -- Pass --> L12["12. Zero-Lock Atomic Memory Cache (CacheShield) ~20ns"]
-    L12 -- Pass / 304 Revalidated --> HANDLER["Application Core Handler"]
-    HANDLER -- Unmapped 404 --> L13["13. Autonomous Threat Harvester (ThreatHarvesterEngine) ~25ns"]
-    L13 -- Multi-Subnet Correlated (≥3 Subnets) --> ELEVATE["Elevate to Live Decoy Traps in <15ns!"]
+flowchart LR
+    subgraph Stage1 ["⚡ Stage I: Wire & Trap Guards (~5-30ns)"]
+        direction TB
+        L0["0. Autonomous Quarantine\n(Radix CIDR) ~10ns"] --> L05["0.5 Decoy URI Sentinel\n(Stealth 404) ~5-10ns"]
+        L05 --> L1["1. Honeypot Validator\n(DOM Trap / Tarpit) ~5ns"]
+        L1 --> L2["2. Subnet Guard\n(Tor / Scanner CIDR) ~15ns"]
+        L2 --> L14["14. Sovereign Bot Guard\n(RFC 9309 UA Filter) ~12ns"]
+        L14 --> L3["3. Email Pattern Guard\n(Canonical / Burner) ~30ns"]
+    end
+
+    subgraph Stage2 ["🔐 Stage II: Crypto & Identity (~25-500ns)"]
+        direction TB
+        L4["4. Interaction Cadence\n(Timing HMAC) ~200ns"] --> L5["5. Adaptive Micro-PoW\n(SHA-256 Puzzle) ~500ns"]
+        L5 --> L6["6. Breached Password\n(Bloom Filter) <25ns"]
+        L6 --> L7["7. Account Velocity\n(Cross-IP Governor) ~40ns"]
+        L7 --> L8["8. Session Sentinel\n(Impossible Travel) ~150ns"]
+    end
+
+    subgraph Stage3 ["🛡️ Stage III: Quotas & Harvester (~20-100ns)"]
+        direction TB
+        L9["9. WebRTC TurnGuard\n(COTURN Quota) ~100ns"] --> L10["10. Download DistGuard\n(Single-Use Voucher) ~100ns"]
+        L10 --> L11["11. Stream Guard\n(Anti-Slowloris) ~50ns"]
+        L11 --> L12["12. Atomic CacheShield\n(Zero-Lock ETag) ~20ns"]
+        L12 --> L13["13. Threat Harvester\n(3-Subnet Zero-Day) ~25ns"]
+    end
+
+    Stage1 ==>|"Pass (<85ns)"| Stage2
+    Stage2 ==>|"Pass (<900ns)"| Stage3
 ```
 
 ---
@@ -157,7 +154,9 @@ flowchart TD
 Installs the `phylax` binary to `/usr/local/bin`, generates `/etc/phylax/phylax.toml`, and configures a systemd service unit on Linux:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/xuoxod/phylax/main/scripts/install.sh | bash
+curl -sSL \
+  https://raw.githubusercontent.com/xuoxod/phylax/main/scripts/install.sh \
+  | bash
 ```
 
 ### Windows (PowerShell)
@@ -197,9 +196,10 @@ $ phylax serve --upstream http://127.0.0.1:8080 --listen 0.0.0.0:3000
 $ curl -s http://127.0.0.1:3000/_phylax/challenge
 
 # 3. Test honeypot trap behavior
-$ curl -i -X POST http://127.0.0.1:3000/auth/register?website_url=http://bot.com
+$ curl -i -X POST \
+  "http://127.0.0.1:3000/auth/register?website_url=http://bot.com"
 HTTP/1.1 403 Forbidden
-{"engine":"Phylax Sovereign Edge Defense","error":"Automated submission detected (trap tripped).","status":"BLOCKED"}
+{"engine":"Phylax Sovereign Edge Defense","status":"BLOCKED"}
 ```
 
 #### Production Configuration (`phylax.toml`)
@@ -252,14 +252,15 @@ struct RegisterRequest {
 }
 
 // 1. Issue challenge context to legitimate frontends
-async fn challenge_handler(State(state): State<AppState>) -> impl IntoResponse {
+async fn challenge_handler(
+    State(state): State<AppState>,
+) -> impl IntoResponse {
     let now_ms = current_timestamp_ms();
-    let seed_nonce = 42;
-    let ctx = state.phylax.issue_client_context(now_ms, seed_nonce);
+    let ctx = state.phylax.issue_client_context(now_ms, 42);
     Json(ctx)
 }
 
-// 2. Protect sensitive mutations with Stealth Deception (No 403 tip-offs)
+// 2. Protect mutations with Stealth Deception (No 403 tip-offs)
 async fn register_handler(
     State(state): State<AppState>,
     Json(payload): Json<RegisterRequest>,
@@ -267,14 +268,13 @@ async fn register_handler(
     let now_ms = current_timestamp_ms();
 
     // 0. Honeypot Trap: Synthetic 201 Created Black Hole
-    // Never tip off detection with 403. The bot thinks it succeeded,
-    // but the payload is dropped to the void without touching databases.
+    // Never tip off bots with 403; drop payload to the void.
     if let Some(ref decoy) = payload.website_url {
         if !decoy.trim().is_empty() {
-            let trapped_fields = vec![("website_url".to_string(), decoy.clone())];
+            let fields = vec![("website_url".into(), decoy.clone())];
             let shield_req = PhylaxRequest {
                 client_ip: "198.51.100.42",
-                submitted_fields: &trapped_fields,
+                submitted_fields: &fields,
                 target_uri: Some("/api/register"),
                 http_method: Some("POST"),
                 now_ms,
@@ -312,7 +312,7 @@ async fn register_handler(
             StatusCode::CREATED,
             Json(serde_json::json!({
                 "status": "SUCCESS",
-                "message": "Human operator verified. Account created.",
+                "message": "Human operator verified.",
                 "canonical_email": canonical_email,
                 "username": payload.username
             })),
@@ -321,7 +321,7 @@ async fn register_handler(
             StatusCode::BAD_REQUEST,
             Json(serde_json::json!({
                 "status": "ERROR",
-                "message": "Unable to complete registration request. Please try again."
+                "message": "Unable to complete registration request."
             })),
         ),
     }
@@ -333,23 +333,26 @@ async fn main() {
         PhylaxPipeline::builder()
             .secret_key(b"production-hmac-master-key-seed-2026")
             .with_honeypot_fields(["website_url", "company_fax"])
-            .with_timing(1500, 600_000) // Minimum 1.5s, Maximum 10 min
-            .with_pow(12, 300_000)       // 12 bits difficulty, 5 min TTL
+            .with_timing(1500, 600_000) // Min 1.5s, Max 10 min
+            .with_pow(12, 300_000)       // 12 bits, 5 min TTL
             .with_quarantine(QuarantineConfig::default())
             .with_adaptive_pow(AdaptivePowConfig::default())
             .build(),
     );
 
-    // Spawn autonomous memory hygiene worker (sweeps expired state every 60s)
-    phylax.spawn_background_maintenance(std::time::Duration::from_secs(60));
+    // Spawn autonomous memory hygiene worker (every 60s)
+    phylax.spawn_background_maintenance(
+        std::time::Duration::from_secs(60),
+    );
 
     let app = Router::new()
         .route("/api/challenge", get(challenge_handler))
         .route("/api/register", post(register_handler))
         .with_state(AppState { phylax });
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    println!("Phylax protected edge server listening on http://0.0.0.0:3000");
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000")
+        .await
+        .unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
@@ -388,33 +391,33 @@ The following traces represent defense operations captured against live distribu
 When an automated crawler populates an invisible DOM decoy field:
 
 ```text
-[PHYLAX PERIMETER] Trapped automated submission on endpoint '/auth/register'
-  Source IP:      185.34.33.2
-  Decoy Field:    'website_url' (populated with: 'http://bot-target.xyz')
-  Infraction:     Severe (Repeat Count: 3)
-  Action:         Autonomous CIDR Quarantine Engaged -> 185.34.33.0/24 banned for 24h
-  Evaluation:     Rejected in 4.9 nanoseconds (Verdict: Deny(HoneypotTrapped))
+[PHYLAX PERIMETER] Trapped automated submission on '/auth/register'
+  Source IP:   185.34.33.2
+  Decoy Field: 'website_url' (value: 'http://bot-target.xyz')
+  Infraction:  Severe (Repeat Count: 3)
+  Action:      Autonomous CIDR Quarantine -> 185.34.33.0/24 (24h)
+  Evaluation:  Rejected in 4.9ns (Verdict: Deny(HoneypotTrapped))
 ```
 
 ### 2. Asymmetric Tarpit: Reverse Slowloris
 When a scanner trips a perimeter trap, `phylax` locks the bot's TCP socket and burns its execution pool:
 
 ```text
-[PHYLAX TARPIT] Engaging socket hostage mode for hostile client: 80.67.167.81
-  Active Slots:   12 / 256
-  Cadence:        Trickling 2 bytes every 3000ms
-  Duration:       Held hostage for 45.0 seconds
-  Result:         Client thread exhausted; Server CPU overhead: ~0.00% (async epoll)
+[PHYLAX TARPIT] Engaging socket hostage mode for 80.67.167.81
+  Active Slots: 12 / 256
+  Cadence:      Trickling 2 bytes every 3000ms
+  Duration:     Held hostage for 45.0 seconds
+  Result:       Client thread exhausted; Server CPU: ~0.00% (epoll)
 ```
 
 ### 3. Quadratic Adaptive PoW Ratcheting
 Dynamic SHA-256 micro-puzzles scale quadratic CPU friction on suspicious IP ranges:
 
 ```text
-[PHYLAX ADAPTIVE POW] Ratcheting difficulty for suspicious IP: 45.84.107.17
+[PHYLAX ADAPTIVE POW] Ratcheting difficulty for 45.84.107.17
   Baseline:       12 bits (~4,096 hashes, ~5ms on client)
   Infractions:    High-rate login failures (Hostile)
-  New Difficulty: 18 bits (~262,144 hashes, ~1.2s 100% CPU on client)
+  New Difficulty: 18 bits (~262,144 hashes, ~1.2s client CPU)
   Next Tier:      22 bits (~4,194,304 hashes, ~15s CPU lockup)
 ```
 
@@ -422,26 +425,25 @@ Dynamic SHA-256 micro-puzzles scale quadratic CPU friction on suspicious IP rang
 When a coordinated botnet probes an unmapped zero-day vulnerability across distributed residential proxies:
 
 ```text
-[PHYLAX HARVESTER] Correlating anomalous reconnaissance probe: '/wp-content/plugins/cve-2026-zero-day/shell.php'
-  Subnet 1:       185.220.101.0/24 (Hit 1 at t=0ms - Tor Exit)
-  Subnet 2:       194.26.29.0/24   (Hit 2 at t+140ms - Bulletproof ISP)
-  Subnet 3:       45.154.255.0/24  (Hit 3 at t+280ms -> 3-Subnet Correlation Threshold Reached!)
-  Action:         Autonomously Promoted to Live Decoy Trap Trie (DecoyCategory::AdminCmsProbe)
-  Subsequent:     All future probes across all IPs intercepted at Layer 0.5 in <15ns with Stealth 404!
+[PHYLAX HARVESTER] Correlating probe: '/wp-content/cve-2026/shell.php'
+  Subnet 1:   185.220.101.0/24 (Hit 1 at t=0ms   - Tor Exit)
+  Subnet 2:   194.26.29.0/24   (Hit 2 at t+140ms - Bulletproof ISP)
+  Subnet 3:   45.154.255.0/24  (Hit 3 at t+280ms - Threshold Reached!)
+  Action:     Promoted to Live Decoy Trap Trie (AdminCmsProbe)
+  Subsequent: Intercepted at Layer 0.5 in <15ns with Stealth 404!
 ```
 
 ### 5. Zero-Leak Autonomous In-Memory Maintenance
 Continuous, lock-free state pruning guarantees zero memory leakage:
 
 ```text
-[PHYLAX MAINTENANCE] Running automated in-memory hygiene cycle (t = 1789642800000 ms)
+[PHYLAX MAINTENANCE] Automated hygiene cycle (t = 1789642800000 ms)
   Quarantined Subnets Pruned: 4 expired (/24 CIDRs)
-  Decayed PoW Records Pruned: 18 records (decayed to baseline difficulty)
-  Threat Candidates Pruned:   7 expired unpromoted candidate paths
+  Decayed PoW Records Pruned: 18 records (decayed to baseline)
+  Threat Candidates Pruned:   7 expired candidate paths
   Active Quarantined Subnets: 2 subnets
   Active Tracked PoW IPs:     5 IPs
-  Active Threat Candidates:   1 candidate
-  Hygiene Latency:            < 15 microseconds (Zero request locks)
+  Hygiene Latency:            < 15 microseconds (Zero locks)
 ```
 
 ### 6. Optional Collaborative Threat Intelligence (AbuseIPDB v2)
@@ -453,7 +455,7 @@ When `abuse-reporting` is enabled, honeypot intrusions are asynchronously dispat
   Reported IP:     185.100.87.174
   Categories:      10 (Web Spam), 21 (Web App Attack)
   Confidence:      100% (Confirmed malicious autonomous actor)
-  Cooldown:        Sliding window active (Deduplicated for 900 seconds)
+  Cooldown:        Sliding window active (Deduplicated for 900s)
 ```
 
 ### 7. Sovereign Bot Guard & User-Agent Interception (Layer 14)
@@ -465,7 +467,7 @@ Zero-allocation sub-microsecond classification engine deflecting aggressive AI m
   Target Path:    /
   User-Agent:     Claude-SearchBot/1.0
   Classification: BotCategory::AiScraper (Claude-SearchBot)
-  Action:         Deflected with HTTP 403 Forbidden (RFC 9309 compliance)
+  Action:         Deflected with HTTP 403 Forbidden (RFC 9309)
 ```
 
 ---
@@ -479,26 +481,26 @@ Zero-allocation sub-microsecond classification engine deflecting aggressive AI m
 <script src="/static/phylax.js"></script>
 
 <form id="auth-form" method="POST" action="/api/register">
-    <input type="text" name="username" placeholder="Username" required />
-    <input type="email" name="email" placeholder="Email" required />
-    <input type="password" name="password" placeholder="Password" required />
-    
-    <!-- Decoy fields are injected invisibly by Phylax -->
-    <button type="submit">Create Account</button>
+  <input type="text" name="username" placeholder="Username" required />
+  <input type="email" name="email" placeholder="Email" required />
+  <input type="password" name="password" placeholder="Password" required />
+
+  <!-- Decoy fields are injected invisibly by Phylax -->
+  <button type="submit">Create Account</button>
 </form>
 
 <script>
-    // Automatically fetches /api/challenge and solves PoW nonces in the background
-    Phylax.fetchChallenge('/api/challenge');
+  // Fetches /api/challenge and solves PoW nonces in the background
+  Phylax.fetchChallenge('/api/challenge');
 
-    document.getElementById('auth-form').addEventListener('submit', function (e) {
-        // Enriches payload with timing token and solved PoW nonce before submission
-        const payload = Phylax.enrichPayload({
-            username: this.username.value,
-            email: this.email.value,
-            password: this.password.value,
-        });
+  document.getElementById('auth-form').addEventListener('submit', function (e) {
+    // Enriches payload with timing token and solved PoW nonce
+    const payload = Phylax.enrichPayload({
+      username: this.username.value,
+      email: this.email.value,
+      password: this.password.value,
     });
+  });
 </script>
 ```
 
@@ -563,7 +565,7 @@ Throughput Capacity:                 > 994,934 requests/sec/core
 ## Testing & Verification Suite
 
 ```bash
-# Execute full unit, integration, and deception test suite (84 tests)
+# Execute full unit, integration, and adversarial test suite (122 tests)
 $ cargo test --all-targets --all-features
 
 # Verify strict clippy compliance
