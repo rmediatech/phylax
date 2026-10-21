@@ -223,15 +223,15 @@ mod tests {
             max_tracked_subnets: 100,
         });
 
-        aq.record_and_check("192.168.1.50", 1000);
+        aq.record_and_check("192.0.2.50", 1000);
         assert_eq!(aq.active_bans_count(), 1);
-        assert!(aq.is_quarantined("192.168.1.99", 1500));
+        assert!(aq.is_quarantined("192.0.2.99", 1500));
 
         // At t = 2001ms, ban has expired (1000 + 1000 = 2000)
         let pruned = aq.purge_expired(2001);
         assert_eq!(pruned, 1);
         assert_eq!(aq.active_bans_count(), 0);
-        assert!(!aq.is_quarantined("192.168.1.99", 2001));
+        assert!(!aq.is_quarantined("192.0.2.99", 2001));
     }
 
     #[test]

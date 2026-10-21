@@ -276,8 +276,8 @@ fn test_layer7_credential_guard_bloom_speed_and_account_lockout() {
 fn test_layer8_session_sentinel_haversine_and_subnet_masking() {
     let sentinel = SessionSentinel::new(b"secret_unit_test", SessionSentinelConfig::default());
     assert_eq!(
-        sentinel.extract_subnet_prefix("192.168.1.55"),
-        "192.168.1.0"
+        sentinel.extract_subnet_prefix("192.0.2.55"),
+        "192.0.2.0"
     );
 
     let session_id = "test_sess_01";

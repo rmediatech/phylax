@@ -4,6 +4,16 @@ All notable changes, defense layer releases, and architectural milestones for **
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.5] - 2026-10-21 (Radical OJP Modularity, ANSI/Formula Sanitization & Zero-Panic Hardening)
+
+### 🌟 Added & Fortified
+* **Radical One-Job-Principle (OJP) Modular Decomposition**:
+  - Decomposed monolithic engines (`pipeline`, `bot_guard`, `threat_harvester`, `decoy_uri`, `abuse_reporting`, and the `phylax` CLI binary) into focused, single-responsibility modules ($\le 300$ lines per file) with zero breaking changes to the public library API.
+* **Universal ANSI & Formula Injection Sanitization (`src/sanitize.rs`)**:
+  - Added sub-microsecond ANSI CSI/OSC escape sequence scrubbing and spreadsheet formula injection neutralization across all forensic abuse dossiers, CSV/Markdown exports, and telemetry streams.
+* **RFC 5737 Test Fixture Sanitization (`SOVEREIGN-SANITIZE-01`)**:
+  - Standardized all test fixtures onto RFC 5737 documentation CIDR blocks (`192.0.2.0/24`).
+
 ## [0.2.4] - 2026-10-02 (Commercial Cloud, Datacenter & Mass-Scanner Threat Weighting)
 
 ### 🌟 Added & Fortified

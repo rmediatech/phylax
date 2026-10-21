@@ -122,8 +122,8 @@ fn test_autonomous_quarantine_auto_subnets_ipv4_and_ipv6() {
         Some("185.34.33.0/24".to_string())
     );
     assert_eq!(
-        AutonomousQuarantine::derive_quarantine_cidr("192.168.1.55"),
-        Some("192.168.1.0/24".to_string())
+        AutonomousQuarantine::derive_quarantine_cidr("192.0.2.55"),
+        Some("192.0.2.0/24".to_string())
     );
     assert_eq!(
         AutonomousQuarantine::derive_quarantine_cidr("2001:db8:85a3::8a2e:370:7334"),

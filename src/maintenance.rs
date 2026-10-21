@@ -126,7 +126,7 @@ mod tests {
         });
 
         // Set up initial state at t=1000
-        quarantine.record_and_check("192.168.1.50", 1000);
+        quarantine.record_and_check("192.0.2.50", 1000);
         adaptive_pow.record_infraction("10.0.0.1", InfractionSeverity::Suspicious, 1000);
         adaptive_pow.record_infraction("10.0.0.2", InfractionSeverity::Severe, 1000);
 

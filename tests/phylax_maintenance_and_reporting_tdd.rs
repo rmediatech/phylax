@@ -95,9 +95,9 @@ async fn test_pipeline_spawn_background_maintenance_cleans_autonomously() {
     // Trigger quarantine infraction
     pipeline
         .quarantine()
-        .record_and_check("192.168.1.100", now_ms);
+        .record_and_check("192.0.2.100", now_ms);
     pipeline.adaptive_pow().record_infraction(
-        "192.168.1.100",
+        "192.0.2.100",
         InfractionSeverity::Suspicious,
         now_ms,
     );
