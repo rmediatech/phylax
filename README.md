@@ -36,6 +36,9 @@ When critical C-runtime vulnerabilities like **`CVE-2026-109618` and `CVE-2026-1
 2. **Tandem Wire-to-RAM Interception (`propylea` + `phylax`):** When automated exploit waves sweep the internet for `/include/config.php`, `/admin/config.php`, or `/phpinfo.php` using spoofed `Chrome` User-Agents, **[`propylea`](https://github.com/xuoxod/propylea)** unmasks the missing RFC 8701 TLS GREASE extensions during the `ClientHello` handshake (`[PROPYLEA-TLS-SPOOF]`), and **`phylax`'s Layer 0/1 Quarantine & Decoy URI Tarpit** blackholes any survivor in `< 15ns` (or holds the scanner's socket hostage at `1 byte / 10s`) before a single byte touches application logic.
 3. **Instant Shield for Existing Legacy Apps:** Even if you currently maintain an upstream PHP, WordPress, Python, or Node.js service while migrating away from legacy runtimes, running the **[Standalone `phylax-waf` Daemon](#1-standalone-waf-reverse-proxy-zero-rust-required)** (or pairing `propylea` + `phylax` at the edge) neutralizes automated RCE probes and credential stuffers in sub-microseconds without modifying upstream code.
 
+> [!TIP]
+> **Already Running `phylax` or `propylea`? Sleep Easy—Zero Action Required:** If you already downloaded and deployed `phylax` and/or [`propylea`](https://github.com/xuoxod/propylea), you are already covered out of the box—**no emergency hotfixes, no signature updates, and no weekend maintenance windows needed**. Your existing binary's built-in decoy traps and TLS/radix filters have been catching and dropping these scanner waves automatically from packet one.
+
 📖 **Read the Full Battlefield Report:** [**Chapter 3: Production Case Study**](docs/03_CASE_STUDY_MATRIX_PRODUCTION.md)
 
 ---
