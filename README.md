@@ -16,19 +16,27 @@
 
 ---
 
-## 🛡️ Proven in Production: Real-Time WebRTC & Mesh Engine
+## 🛡️ Proven in Production: Real-Time WebRTC SFU & Sovereign Edge
 
-> **Platform Showcase:** [`matrix.rmediatech.com`](https://matrix.rmediatech.com)  
-> **Mission:** Real-time decentralized video, spatial audio, in-room whisper mesh, and multi-party WebSocket collaboration.
+> **Platform Showcase:** [`rmediatech.com`](https://rmediatech.com) & `thoth.rmediatech.com`  
+> **Mission:** Commercial control plane, multi-tenant WebRTC SFU media signaling, spatial audio, and encrypted real-time DataChannels.
 
-`phylax` serves as the native, in-process edge defense shield for **[`matrix.rmediatech.com`](https://matrix.rmediatech.com)**, protecting high-throughput WebRTC SFU media pipelines and public authentication endpoints under continuous adversarial load:
+`phylax` serves as the native, in-process application shield for **[`rmediatech.com`](https://rmediatech.com)** — working hand-in-hand with **[`propylea`](https://github.com/xuoxod/propylea)** at the outer TLS/L7 perimeter to protect high-throughput WebRTC SFU media pipelines and public authentication endpoints under continuous adversarial load:
 
 * **Zero Latency Budget Compromise:** Executes in `<950ns` in memory, adding `0.00ms` of network jitter to WebSockets and WebRTC media streams.
 * **Stealth Deception & Silent Neutralization:** Replaces alerting `403 Forbidden` errors with **Synthetic 201 Created Black Holes** on registration, generic 401s on login, and stealth 404 perimeter ghosting.
 * **Coturn Relay Bandwidth Guard (`TurnGuard`):** Eliminates WebRTC relay bandwidth theft using cryptographic session-bound token verification.
 * **Zero Infrastructure Overhead:** Embedded directly inside the Axum application process—zero Redis clusters, zero Fail2ban daemons, zero external cloud proxies.
 
-📖 **Read the Full Battlefield Report:** [**Chapter 3: Matrix Production Case Study**](docs/03_CASE_STUDY_MATRIX_PRODUCTION.md)
+### 🤝 Intertwined Defense: `phylax` + `propylea` vs. Modern RCE Waves (`CVE-2026-109618` / `CVE-2026-109619`)
+
+When critical C-runtime vulnerabilities like **`CVE-2026-109618` and `CVE-2026-109619` ("PHP2Shell", CVSS 9.2)** trigger emergency FBI/CISA advisories—exposing legacy web stacks to unauthenticated Remote Code Execution via `longjmp()` uninitialized memory and use-after-free flaws—our ground-floor sovereign architecture is protected from the very first packet:
+
+1. **Structural Immunity by Design:** Services built natively on Rust and `phylax` enforce strict compile-time ownership and deterministic RAII drop semantics—zero C `longjmp()` stack unwinding, zero dangling pointers, and zero dynamic script interpreters (`eval`/`include`) in the request path.
+2. **Tandem Wire-to-RAM Interception (`propylea` + `phylax`):** When automated exploit waves sweep the internet for `/include/config.php`, `/admin/config.php`, or `/phpinfo.php` using spoofed `Chrome` User-Agents, **[`propylea`](https://github.com/xuoxod/propylea)** unmasks the missing RFC 8701 TLS GREASE extensions during the `ClientHello` handshake (`[PROPYLEA-TLS-SPOOF]`), and **`phylax`'s Layer 0/1 Quarantine & Decoy URI Tarpit** blackholes any survivor in `< 15ns` (or holds the scanner's socket hostage at `1 byte / 10s`) before a single byte touches application logic.
+3. **Instant Shield for Existing Legacy Apps:** Even if you currently maintain an upstream PHP, WordPress, Python, or Node.js service while migrating away from legacy runtimes, running the **[Standalone `phylax-waf` Daemon](#1-standalone-waf-reverse-proxy-zero-rust-required)** (or pairing `propylea` + `phylax` at the edge) neutralizes automated RCE probes and credential stuffers in sub-microseconds without modifying upstream code.
+
+📖 **Read the Full Battlefield Report:** [**Chapter 3: Production Case Study**](docs/03_CASE_STUDY_MATRIX_PRODUCTION.md)
 
 ---
 
