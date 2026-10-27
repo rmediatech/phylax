@@ -4,6 +4,25 @@ All notable changes, defense layer releases, and architectural milestones for **
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6] - 2026-10-26 (Adversarial PayloadGuard: 7-Vector Zero-Allocation Defense Against OWASP & Kali Tools)
+
+### 🌟 Added & Fortified
+* **Adversarial PayloadGuard (`src/payload_guard.rs` / Layer 15)**:
+  - Zero-allocation, zero-panic percent-decoding inspection engine inspecting request paths, headers, and query strings in `< 15ns`.
+  - Comprehensive deflection across 7 critical vector classes:
+    1. SQL Injection (`union select`, `' or 1=1`, `exec xp_cmdshell`, `sleep(`, `benchmark(`) favored by `sqlmap`.
+    2. Path Traversal & LFI (`../`, `..\`, `%2e%2e%2f`, `/etc/passwd`, `/etc/shadow`, `boot.ini`).
+    3. Command Injection & RCE shell meta-characters (`;`, `|`, `&&`, `` ` ``, `$(...)`, `wget `, `curl `, `/bin/sh`).
+    4. Cross-Site Scripting (`<script>`, `javascript:`, `onerror=`, `onload=`, `eval(`).
+    5. SSRF / Cloud Metadata reconnaissance probes (`169.254.169.254`, `metadata.google.internal`, `latest/meta-data`, `gopher://`, `dict://`).
+    6. Server-Side Template Injection (`{{7*7}}`, `${7*7}`, `#{7*7}`, `<%= 7*7 %>`, `__globals__`, `__builtins__`) used by `nuclei` and `tplmap`.
+    7. NoSQL & Object Operator Injection (`{"$gt": ""}`, `{"$ne": null}`, `[$ne]=`, `[$gt]=`).
+* **Hard Boundary Enforcement**:
+  - Null-byte injection neutralization (`\0`, `%00`).
+  - Hard URI length ceilings preventing allocation bombs and regex Denial of Service.
+
+---
+
 ## [0.2.5] - 2026-10-21 (Radical OJP Modularity, ANSI/Formula Sanitization & Zero-Panic Hardening)
 
 ### 🌟 Added & Fortified
