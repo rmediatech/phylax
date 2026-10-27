@@ -27,6 +27,7 @@ pub mod dist_guard;
 pub mod email_guard;
 pub mod honeypot;
 pub mod maintenance;
+pub mod payload_guard;
 pub mod pipeline;
 pub mod pow;
 pub mod sanitize;
@@ -56,6 +57,7 @@ pub use dist_guard::{DistGuard, DistGuardConfig, DistVerdict};
 pub use email_guard::{EmailPatternGuard, EmailVerdict};
 pub use honeypot::{HoneypotValidator, HoneypotVerdict};
 pub use maintenance::{MaintenanceManager, MaintenanceReport};
+pub use payload_guard::{AdversarialPayload, PayloadGuard};
 pub use pipeline::{
     DenialReason, PhylaxClientContext, PhylaxPipeline, PhylaxPipelineBuilder, PhylaxRequest,
     PhylaxVerdict, ShieldClientContext, ShieldPipeline, ShieldPipelineBuilder, ShieldRequest,

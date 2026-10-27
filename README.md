@@ -481,6 +481,25 @@ Zero-allocation sub-microsecond classification engine deflecting aggressive AI m
   Action:         Deflected with HTTP 403 Forbidden (RFC 9309)
 ```
 
+### 8. Adversarial Exploit & Kali Arsenal Deflection (`PayloadGuard` / Layer 15)
+Zero-allocation, zero-copy percent-decoding inspection engine inspecting request paths, headers, and query strings against modern automated penetration tools and exploit vectors:
+
+* **SQL Injection (SQLi)**: Deflects union-based, boolean-blind, and time-based injection attacks (`union select`, `' or 1=1`, `exec xp_cmdshell`, `sleep(`, `benchmark(`) favored by `sqlmap`.
+* **Path Traversal & Local File Inclusion (LFI)**: Blocks directory climbing vectors (`../`, `..\`, `%2e%2e%2f`, `%252e%252e%252f`) and sensitive system probes (`/etc/passwd`, `/etc/shadow`, `boot.ini`).
+* **Command Injection / RCE**: Intercepts shell meta-characters and command chains (`;`, `|`, `&&`, `` ` ``, `$(...)`, `wget `, `curl `, `/bin/sh`).
+* **Cross-Site Scripting (XSS)**: Neutralizes script payloads (`<script>`, `javascript:`, `onerror=`, `onload=`, `eval(`).
+* **Null-Byte Poisoning**: Drops `%00` and `\0` string termination attacks before they reach low-level system APIs.
+* **URI Length & Allocation Bombs**: Hard boundary protection preventing buffer exhaustion and regex Denial of Service.
+
+```rust
+use phylax::PayloadGuard;
+
+// Sub-microsecond edge inspection across paths and query strings
+if let Err(threat) = PayloadGuard::inspect(req.uri().path(), req.uri().query().unwrap_or("")) {
+    return (StatusCode::FORBIDDEN, format!("Access Denied: Adversarial Payload ({}) detected.\n", threat.category_name())).into_response();
+}
+```
+
 ---
 
 ## Client-Side Script: `client/phylax.js`
