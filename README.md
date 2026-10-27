@@ -96,7 +96,7 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 | **Index** | [**Master Navigation Map**](docs/INDEX.md) | Full architectural map and Optimal Journey Path index. |
 | **01** | [**Architecture & Cost Hierarchy**](docs/01_ARCHITECTURE_AND_COST_HIERARCHY.md) | 14 defensive layers, nanosecond Radix CIDR, Bloom filters, fail-fast mechanics. |
 | **02** | [**Stealth Deception & Active Defense**](docs/02_STEALTH_DECEPTION_AND_ACTIVE_DEFENSE.md) | Silent neutralization vs 403, Deceptive Black Holes, perimeter ghosting. |
-| **03** | [**Case Study: Matrix WebRTC Mesh**](docs/03_CASE_STUDY_MATRIX_PRODUCTION.md) | Real-world battlefield deployment protecting [`matrix.rmediatech.com`](https://matrix.rmediatech.com). |
+| **03** | [**Case Study: Matrix WebRTC Mesh**](docs/03_CASE_STUDY_MATRIX_PRODUCTION.md) | Real-world battlefield deployment protecting real-time WebRTC mesh infrastructure. |
 | **04** | [**Integration & Framework Guide**](docs/04_INTEGRATION_AND_FRAMEWORK_GUIDE.md) | Axum, Actix-web, Tower, standalone reverse proxy, frontend `phylax.js`. |
 | **05** | [**Autonomous Abuse Intelligence**](docs/05_AUTONOMOUS_ABUSE_INTELLIGENCE.md) | Optional background AbuseIPDB v2 reporting, sliding-window rate governors. |
 | **06** | [**Production Deployment & Runbook**](docs/06_PRODUCTION_DEPLOYMENT_AND_RUNBOOK.md) | Systemd units, Caddyfile reverse proxy recipes, hardware sizing, epilogue. |

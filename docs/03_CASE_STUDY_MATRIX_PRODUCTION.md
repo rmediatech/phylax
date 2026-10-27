@@ -1,6 +1,6 @@
 # Chapter 3: Proven in Production — Real-Time WebRTC Media & Mesh Engine Case Study
 
-> **Platform:** [`matrix.rmediatech.com`](https://matrix.rmediatech.com)  
+> **Platform:** Matrix Sovereign WebRTC Mesh (`chat.example.com`)  
 > **Architecture:** In-Process Axum Edge Defense, Coturn Relay Shield, SQLite WAL  
 > **Previous:** [02: Stealth Deception & Active Defense](02_STEALTH_DECEPTION_AND_ACTIVE_DEFENSE.md) | **Next:** [04: Integration & Framework Guide](04_INTEGRATION_AND_FRAMEWORK_GUIDE.md)
 
@@ -10,13 +10,13 @@
 
 When deploying sovereign, high-throughput web applications, traditional security advice typically dictates placing the application behind a commercial cloud CDN or WAF (e.g. Cloudflare, AWS WAF).
 
-For **[`matrix.rmediatech.com`](https://matrix.rmediatech.com)**—a sovereign, real-time decentralized communications engine featuring WebRTC SFU mesh audio/video, ephemeral in-room spatial sync, multi-party chat, and Coturn relay media bridging—this conventional architecture was completely unacceptable:
+For **Matrix Sovereign Communications Engine** (`chat.example.com`)—a sovereign, real-time decentralized communications engine featuring WebRTC SFU mesh audio/video, ephemeral in-room spatial sync, multi-party chat, and Coturn relay media bridging—this conventional architecture was completely unacceptable:
 
 - **Latency Budget:** Real-time audio and video negotiation require sub-millisecond local routing. Third-party cloud WAF proxies add **20ms to 75ms of network jitter**, destroying real-time audio synchronization.
 - **Privacy & Sovereignty:** Matrix operates on strict zero-telemetry and end-to-end privacy guarantees. Routing user traffic, subscriber IP addresses, and WebSocket sessions through commercial multi-tenant proxies violates that covenant.
 - **Cost & Complexity:** Operating auxiliary WAF daemons, Redis clusters, or external security sidecars creates operational fragility and infrastructure debt.
 
-[`matrix.rmediatech.com`](https://matrix.rmediatech.com) chose **`phylax`** as its native, embedded, in-process edge defense engine.
+The Matrix platform chose **`phylax`** as its native, embedded, in-process edge defense engine.
 
 ---
 
@@ -128,7 +128,7 @@ When a honeypot trap is tripped, `phylax` autonomously packages a forensic incid
 
 ## 4. Measurable Battlefield Metrics
 
-Under continuous production operation on [`matrix.rmediatech.com`](https://matrix.rmediatech.com):
+Under continuous production operation on Matrix (`chat.example.com`):
 
 | Metric | Before Phylax (Conventional Approach) | After Native Phylax Integration | Improvement |
 |---|---|---|---|
@@ -143,7 +143,7 @@ Under continuous production operation on [`matrix.rmediatech.com`](https://matri
 
 ## 5. Architectural Verdict
 
-The integration of `phylax` into [`matrix.rmediatech.com`](https://matrix.rmediatech.com) proves that **sovereign, high-concurrency web services do not need to compromise on privacy, performance, or defense.**
+The integration of `phylax` into Matrix proves that **sovereign, high-concurrency web services do not need to compromise on privacy, performance, or defense.**
 
 By moving defense into the application process and adopting active stealth deception, modern web services can achieve superior security while delivering uncompromised sub-millisecond user experiences.
 

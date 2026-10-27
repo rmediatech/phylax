@@ -19,7 +19,7 @@ flowchart TD
     end
 
     subgraph ProductionBattlefield["2. Battle-Tested Showcase"]
-        DECEPT --> MATRIX["03_CASE_STUDY_MATRIX_PRODUCTION.md<br/>• Real-World Showcase: matrix.rmediatech.com<br/>• Dual-Shield Edge: Propylea L7 + In-Process Phylax<br/>• Real Crawler & Exploit Spray Telemetry"]
+        DECEPT --> MATRIX["03_CASE_STUDY_MATRIX_PRODUCTION.md<br/>• Real-World Showcase: Matrix WebRTC Mesh<br/>• Dual-Shield Edge: Propylea L7 + In-Process Phylax<br/>• Real Crawler & Exploit Spray Telemetry"]
     end
 
     subgraph IntegrationAndOps["3. Implementation & Operations"]
@@ -37,7 +37,7 @@ flowchart TD
 |---|---|---|---|
 | **01** | [**Architecture & Cost Hierarchy**](01_ARCHITECTURE_AND_COST_HIERARCHY.md) | 13 defensive layers + Layer 0.5 decoy honeyroutes, Layer 13 emerging threat harvester, nanosecond Radix CIDR trees, Bloom filters, fail-fast cost hierarchy. | Architects, Security Engineers |
 | **02** | [**Stealth Deception & Active Defense**](02_STEALTH_DECEPTION_AND_ACTIVE_DEFENSE.md) | Why 403 Forbidden leaks intel, Deceptive Black Holes (`201 Created`), login timing equalization, reverse Slowloris socket-hostage mode, quadratic PoW ratcheting. | Security Researchers, App Developers |
-| **03** | [**Case Study: Matrix Real-Time WebRTC Mesh**](03_CASE_STUDY_MATRIX_PRODUCTION.md) | Battle-tested production deployment: [`matrix.rmediatech.com`](https://matrix.rmediatech.com). Dual-Shield edge topology with `propylea`, zero-latency WebRTC `TurnGuard`, real-world crawler telemetry. | Engineering Leads, CTOs |
+| **03** | [**Case Study: Matrix Real-Time WebRTC Mesh**](03_CASE_STUDY_MATRIX_PRODUCTION.md) | Battle-tested production deployment: Matrix WebRTC Mesh. Dual-Shield edge topology with `propylea`, zero-latency WebRTC `TurnGuard`, real-world crawler telemetry. | Engineering Leads, CTOs |
 | **04** | [**Integration & Framework Guide**](04_INTEGRATION_AND_FRAMEWORK_GUIDE.md) | 3 deployment paths: In-process Axum/Actix middleware, Propylea L7 reverse proxy gateway, standalone WAF daemon; frontend `phylax.js` helper. | Full-Stack Developers, SREs |
 | **05** | [**Autonomous Abuse Intelligence**](05_AUTONOMOUS_ABUSE_INTELLIGENCE.md) | Non-blocking AbuseIPDB v2 reporting, multi-subnet forensic dossiers, per-IP sliding window token governors, zero-config credential discovery. | SecOps, Incident Responders |
 | **06** | [**Production Deployment & Runbook**](06_PRODUCTION_DEPLOYMENT_AND_RUNBOOK.md) | Systemd units, distro-agnostic service script, autonomous 60s memory hygiene pass (`malloc_trim`), live traffic tuning, production epilogue. | Sysadmins, DevOps |
