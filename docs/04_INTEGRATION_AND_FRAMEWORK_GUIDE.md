@@ -50,7 +50,7 @@ By default, `phylax` compiles with **zero external network dependencies** and ze
 
 ```toml
 [dependencies]
-phylax = { git = "https://github.com/xuoxod/phylax.git" }
+phylax = { git = "https://github.com/rmediatech/phylax.git" }
 ```
 
 *(Optional: If you have an AbuseIPDB API key and want automated reporting, use `features = ["abuse-reporting"]`)*.
@@ -254,7 +254,7 @@ If you already have an application running (e.g. Node.js on `http://127.0.0.1:80
 ### Option 1: Run via Cargo
 ```bash
 # 1. Install Phylax CLI
-cargo install --git https://github.com/xuoxod/phylax.git --features cli
+cargo install --git https://github.com/rmediatech/phylax.git --features cli
 
 # 2. Start the proxy in front of your service
 phylax serve --upstream http://127.0.0.1:8080 --listen 0.0.0.0:3000
@@ -264,7 +264,7 @@ phylax serve --upstream http://127.0.0.1:8080 --listen 0.0.0.0:3000
 ```bash
 docker run -d --name phylax-shield \
   -p 80:3000 \
-  ghcr.io/xuoxod/phylax:latest \
+  ghcr.io/rmediatech/phylax:latest \
   serve --upstream http://host.docker.internal:8080 --listen 0.0.0.0:3000
 ```
 
@@ -274,7 +274,7 @@ Now route your public traffic through port `3000` (or port `80`). Phylax will au
 
 ## 4. Path C: Propylea Sovereign L7 Reverse Proxy (Multi-Domain Edge)
 
-For multi-domain edge deployments, API gateways, or replacing Caddy / Nginx, deploy **[Propylea](https://github.com/xuoxod/propylea)**—the sovereign pure-Rust L7 reverse proxy powered by `hyper 1.4`, `tokio-rustls 0.26`, and native `phylax` active defense:
+For multi-domain edge deployments, API gateways, or replacing Caddy / Nginx, deploy **[Propylea](https://github.com/rmediatech/propylea)**—the sovereign pure-Rust L7 reverse proxy powered by `hyper 1.4`, `tokio-rustls 0.26`, and native `phylax` active defense:
 
 ```toml
 # /etc/propylea/propylea.toml

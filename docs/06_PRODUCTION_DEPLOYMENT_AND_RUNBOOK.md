@@ -111,7 +111,7 @@ If you prefer to configure systemd manually without the automated script, create
 Description=Phylax Sovereign Edge Defense Proxy Daemon
 After=network.target network-online.target
 Wants=network-online.target
-Documentation=https://github.com/xuoxod/phylax
+Documentation=https://github.com/rmediatech/phylax
 
 [Service]
 Type=simple
@@ -154,7 +154,7 @@ Phylax runs natively on **Windows Server 2019/2022/2025** and **Windows 10/11**,
 #### 1. Automated Installation via PowerShell
 ```powershell
 # Installs phylax.exe, sample phylax.toml, and analytics tools into C:\Program Files\Phylax
-irm https://raw.githubusercontent.com/xuoxod/phylax/main/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/rmediatech/phylax/main/scripts/install.ps1 | iex
 ```
 
 #### 2. Configure Windows Defender Firewall Port

@@ -153,7 +153,7 @@ generate_systemd_unit() {
 Description=Phylax Sovereign Edge Defense & Reverse Proxy WAF
 After=network.target network-online.target
 Wants=network-online.target
-Documentation=https://github.com/xuoxod/phylax
+Documentation=https://github.com/rmediatech/phylax
 
 [Service]
 Type=simple
@@ -189,7 +189,7 @@ generate_systemd_user_unit() {
 [Unit]
 Description=Phylax Sovereign Edge Defense & Reverse Proxy WAF
 After=network.target
-Documentation=https://github.com/xuoxod/phylax
+Documentation=https://github.com/rmediatech/phylax
 
 [Service]
 Type=simple

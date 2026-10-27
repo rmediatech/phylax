@@ -68,12 +68,12 @@ else
         esac
 
         if [ -n "${TARGET}" ]; then
-            TAG=$(curl -sSLI -o /dev/null -w '%{url_effective}' https://github.com/xuoxod/phylax/releases/latest 2>/dev/null | awk -F'/' '{print $NF}')
+            TAG=$(curl -sSLI -o /dev/null -w '%{url_effective}' https://github.com/rmediatech/phylax/releases/latest 2>/dev/null | awk -F'/' '{print $NF}')
             TAG="${TAG:-v0.2.1}"
-            RELEASE_URL="https://github.com/xuoxod/phylax/releases/download/${TAG}/phylax-${TAG}-${TARGET}.tar.gz"
+            RELEASE_URL="https://github.com/rmediatech/phylax/releases/download/${TAG}/phylax-${TAG}-${TARGET}.tar.gz"
             TMP_DIR="$(mktemp -d)"
             if ! curl -sSLf "${RELEASE_URL}" -o "${TMP_DIR}/phylax.tar.gz" 2>/dev/null; then
-                RELEASE_URL="https://github.com/xuoxod/phylax/releases/download/${TAG}/phylax-${TARGET}.tar.gz"
+                RELEASE_URL="https://github.com/rmediatech/phylax/releases/download/${TAG}/phylax-${TARGET}.tar.gz"
                 curl -sSLf "${RELEASE_URL}" -o "${TMP_DIR}/phylax.tar.gz" 2>/dev/null || true
             fi
 
@@ -97,7 +97,7 @@ else
             exit 1
         fi
         echo -e "📦 Building and installing via Cargo from GitHub..."
-        cargo install --git https://github.com/xuoxod/phylax.git --features cli --root "${BIN_DIR}/.."
+        cargo install --git https://github.com/rmediatech/phylax.git --features cli --root "${BIN_DIR}/.."
         if [ -f "${BIN_DIR}/../bin/phylax" ]; then
             mv -f "${BIN_DIR}/../bin/phylax" "${BIN_DIR}/phylax"
         fi
@@ -127,7 +127,7 @@ if [ -d "${REPO_ROOT}/tools/analytics" ]; then
     fi
 else
     echo -e "🛠️  Downloading Sovereign Analytics & Observability Suite from GitHub..."
-    RAW_BASE="https://raw.githubusercontent.com/xuoxod/phylax/main/tools/analytics"
+    RAW_BASE="https://raw.githubusercontent.com/rmediatech/phylax/main/tools/analytics"
     curl -sSLf "${RAW_BASE}/phylax-analyze-traffic.sh" -o "${BIN_DIR}/phylax-analyze-traffic" 2>/dev/null && \
         chmod +x "${BIN_DIR}/phylax-analyze-traffic" && \
         echo -e "${GREEN}   Installed:${NC} ${BIN_DIR}/phylax-analyze-traffic" || true

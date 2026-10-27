@@ -22,7 +22,7 @@ To activate autonomous abuse reporting, enable the feature in `Cargo.toml`:
 
 ```toml
 [dependencies]
-phylax = { git = "https://github.com/xuoxod/phylax.git", features = ["abuse-reporting"] }
+phylax = { git = "https://github.com/rmediatech/phylax.git", features = ["abuse-reporting"] }
 ```
 
 In your pipeline initialization:

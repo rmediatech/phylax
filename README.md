@@ -1,11 +1,11 @@
 # phylax (φύλαξ)
 
 <p align="center">
-  <a href="https://github.com/xuoxod/phylax/actions/workflows/ci.yml"><img src="https://github.com/xuoxod/phylax/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/rmediatech/phylax/actions/workflows/ci.yml"><img src="https://github.com/rmediatech/phylax/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <img src="https://img.shields.io/badge/Language-Pure%20Rust%202021-orange.svg" alt="Pure Rust" />
   <img src="https://img.shields.io/badge/TDD%20Tests-122%2F122%20Passed-brightgreen.svg" alt="Tests" />
   <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
-  <a href="https://github.com/xuoxod/phylax/releases/tag/v0.2.6"><img src="https://img.shields.io/badge/Release-v0.2.6-green.svg" alt="Release" /></a>
+  <a href="https://github.com/rmediatech/phylax/releases/tag/v0.2.6"><img src="https://img.shields.io/badge/Release-v0.2.6-green.svg" alt="Release" /></a>
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
 </p>
 
@@ -21,7 +21,7 @@
 > **Platform Showcase:** [`rmediatech.com`](https://rmediatech.com)  
 > **Mission:** Commercial control plane, multi-tenant WebRTC SFU media signaling, spatial audio, and encrypted real-time DataChannels.
 
-`phylax` serves as the native, in-process application shield for **[`rmediatech.com`](https://rmediatech.com)** — working hand-in-hand with **[`propylea`](https://github.com/xuoxod/propylea)** at the outer TLS/L7 perimeter to protect high-throughput WebRTC SFU media pipelines and public authentication endpoints under continuous adversarial load:
+`phylax` serves as the native, in-process application shield for **[`rmediatech.com`](https://rmediatech.com)** — working hand-in-hand with **[`propylea`](https://github.com/rmediatech/propylea)** at the outer TLS/L7 perimeter to protect high-throughput WebRTC SFU media pipelines and public authentication endpoints under continuous adversarial load:
 
 * **Zero Latency Budget Compromise:** Executes in `<950ns` in memory, adding `0.00ms` of network jitter to WebSockets and WebRTC media streams.
 * **Stealth Deception & Silent Neutralization:** Replaces alerting `403 Forbidden` errors with **Synthetic 201 Created Black Holes** on registration, generic 401s on login, and stealth 404 perimeter ghosting.
@@ -33,11 +33,11 @@
 When critical C-runtime vulnerabilities like **`CVE-2026-109618` and `CVE-2026-109619` ("PHP2Shell", CVSS 9.2)** trigger emergency FBI/CISA advisories—exposing legacy web stacks to unauthenticated Remote Code Execution via `longjmp()` uninitialized memory and use-after-free flaws—our ground-floor sovereign architecture is protected from the very first packet:
 
 1. **Structural Immunity by Design:** Services built natively on Rust and `phylax` enforce strict compile-time ownership and deterministic RAII drop semantics—zero C `longjmp()` stack unwinding, zero dangling pointers, and zero dynamic script interpreters (`eval`/`include`) in the request path.
-2. **Tandem Wire-to-RAM Interception (`propylea` + `phylax`):** When automated exploit waves sweep the internet for `/include/config.php`, `/admin/config.php`, or `/phpinfo.php` using spoofed `Chrome` User-Agents, **[`propylea`](https://github.com/xuoxod/propylea)** unmasks the missing RFC 8701 TLS GREASE extensions during the `ClientHello` handshake (`[PROPYLEA-TLS-SPOOF]`), and **`phylax`'s Layer 0/1 Quarantine & Decoy URI Tarpit** blackholes any survivor in `< 15ns` (or holds the scanner's socket hostage at `1 byte / 10s`) before a single byte touches application logic.
+2. **Tandem Wire-to-RAM Interception (`propylea` + `phylax`):** When automated exploit waves sweep the internet for `/include/config.php`, `/admin/config.php`, or `/phpinfo.php` using spoofed `Chrome` User-Agents, **[`propylea`](https://github.com/rmediatech/propylea)** unmasks the missing RFC 8701 TLS GREASE extensions during the `ClientHello` handshake (`[PROPYLEA-TLS-SPOOF]`), and **`phylax`'s Layer 0/1 Quarantine & Decoy URI Tarpit** blackholes any survivor in `< 15ns` (or holds the scanner's socket hostage at `1 byte / 10s`) before a single byte touches application logic.
 3. **Instant Shield for Existing Legacy Apps:** Even if you currently maintain an upstream PHP, WordPress, Python, or Node.js service while migrating away from legacy runtimes, running the **[Standalone `phylax-waf` Daemon](#1-standalone-waf-reverse-proxy-zero-rust-required)** (or pairing `propylea` + `phylax` at the edge) neutralizes automated RCE probes and credential stuffers in sub-microseconds without modifying upstream code.
 
 > [!TIP]
-> **Already Running `phylax` or `propylea`? Sleep Easy—Zero Action Required:** If you already downloaded and deployed `phylax` and/or [`propylea`](https://github.com/xuoxod/propylea), you are already covered out of the box—**no emergency hotfixes, no signature updates, and no weekend maintenance windows needed**. Your existing binary's built-in decoy traps and TLS/radix filters have been catching and dropping these scanner waves automatically from packet one.
+> **Already Running `phylax` or `propylea`? Sleep Easy—Zero Action Required:** If you already downloaded and deployed `phylax` and/or [`propylea`](https://github.com/rmediatech/propylea), you are already covered out of the box—**no emergency hotfixes, no signature updates, and no weekend maintenance windows needed**. Your existing binary's built-in decoy traps and TLS/radix filters have been catching and dropping these scanner waves automatically from packet one.
 
 📖 **Read the Full Battlefield Report:** [**Chapter 3: Production Case Study**](docs/03_CASE_STUDY_MATRIX_PRODUCTION.md)
 
@@ -107,7 +107,7 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 
 | Mode | Target User | Mechanism | Setup Time |
 |---|---|---|---|
-| **[Propylea Sovereign L7 Proxy](https://github.com/xuoxod/propylea)** | Multi-domain edge, Caddy/Nginx replacement | Sovereign pure-Rust reverse proxy, SNI TLS multiplexer & memory governor | `60 seconds` |
+| **[Propylea Sovereign L7 Proxy](https://github.com/rmediatech/propylea)** | Multi-domain edge, Caddy/Nginx replacement | Sovereign pure-Rust reverse proxy, SNI TLS multiplexer & memory governor | `60 seconds` |
 | **[Standalone WAF Proxy Daemon](#1-standalone-waf-reverse-proxy-zero-rust-required)** | Node.js, Python, Go, PHP, WordPress, Ruby, Java | Sits in front of any HTTP service as a reverse proxy shield | `30 seconds` |
 | **[Native Rust Library](#2-native-rust-library-integration)** | Axum, Actix-web, Tower, Hyper | Embedded directly into your Rust web service binary | `2 minutes` |
 
@@ -117,7 +117,7 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 > To achieve complete, impenetrable defense across your infrastructure, operators must deploy a layered defense-in-depth architecture:  
 > 1. **Upstream DNS Perimeter (L3/L4)**: Deploy authoritative DNS rate limiting (BCP 153 RRL) and threat sinkholing to neutralize botnets and volumetric reflection floods before TCP handshakes occur.  
 > 2. **Kernel & Wire Firewalling (L4)**: Harden OS kernel network buffers (`sysctl`) and deploy packet filters (eBPF/XDP, stateful firewall rules) to drop invalid TCP flags and volumetric floods in microseconds.  
-> 3. **L7 Edge Gateway**: Place an ultra-low-latency reverse proxy (such as [**`propylea`**](https://github.com/xuoxod/propylea)) at your edge to terminate TLS, validate request framing, and drop decoy path scanners in `< 15ns`.  
+> 3. **L7 Edge Gateway**: Place an ultra-low-latency reverse proxy (such as [**`propylea`**](https://github.com/rmediatech/propylea)) at your edge to terminate TLS, validate request framing, and drop decoy path scanners in `< 15ns`.  
 > 4. **Application Shielding (`phylax`)**: Embed `phylax` in your application core to eliminate crawlers, AI scrapers, credential stuffing, and brute-force abuse with zero CPU overhead.
 
 ---
@@ -166,28 +166,28 @@ Installs the `phylax` binary to `/usr/local/bin`, generates `/etc/phylax/phylax.
 
 ```bash
 curl -sSL \
-  https://raw.githubusercontent.com/xuoxod/phylax/main/scripts/install.sh \
+  https://raw.githubusercontent.com/rmediatech/phylax/main/scripts/install.sh \
   | bash
 ```
 
 ### Windows (PowerShell)
 ```powershell
-irm https://raw.githubusercontent.com/xuoxod/phylax/main/scripts/install.ps1 | iex
+irm https://raw.githubusercontent.com/rmediatech/phylax/main/scripts/install.ps1 | iex
 ```
 
 ### Via Cargo
 ```bash
 # Install standalone CLI binary with WAF reverse proxy
-cargo install --git https://github.com/xuoxod/phylax.git --features cli
+cargo install --git https://github.com/rmediatech/phylax.git --features cli
 
 # Or add as an ultra-lean library dependency in your Cargo.toml
-cargo add --git https://github.com/xuoxod/phylax.git phylax
+cargo add --git https://github.com/rmediatech/phylax.git phylax
 ```
 
 ### Via Docker
 ```bash
 docker run -d --name phylax -p 80:3000 \
-  ghcr.io/xuoxod/phylax:latest \
+  ghcr.io/rmediatech/phylax:latest \
   serve --upstream http://host.docker.internal:8080 --listen 0.0.0.0:3000
 ```
 
@@ -229,7 +229,7 @@ Add `phylax` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-phylax = { git = "https://github.com/xuoxod/phylax.git" }
+phylax = { git = "https://github.com/rmediatech/phylax.git" }
 ```
 
 Complete, verified Axum stealth edge defense setup:

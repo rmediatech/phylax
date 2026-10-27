@@ -26,14 +26,14 @@ if (-not (Test-Path $InstallDir)) {
 $Installed = $false
 if (-not (Test-Path "Cargo.toml")) {
     $LatestTag = try {
-        $Resp = Invoke-WebRequest -Uri "https://github.com/xuoxod/phylax/releases/latest" -MaximumRedirection 0 -ErrorAction SilentlyContinue
+        $Resp = Invoke-WebRequest -Uri "https://github.com/rmediatech/phylax/releases/latest" -MaximumRedirection 0 -ErrorAction SilentlyContinue
         $Resp.Headers.Location | Split-Path -Leaf
     } catch {
         "v0.2.1"
     }
     if (-not $LatestTag) { $LatestTag = "v0.2.1" }
 
-    $ReleaseUrl = "https://github.com/xuoxod/phylax/releases/download/$LatestTag/phylax-$LatestTag-x86_64-pc-windows-msvc.zip"
+    $ReleaseUrl = "https://github.com/rmediatech/phylax/releases/download/$LatestTag/phylax-$LatestTag-x86_64-pc-windows-msvc.zip"
     $ZipPath = "$env:TEMP\phylax.zip"
     try {
         Write-Host "🌐 Attempting to download prebuilt binary release ($LatestTag) from GitHub..." -ForegroundColor Cyan
@@ -57,7 +57,7 @@ if (-not $Installed) {
             exit 1
         }
         Write-Host "📦 Installing via Cargo from GitHub..." -ForegroundColor Green
-        cargo install --git https://github.com/xuoxod/phylax.git --features cli
+        cargo install --git https://github.com/rmediatech/phylax.git --features cli
     }
 }
 
