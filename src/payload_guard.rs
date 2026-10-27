@@ -29,23 +29,33 @@ impl AdversarialPayload {
                 format!("SQL injection signature detected ('{}')", pat)
             }
             AdversarialPayload::CommandInjection(pat) => {
-                format!("Command execution / shell meta-character detected ('{}')", pat)
+                format!(
+                    "Command execution / shell meta-character detected ('{}')",
+                    pat
+                )
             }
             AdversarialPayload::CrossSiteScripting(pat) => {
-                format!("Cross-site scripting / script injection detected ('{}')", pat)
+                format!(
+                    "Cross-site scripting / script injection detected ('{}')",
+                    pat
+                )
             }
             AdversarialPayload::SsrfProbe(pat) => {
-                format!("SSRF / Cloud metadata reconnaissance vector detected ('{}')", pat)
+                format!(
+                    "SSRF / Cloud metadata reconnaissance vector detected ('{}')",
+                    pat
+                )
             }
             AdversarialPayload::TemplateInjection(pat) => {
-                format!("Server-Side Template Injection (SSTI) signature detected ('{}')", pat)
+                format!(
+                    "Server-Side Template Injection (SSTI) signature detected ('{}')",
+                    pat
+                )
             }
             AdversarialPayload::NoSqlInjection(pat) => {
                 format!("NoSQL / Operator injection vector detected ('{}')", pat)
             }
-            AdversarialPayload::NullByteInjection => {
-                "Null byte injection detected".to_string()
-            }
+            AdversarialPayload::NullByteInjection => "Null byte injection detected".to_string(),
             AdversarialPayload::UriLengthBomb { len, max } => {
                 format!("URI length bomb detected ({} > {} bytes)", len, max)
             }
@@ -316,10 +326,9 @@ impl PayloadGuard {
 
         while i < bytes.len() {
             if bytes[i] == b'%' && i + 2 < bytes.len() {
-                if let (Some(h1), Some(h2)) = (
-                    from_hex_digit(bytes[i + 1]),
-                    from_hex_digit(bytes[i + 2]),
-                ) {
+                if let (Some(h1), Some(h2)) =
+                    (from_hex_digit(bytes[i + 1]), from_hex_digit(bytes[i + 2]))
+                {
                     out.push((h1 << 4) | h2);
                     i += 3;
                     continue;
