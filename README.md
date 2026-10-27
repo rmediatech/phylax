@@ -18,7 +18,7 @@
 
 ## 🛡️ Proven in Production: Real-Time WebRTC SFU & Sovereign Edge
 
-> **Platform Showcase:** [`rmediatech.com`](https://rmediatech.com) & `thoth.rmediatech.com`  
+> **Platform Showcase:** [`rmediatech.com`](https://rmediatech.com)  
 > **Mission:** Commercial control plane, multi-tenant WebRTC SFU media signaling, spatial audio, and encrypted real-time DataChannels.
 
 `phylax` serves as the native, in-process application shield for **[`rmediatech.com`](https://rmediatech.com)** — working hand-in-hand with **[`propylea`](https://github.com/xuoxod/propylea)** at the outer TLS/L7 perimeter to protect high-throughput WebRTC SFU media pipelines and public authentication endpoints under continuous adversarial load:

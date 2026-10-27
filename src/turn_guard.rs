@@ -82,9 +82,9 @@ impl Default for TurnGuardConfig {
             max_ttl_s: 3600,    // 1 hour max
             max_concurrent_relays_per_user: 5,
             relay_server_uris: vec![
-                "turn:turn.rmediatech.com:3478?transport=udp".to_string(),
-                "turn:turn.rmediatech.com:3478?transport=tcp".to_string(),
-                "turns:turn.rmediatech.com:5349?transport=tcp".to_string(),
+                "turn:turn.example.com:3478?transport=udp".to_string(),
+                "turn:turn.example.com:3478?transport=tcp".to_string(),
+                "turns:turn.example.com:5349?transport=tcp".to_string(),
             ],
         }
     }
