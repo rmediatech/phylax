@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/Language-Pure%20Rust%202021-orange.svg" alt="Pure Rust" />
   <img src="https://img.shields.io/badge/TDD%20Tests-122%2F122%20Passed-brightgreen.svg" alt="Tests" />
   <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
-  <a href="https://github.com/xuoxod/phylax/releases/tag/v0.2.5"><img src="https://img.shields.io/badge/Release-v0.2.5-green.svg" alt="Release" /></a>
+  <a href="https://github.com/xuoxod/phylax/releases/tag/v0.2.6"><img src="https://img.shields.io/badge/Release-v0.2.6-green.svg" alt="Release" /></a>
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
 </p>
 
@@ -488,6 +488,9 @@ Zero-allocation, zero-copy percent-decoding inspection engine inspecting request
 * **Path Traversal & Local File Inclusion (LFI)**: Blocks directory climbing vectors (`../`, `..\`, `%2e%2e%2f`, `%252e%252e%252f`) and sensitive system probes (`/etc/passwd`, `/etc/shadow`, `boot.ini`).
 * **Command Injection / RCE**: Intercepts shell meta-characters and command chains (`;`, `|`, `&&`, `` ` ``, `$(...)`, `wget `, `curl `, `/bin/sh`).
 * **Cross-Site Scripting (XSS)**: Neutralizes script payloads (`<script>`, `javascript:`, `onerror=`, `onload=`, `eval(`).
+* **SSRF & Cloud Metadata Trapping**: Instantly drops unauthorized queries targeting AWS/GCP/Alibaba Instance Metadata Service endpoints (`169.254.169.254`, `metadata.google.internal`, `latest/meta-data`, `latest/api/token`) and exotic URL schemes (`gopher://`, `dict://`, `ldap://`).
+* **Server-Side Template Injection (SSTI)**: Deflects template expression probes (`{{7*7}}`, `${7*7}`, `#{7*7}`, `<%= 7*7 %>`, `__globals__`, `__builtins__`) used by automated scanners (`nuclei`, `tplmap`).
+* **NoSQL & Operator Injection**: Prevents MongoDB/NoSQL query manipulation vectors (`{"$gt": ""}`, `{"$ne": null}`, `[$ne]=`, `[$gt]=`, `[$where]=`).
 * **Null-Byte Poisoning**: Drops `%00` and `\0` string termination attacks before they reach low-level system APIs.
 * **URI Length & Allocation Bombs**: Hard boundary protection preventing buffer exhaustion and regex Denial of Service.
 

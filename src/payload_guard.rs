@@ -12,6 +12,9 @@ pub enum AdversarialPayload {
     SqlInjection(&'static str),
     CommandInjection(&'static str),
     CrossSiteScripting(&'static str),
+    SsrfProbe(&'static str),
+    TemplateInjection(&'static str),
+    NoSqlInjection(&'static str),
     NullByteInjection,
     UriLengthBomb { len: usize, max: usize },
 }
@@ -31,6 +34,15 @@ impl AdversarialPayload {
             AdversarialPayload::CrossSiteScripting(pat) => {
                 format!("Cross-site scripting / script injection detected ('{}')", pat)
             }
+            AdversarialPayload::SsrfProbe(pat) => {
+                format!("SSRF / Cloud metadata reconnaissance vector detected ('{}')", pat)
+            }
+            AdversarialPayload::TemplateInjection(pat) => {
+                format!("Server-Side Template Injection (SSTI) signature detected ('{}')", pat)
+            }
+            AdversarialPayload::NoSqlInjection(pat) => {
+                format!("NoSQL / Operator injection vector detected ('{}')", pat)
+            }
             AdversarialPayload::NullByteInjection => {
                 "Null byte injection detected".to_string()
             }
@@ -46,6 +58,9 @@ impl AdversarialPayload {
             AdversarialPayload::SqlInjection(_) => "SQL Injection",
             AdversarialPayload::CommandInjection(_) => "Remote Code Execution",
             AdversarialPayload::CrossSiteScripting(_) => "Cross-Site Scripting",
+            AdversarialPayload::SsrfProbe(_) => "SSRF / Metadata Probe",
+            AdversarialPayload::TemplateInjection(_) => "Server-Side Template Injection",
+            AdversarialPayload::NoSqlInjection(_) => "NoSQL Injection",
             AdversarialPayload::NullByteInjection => "Null Byte Poisoning",
             AdversarialPayload::UriLengthBomb { .. } => "Resource Exhaustion",
         }
@@ -221,6 +236,71 @@ impl PayloadGuard {
             }
         }
 
+        // 5. SSRF & Cloud Metadata Trapping
+        const SSRF_PATTERNS: &[&str] = &[
+            "169.254.169.254",
+            "metadata.google.internal",
+            "metadata.goog",
+            "100.100.100.200",
+            "latest/meta-data",
+            "latest/user-data",
+            "latest/api/token",
+            "gopher://",
+            "dict://",
+            "ldap://",
+        ];
+        for &pat in SSRF_PATTERNS {
+            if lower.contains(pat) {
+                return Err(AdversarialPayload::SsrfProbe(pat));
+            }
+        }
+
+        // 6. Server-Side Template Injection (SSTI)
+        const SSTI_PATTERNS: &[&str] = &[
+            "{{7*7}}",
+            "${7*7}",
+            "#{7*7}",
+            "<%= 7*7 %>",
+            "{{class.module",
+            "{{lipsum",
+            "{{cycler",
+            "{{joiner",
+            "{{namespace",
+            "{{config",
+            "{{self",
+            "__globals__",
+            "__builtins__",
+            "__import__",
+            "__mro__",
+            "__subclasses__",
+        ];
+        for &pat in SSTI_PATTERNS {
+            if lower.contains(pat) {
+                return Err(AdversarialPayload::TemplateInjection(pat));
+            }
+        }
+
+        // 7. NoSQL & Object Operator Injection
+        const NOSQL_PATTERNS: &[&str] = &[
+            "{\"$gt\"",
+            "{\"$ne\"",
+            "{\"$where\"",
+            "{\"$regex\"",
+            "[$ne]=",
+            "[$gt]=",
+            "[$gte]=",
+            "[$lte]=",
+            "[$regex]=",
+            "[$where]=",
+            "[$exists]=",
+            "db.collection",
+        ];
+        for &pat in NOSQL_PATTERNS {
+            if lower.contains(pat) {
+                return Err(AdversarialPayload::NoSqlInjection(pat));
+            }
+        }
+
         Ok(())
     }
 
@@ -302,6 +382,24 @@ mod tests {
         assert!(matches!(
             PayloadGuard::inspect("/file.txt\0.exe", ""),
             Err(AdversarialPayload::NullByteInjection)
+        ));
+
+        // SSRF
+        assert!(matches!(
+            PayloadGuard::inspect("/proxy", "url=http://169.254.169.254/latest/meta-data"),
+            Err(AdversarialPayload::SsrfProbe(_))
+        ));
+
+        // SSTI
+        assert!(matches!(
+            PayloadGuard::inspect("/render", "name={{7*7}}"),
+            Err(AdversarialPayload::TemplateInjection(_))
+        ));
+
+        // NoSQL
+        assert!(matches!(
+            PayloadGuard::inspect("/users", "filter={\"$gt\":\"\"}"),
+            Err(AdversarialPayload::NoSqlInjection(_))
         ));
     }
 }
