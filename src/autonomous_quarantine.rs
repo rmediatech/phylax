@@ -48,17 +48,31 @@ impl AutonomousQuarantine {
         }
     }
 
-    /// Derive the /24 (IPv4) or /48 (IPv6) subnet string for a given IP
+    /// Derive the /24 (IPv4) or /48 (IPv6) subnet string for a given IP.
+    /// Private RFC 1918, Loopback, Link-Local, and CGNAT (100.64.0.0/10) ranges
+    /// are strictly contained at single-host /32 (IPv4) or /128 (IPv6) granularity
+    /// to eliminate collateral damage on shared local networks.
     pub fn derive_quarantine_cidr(ip_str: &str) -> Option<String> {
         let addr = IpAddr::from_str(ip_str).ok()?;
         match addr {
             IpAddr::V4(v4) => {
-                let net = ipnet::Ipv4Net::new(v4, 24).ok()?.trunc();
-                Some(format!("{}/24", net.network()))
+                let is_cgnat = v4.octets()[0] == 100 && (v4.octets()[1] & 0xC0) == 64;
+                if v4.is_loopback() || v4.is_private() || v4.is_link_local() || is_cgnat {
+                    Some(format!("{}/32", v4))
+                } else {
+                    let net = ipnet::Ipv4Net::new(v4, 24).ok()?.trunc();
+                    Some(format!("{}/24", net.network()))
+                }
             }
             IpAddr::V6(v6) => {
-                let net = ipnet::Ipv6Net::new(v6, 48).ok()?.trunc();
-                Some(format!("{}/48", net.network()))
+                let is_unique_local = (v6.segments()[0] & 0xFE00) == 0xFC00;
+                let is_unicast_link_local = (v6.segments()[0] & 0xFFC0) == 0xFE80;
+                if v6.is_loopback() || is_unique_local || is_unicast_link_local {
+                    Some(format!("{}/128", v6))
+                } else {
+                    let net = ipnet::Ipv6Net::new(v6, 48).ok()?.trunc();
+                    Some(format!("{}/48", net.network()))
+                }
             }
         }
     }
@@ -288,5 +302,60 @@ mod tests {
         aq.add_ban(net, 50_000);
         assert!(aq.is_quarantined("203.0.113.42", 1500));
         assert_eq!(aq.active_bans_count(), 1);
+    }
+
+    #[test]
+    fn test_private_and_cgnat_cidr_containment() {
+        // RFC 1918 Private IPv4 must derive to /32
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("192.168.1.100").unwrap(),
+            "192.168.1.100/32"
+        );
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("10.0.4.50").unwrap(),
+            "10.0.4.50/32"
+        );
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("172.16.8.99").unwrap(),
+            "172.16.8.99/32"
+        );
+
+        // Loopback IPv4 must derive to /32
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("127.0.0.1").unwrap(),
+            "127.0.0.1/32"
+        );
+
+        // Carrier-Grade NAT (RFC 6598 100.64.0.0/10) must derive to /32
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("100.64.1.25").unwrap(),
+            "100.64.1.25/32"
+        );
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("100.127.255.254").unwrap(),
+            "100.127.255.254/32"
+        );
+
+        // Public routable IPv4 must derive to /24
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("192.0.2.45").unwrap(),
+            "192.0.2.0/24"
+        );
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("198.51.100.8").unwrap(),
+            "198.51.100.0/24"
+        );
+
+        // IPv6 Loopback must derive to /128
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("::1").unwrap(),
+            "::1/128"
+        );
+
+        // Public IPv6 must derive to /48
+        assert_eq!(
+            AutonomousQuarantine::derive_quarantine_cidr("2001:db8::1234").unwrap(),
+            "2001:db8::/48"
+        );
     }
 }

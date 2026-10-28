@@ -219,17 +219,23 @@ impl BotGuard {
     }
 
     pub fn evaluate_perimeter(&self, user_agent: Option<&str>, path: &str) -> BotVerdict {
-        if path == "/robots.txt" {
+        if path == "/robots.txt"
+            || path == "/healthz"
+            || path == "/favicon.ico"
+            || path == "/security.txt"
+            || path.starts_with("/.well-known/")
+        {
             return BotVerdict::Allowed {
-                category: BotCategory::LegitimateSearch,
+                category: BotCategory::Unknown,
             };
         }
         let ua = match user_agent {
             Some(u) if !u.trim().is_empty() => u.trim(),
             _ => {
-                return BotVerdict::Allowed {
-                    category: BotCategory::Unknown,
-                }
+                return BotVerdict::Blocked {
+                    category: BotCategory::AutomationTool,
+                    matched_token: Cow::Borrowed("Missing-User-Agent"),
+                };
             }
         };
 

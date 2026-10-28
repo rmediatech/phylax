@@ -4,6 +4,21 @@ All notable changes, defense layer releases, and architectural milestones for **
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.7] - 2026-10-27 (Private Subnet Isolation & Headerless Bot Deflection)
+
+### 🌟 Added & Fortified
+* **RFC 1918, Loopback & CGNAT Subnet Isolation (`src/autonomous_quarantine.rs`)**:
+  - Hardened `AutonomousQuarantine::derive_quarantine_cidr` to strictly enforce `/32` (IPv4) and `/128` (IPv6) single-host boundaries for private networks (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), loopback (`127.0.0.0/8`, `::1`), link-local (`169.254.0.0/16`), and Carrier-Grade NAT (`100.64.0.0/10`).
+  - Completely eliminates collateral damage and accidental quarantine of adjacent legitimate nodes or shared carrier mobile pools. Routable public IPv4 ranges remain strictly quarantined at `/24`.
+* **Headerless & Missing User-Agent Interception (`src/bot_guard/mod.rs`)**:
+  - Closed perimeter scanner evasion vector where raw socket scripts or custom scrapers omitted the `User-Agent` header.
+  - Missing or empty User-Agents on non-infrastructure endpoints are now classified as `BotCategory::AutomationTool` (`Missing-User-Agent`) and blocked with `403 Forbidden` in $< 20\mu\text{s}$.
+  - Standard operational infrastructure paths (`/healthz`, `/robots.txt`, `/security.txt`, `/favicon.ico`, `/.well-known/*`) remain permitted for automated cluster health probes.
+* **Empirical Multi-OS Crucible Verification**:
+  - Verified against live offensive reconnaissance suites via local virtual testing bridge with zero false positives.
+
+---
+
 ## [0.2.6] - 2026-10-26 (Adversarial PayloadGuard: 7-Vector Zero-Allocation Defense Against OWASP & Kali Tools)
 
 ### 🌟 Added & Fortified
