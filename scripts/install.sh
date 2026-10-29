@@ -69,7 +69,7 @@ else
 
         if [ -n "${TARGET}" ]; then
             TAG=$(curl -sSLI -o /dev/null -w '%{url_effective}' https://github.com/rmediatech/phylax/releases/latest 2>/dev/null | awk -F'/' '{print $NF}')
-            TAG="${TAG:-v0.2.1}"
+            TAG="${TAG:-v0.2.8}"
             RELEASE_URL="https://github.com/rmediatech/phylax/releases/download/${TAG}/phylax-${TAG}-${TARGET}.tar.gz"
             TMP_DIR="$(mktemp -d)"
             if ! curl -sSLf "${RELEASE_URL}" -o "${TMP_DIR}/phylax.tar.gz" 2>/dev/null; then

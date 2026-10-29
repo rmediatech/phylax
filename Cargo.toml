@@ -1,6 +1,6 @@
 [package]
 name = "phylax"
-version = "0.2.7"
+version = "0.2.8"
 edition = "2021"
 authors = ["Rick <rick@rmediatech.com>", "RMediaTech Contributors"]
 license = "MIT OR Apache-2.0"

@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/Language-Pure%20Rust%202021-orange.svg" alt="Pure Rust" />
   <img src="https://img.shields.io/badge/TDD%20Tests-122%2F122%20Passed-brightgreen.svg" alt="Tests" />
   <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
-  <a href="https://github.com/rmediatech/phylax/releases/tag/v0.2.7"><img src="https://img.shields.io/badge/Release-v0.2.7-green.svg" alt="Release" /></a>
+  <a href="https://github.com/rmediatech/phylax/releases/tag/v0.2.8"><img src="https://img.shields.io/badge/Release-v0.2.8-green.svg" alt="Release" /></a>
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
 </p>
 

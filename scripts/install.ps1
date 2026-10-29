@@ -29,9 +29,9 @@ if (-not (Test-Path "Cargo.toml")) {
         $Resp = Invoke-WebRequest -Uri "https://github.com/rmediatech/phylax/releases/latest" -MaximumRedirection 0 -ErrorAction SilentlyContinue
         $Resp.Headers.Location | Split-Path -Leaf
     } catch {
-        "v0.2.1"
+        "v0.2.8"
     }
-    if (-not $LatestTag) { $LatestTag = "v0.2.1" }
+    if (-not $LatestTag) { $LatestTag = "v0.2.8" }
 
     $ReleaseUrl = "https://github.com/rmediatech/phylax/releases/download/$LatestTag/phylax-$LatestTag-x86_64-pc-windows-msvc.zip"
     $ZipPath = "$env:TEMP\phylax.zip"

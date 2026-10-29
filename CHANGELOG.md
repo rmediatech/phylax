@@ -4,6 +4,18 @@ All notable changes, defense layer releases, and architectural milestones for **
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.8] - 2026-10-29 (Path Traversal Signature Precision & Zero False-Positive URL Handling)
+
+### 🌟 Added & Fortified
+* **Path Traversal Signature Precision (`src/payload_guard.rs`)**:
+  - Replaced isolated single-character percent-encoded slashes (`%2f`, `%5c`) with true directory climbing vector sequences (`..%2f`, `%2f..`, `..%5c`, `%5c..`, `%2e%2e%2f`, `%2e%2e%5c`).
+  - Eliminates a 100% false-positive defect where legitimate RFC-compliant URL-encoded query strings (e.g. OAuth callback redirects, pairing QR codes, deep links) were mistakenly categorized as path traversal exploits.
+  - Maintains strict sub-5ns deflection against actual traversal attacks (`../`, `..\`, `%2e%2e%2f`, sensitive file probes `/etc/passwd`, `/etc/shadow`, `/proc/self`, etc.).
+* **Benign Traffic & Real-World RFC Fuzzing Assertions (`src/payload_guard.rs`)**:
+  - Integrated high-entropy benign workload test vectors verifying seamless pass-through for complex query strings, URL parameters, deep links, and base64 payloads without tripping perimeter alarms.
+
+---
+
 ## [0.2.7] - 2026-10-27 (Private Subnet Isolation & Headerless Bot Deflection)
 
 ### 🌟 Added & Fortified

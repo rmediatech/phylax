@@ -137,8 +137,12 @@ impl PayloadGuard {
         const TRAVERSAL_PATTERNS: &[&str] = &[
             "..",
             "%2e%2e",
-            "%2f",
-            "%5c",
+            "..%2f",
+            "%2f..",
+            "..%5c",
+            "%5c..",
+            "%2e%2e%2f",
+            "%2e%2e%5c",
             "/etc/passwd",
             "/etc/shadow",
             "/etc/hosts",
@@ -362,6 +366,7 @@ mod tests {
     fn test_payload_guard_poc_and_defenses() {
         assert!(PayloadGuard::inspect("/", "").is_ok());
         assert!(PayloadGuard::inspect("/api/v1/health", "token=safe_123").is_ok());
+        assert!(PayloadGuard::inspect("/qr", "text=https%3A%2F%2Fvox.rmediatech.com%2F%3Froom%3Dtac-alpha%26callsign%3DMobile-1").is_ok());
 
         // SQLi
         assert!(matches!(
