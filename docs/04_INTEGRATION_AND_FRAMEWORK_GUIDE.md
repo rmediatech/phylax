@@ -1,7 +1,7 @@
 # Chapter 4: Integration & Framework Guide — 60-Second Foolproof Setup
 
 > **Namespace:** `phylax::prelude`  
-> **Previous:** [03: Case Study: Matrix WebRTC Mesh](03_CASE_STUDY_MATRIX_PRODUCTION.md) | **Next:** [05: Autonomous Abuse Intelligence](05_AUTONOMOUS_ABUSE_INTELLIGENCE.md)
+> **Previous:** [03: Case Study: Production WebRTC Media Engine](03_CASE_STUDY_WEBRTC_PRODUCTION.md) | **Next:** [05: Autonomous Abuse Intelligence](05_AUTONOMOUS_ABUSE_INTELLIGENCE.md)
 
 ---
 
@@ -91,7 +91,7 @@ pub struct RegisterPayload {
 
 #[tokio::main]
 async fn main() {
-    // 1. Initialize Phylax 12-layer defense pipeline in memory
+    // 1. Initialize Phylax 15-layer defense pipeline in memory
     let phylax = Arc::new(
         PhylaxPipeline::builder()
             .secret_key(b"replace-with-a-random-secret-key-32bytes")

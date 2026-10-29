@@ -107,7 +107,7 @@ impl TurnGuard {
         }
     }
 
-    /// Mint ephemeral RFC-compliant Coturn / LiveKit REST credentials
+    /// Mint ephemeral RFC-compliant Coturn REST credentials
     pub fn issue_credentials(
         &self,
         user_id: &str,

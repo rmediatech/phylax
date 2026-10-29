@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # Phylax Sovereign Release & Cryptographic Packaging Pipeline
-# Standard: AGY-RULE-SOVEREIGN-FLAGSHIP-01 & SOVEREIGN-SIGN-01
+# Standard: Universal Sovereign Cryptographic Release Standard (SOVEREIGN-SIGN-01)
 # ==============================================================================
 set -euo pipefail
 

@@ -34,7 +34,7 @@ pub async fn handle_healthz(State(state): State<ProxyState>) -> impl IntoRespons
             "status": "HEALTHY",
             "uptime_seconds": uptime_s,
             "engine": "Phylax Sovereign Edge Defense",
-            "version": "0.1.0"
+            "version": env!("CARGO_PKG_VERSION")
         })),
     )
 }
@@ -177,7 +177,7 @@ pub async fn handle_proxy(
     }
 
     forward_req = forward_req.header("X-Forwarded-For", &client_ip);
-    forward_req = forward_req.header("X-Shield-By", "Phylax-0.1.0");
+    forward_req = forward_req.header("X-Shield-By", concat!("Phylax-", env!("CARGO_PKG_VERSION")));
 
     if !body.is_empty() {
         forward_req = forward_req.body(body);

@@ -157,7 +157,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### 🌟 Added
 * **Cross-Platform Analytics & Threat Recon Suite (`tools/analytics/`)**:
   - Implemented 100% feature-parity red-team and traffic intelligence tools across POSIX `/bin/sh` and PowerShell Core (`.ps1`).
-  - Added `phylax-analyze-traffic` with Native Sovereign Context Auto-Discovery ("Royalty Mode") for auto-detecting SQLite WAL, journalctl, and application log stores across `rmediatech`, `matrix`, `propylea`, and standalone systems.
+  - Added `phylax-analyze-traffic` with Native Sovereign Context Auto-Discovery ("Royalty Mode") for auto-detecting SQLite WAL, journalctl, and application log stores across web services, reverse proxies, and standalone systems.
   - Added `phylax-threat-recon` for autonomous IP threat correlation, multi-subnet anomaly detection, and AbuseIPDB reputation auditing.
 * **Automated Red-Team Fuzzing Battery (`tools/redteam_script_fuzzer/`)**:
   - Enforced Adversarial Self-Attack invariant validating telemetry scripts against ANSI escape sequence injection, ReDoS patterns, shell injection payloads, and symlink traversals.

@@ -1,7 +1,7 @@
 # Chapter 2: Stealth Deception & Active Defense
 
 > **Namespace:** `phylax::honeypot`, `phylax::tarpit`  
-> **Previous:** [01: Architecture & Cost Hierarchy](01_ARCHITECTURE_AND_COST_HIERARCHY.md) | **Next:** [03: Case Study: Matrix WebRTC Mesh](03_CASE_STUDY_MATRIX_PRODUCTION.md)
+> **Previous:** [01: Architecture & Cost Hierarchy](01_ARCHITECTURE_AND_COST_HIERARCHY.md) | **Next:** [03: Case Study: Production WebRTC Media Engine](03_CASE_STUDY_WEBRTC_PRODUCTION.md)
 
 ---
 
@@ -156,4 +156,4 @@ let governor = TarpitGovernor::new(TarpitConfig {
 
 See this exact stealth architecture in action within a mission-critical, real-time WebRTC communications platform:
 
-👉 **Continue to [Chapter 3: Proven in Production: Matrix Case Study](03_CASE_STUDY_MATRIX_PRODUCTION.md)**
+👉 **Continue to [Chapter 3: Proven in Production: WebRTC Platform Case Study](03_CASE_STUDY_WEBRTC_PRODUCTION.md)**

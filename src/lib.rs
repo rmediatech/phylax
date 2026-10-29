@@ -1,21 +1,24 @@
-//! # Sovereign Anti-Bot & Threat Neutralization Engine (`rmt-shield`)
+//! # Phylax (φύλαξ) — Sovereign Anti-Bot & Threat Neutralization Engine
 //!
 //! High-throughput, zero-telemetry, memory-safe defense suite for enterprise edge architectures.
-//! Enforces:
-//! 1. Cryptographic Honeypot Traps (`honeypot`)
-//! 2. Tamper-Proof HMAC Submission Timing Defense (`timing`)
-//! 3. Sub-microsecond SHA-256 Proof-of-Work (PoW) Verification (`pow`)
-//! 4. Radix CIDR Datacenter & Tor Exit Node Perimeter Filtering (`subnet_guard`)
-//! 5. Bot Email Dot-Scattering & Throwaway Domain Sanitization (`email_guard`)
-//! 6. Financial Toll Fraud & Telephony Abuse Guard (`toll_guard`)
-//! 7. Leaked Credential Bloom Filter & Target-Account Velocity Shield (`credential_guard`)
-//! 8. Session Hijacking & Impossible Travel Sentinel (`session_sentinel`)
-//! 9. WebRTC / Coturn Relay Bandwidth Leeching Guard (`turn_guard`)
-//! 10. Binary Download Voucher & Byte-Range Abuse Guard (`dist_guard`)
-//! 11. L7 Stream & Slowloris Protection Guard (`stream_guard`)
-//! 12. Zero-Lock In-Memory Cache Shield (`cache_shield`)
-//! 13. Autonomous Zero-Day & Emerging Threat Harvester (`threat_harvester`)
-//! 14. Sovereign Bot Guard & User-Agent Interception (`bot_guard`)
+//! Enforces a strict 15-layer cost-hierarchical fail-fast defense:
+//! - Layer 0: Autonomous Radix CIDR Quarantine (`autonomous_quarantine`)
+//! - Layer 0.5: Decoy URI Honeyroute Sentinel (`decoy_uri`)
+//! - Layer 1: Cryptographic Honeypot Traps (`honeypot`)
+//! - Layer 2: Radix CIDR Datacenter & Tor Exit Node Perimeter Filtering (`subnet_guard`)
+//! - Layer 3: Bot Email Dot-Scattering & Disposable Domain Sanitization (`email_guard`)
+//! - Layer 4: Tamper-Proof HMAC Submission Timing Defense (`timing`)
+//! - Layer 5: Sub-microsecond SHA-256 Proof-of-Work (PoW) Verification (`pow` / `adaptive_pow`)
+//! - Layer 6: Leaked Credential Bloom Filter (`credential_guard`)
+//! - Layer 7: Target-Account Velocity Shield (`credential_guard`)
+//! - Layer 8: Session Hijacking & Impossible Travel Sentinel (`session_sentinel`)
+//! - Layer 9: WebRTC / Coturn Relay Bandwidth Leeching Guard (`turn_guard`)
+//! - Layer 10: Binary Download Voucher & Byte-Range Abuse Guard (`dist_guard`)
+//! - Layer 11: L7 Stream & Slowloris Protection Guard (`stream_guard`)
+//! - Layer 12: Zero-Lock In-Memory Cache Shield (`cache_shield`)
+//! - Layer 13: Autonomous Zero-Day & Emerging Threat Harvester (`threat_harvester`)
+//! - Layer 14: Sovereign Bot Guard & User-Agent Interception (`bot_guard`)
+//! - Layer 15: Adversarial Exploit & Traversal Payload Guard (`payload_guard`)
 
 pub mod adaptive_pow;
 pub mod autonomous_quarantine;

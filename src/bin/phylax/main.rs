@@ -17,7 +17,7 @@ use serve::ServeArgs;
     name = "phylax",
     author = "Rick <rick@rmediatech.com>",
     version,
-    about = "Sovereign 12-layer edge defense, honeypot tarpit, and autonomous anti-bot WAF",
+    about = "Sovereign 15-layer edge defense, honeypot tarpit, and autonomous anti-bot WAF",
     long_about = "Phylax (φύλαξ) provides sub-microsecond edge security against credential stuffing, automated bots, Tor/datacenter crawlers, and Slowloris attacks with zero external telemetry."
 )]
 struct Cli {

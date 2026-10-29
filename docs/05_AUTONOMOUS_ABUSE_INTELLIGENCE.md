@@ -36,7 +36,8 @@ let phylax = PhylaxPipeline::builder()
 
 `with_default_abuse_reporting()` searches for credentials in the following order:
 1. **Environment Variable:** `ABUSEIPDB_API_KEY`
-2. **Standard Host Reference File:** `~/Documents/reference/abuse_ip_db/api-key.txt`
+2. **System Service Keyfile:** `/etc/phylax/abuseipdb.key`
+3. **User Config Keyfile:** `~/.config/phylax/abuseipdb.key`
 
 If no valid API key is found, the informant engine safely disables itself without causing runtime panics or breaking edge request flow.
 

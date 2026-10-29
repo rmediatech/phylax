@@ -1,6 +1,6 @@
-# Chapter 3: Proven in Production — Real-Time WebRTC Media & Mesh Engine Case Study
+# Chapter 3: Proven in Production — Real-Time WebRTC Media & Communications Platform Case Study
 
-> **Platform:** Matrix Sovereign WebRTC Mesh (`chat.example.com`)  
+> **Platform:** Production WebRTC Media & Communications Engine (`chat.example.com`)  
 > **Architecture:** In-Process Axum Edge Defense, Coturn Relay Shield, SQLite WAL  
 > **Previous:** [02: Stealth Deception & Active Defense](02_STEALTH_DECEPTION_AND_ACTIVE_DEFENSE.md) | **Next:** [04: Integration & Framework Guide](04_INTEGRATION_AND_FRAMEWORK_GUIDE.md)
 
@@ -10,13 +10,13 @@
 
 When deploying sovereign, high-throughput web applications, traditional security advice typically dictates placing the application behind a commercial cloud CDN or WAF (e.g. Cloudflare, AWS WAF).
 
-For **Matrix Sovereign Communications Engine** (`chat.example.com`)—a sovereign, real-time decentralized communications engine featuring WebRTC SFU mesh audio/video, ephemeral in-room spatial sync, multi-party chat, and Coturn relay media bridging—this conventional architecture was completely unacceptable:
+For high-concurrency real-time communications platforms featuring WebRTC SFU mesh audio/video, ephemeral in-room spatial sync, multi-party chat, and Coturn relay media bridging—this conventional architecture was completely unacceptable:
 
 - **Latency Budget:** Real-time audio and video negotiation require sub-millisecond local routing. Third-party cloud WAF proxies add **20ms to 75ms of network jitter**, destroying real-time audio synchronization.
-- **Privacy & Sovereignty:** Matrix operates on strict zero-telemetry and end-to-end privacy guarantees. Routing user traffic, subscriber IP addresses, and WebSocket sessions through commercial multi-tenant proxies violates that covenant.
+- **Privacy & Sovereignty:** Real-time communication platforms operate on strict zero-telemetry and end-to-end privacy guarantees. Routing user traffic, subscriber IP addresses, and WebSocket sessions through commercial multi-tenant proxies violates that covenant.
 - **Cost & Complexity:** Operating auxiliary WAF daemons, Redis clusters, or external security sidecars creates operational fragility and infrastructure debt.
 
-The Matrix platform chose **`phylax`** as its native, embedded, in-process edge defense engine.
+The communications platform chose **`phylax`** as its native, embedded, in-process edge defense engine.
 
 ---
 
@@ -30,14 +30,14 @@ flowchart TD
         LEECH["⚡ WebRTC Relay Bandwidth Leechers"]
     end
 
-    subgraph NodeEdge["Sovereign Node 1 Edge Boundary"]
-        subgraph PropyleaGateway["Propylea L7 Edge Gateway (Port 80/443)"]
+    subgraph EdgeBoundary["Production Edge Boundary"]
+        subgraph Gateway["L7 Edge Reverse Proxy Gateway (Port 80/443)"]
             TLS["SNI Multiplexer & TLS 1.3 Termination"]
             L05["Perimeter Decoy Trap Trie (<15ns)"]
             ROUTER["Zero-Allocation Upstream Router"]
         end
         
-        subgraph MatrixApp["Matrix Sovereign SFU Daemon (Port 8082)"]
+        subgraph AppDaemon["Real-Time Media SFU Daemon (Port 8080)"]
             PHYLAX["In-Process Phylax Engine (<950ns)"]
             WEBRTC["WebRTC Mesh & TurnGuard"]
             AUTH["Stealth Deception Auth Handlers"]
@@ -74,7 +74,7 @@ flowchart TD
 The platform integrated `phylax` natively within its core Axum application state with **zero external daemons**.
 
 ### 1. The Deceptive Black Hole on Registrations
-Rather than tipping off automated scripts with an explicit rejection, Matrix implemented the **Deceptive Black Hole** in its registration handler:
+Rather than tipping off automated scripts with an explicit rejection, the platform implemented the **Deceptive Black Hole** in its registration handler:
 
 ```rust
 // Honeypot Trap: Stealth Deception, Black Hole & Autonomous Abuse Reporting
@@ -113,7 +113,7 @@ if let Some(ref decoy) = payload.website_url {
 **Result:** The bot receives a valid `201 Created` status code, logs the registration as a success in its database, and never adjusts its script. The payload is absorbed into the void without touching the SQLite database or dispatching verification emails.
 
 ### 2. Indistinguishable Authentication Masking
-In the login handler (`POST /api/v1/auth/login`), when a bot populates the decoy field, Matrix injects a **150ms delay** and returns a standard `401 Unauthorized` with the generic message `"Invalid credentials"`. The attacker cannot tell whether the honeypot was tripped or the password was incorrect.
+In the login handler (`POST /api/v1/auth/login`), when a bot populates the decoy field, the service injects a **150ms delay** and returns a standard `401 Unauthorized` with the generic message `"Invalid credentials"`. The attacker cannot tell whether the honeypot was tripped or the password was incorrect.
 
 ### 3. Perimeter Ghosting for Hostile Subnets
 Hostile cloud datacenters, Tor exit nodes, and quarantined subnets are intercepted at the perimeter middleware level and returned a plain **`404 Not Found\n`**. The server appears completely dead to automated vulnerability scanners.
@@ -128,7 +128,7 @@ When a honeypot trap is tripped, `phylax` autonomously packages a forensic incid
 
 ## 4. Measurable Battlefield Metrics
 
-Under continuous production operation on Matrix (`chat.example.com`):
+Under continuous production operation on the communications cluster (`chat.example.com`):
 
 | Metric | Before Phylax (Conventional Approach) | After Native Phylax Integration | Improvement |
 |---|---|---|---|
@@ -143,7 +143,7 @@ Under continuous production operation on Matrix (`chat.example.com`):
 
 ## 5. Architectural Verdict
 
-The integration of `phylax` into Matrix proves that **sovereign, high-concurrency web services do not need to compromise on privacy, performance, or defense.**
+The integration of `phylax` into production proves that **sovereign, high-concurrency web services do not need to compromise on privacy, performance, or defense.**
 
 By moving defense into the application process and adopting active stealth deception, modern web services can achieve superior security while delivering uncompromised sub-millisecond user experiences.
 

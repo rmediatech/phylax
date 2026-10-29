@@ -1,7 +1,7 @@
 #!/bin/sh
 # ==============================================================================
 # 🛡️ PHYLAX THREAT RECONNAISSANCE & ABUSE INTELLIGENCE: phylax-threat-recon.sh
-# Standard: AGY-RULE-SOVEREIGN-FLAGSHIP-01 & Directive 7 (GEMINI.md)
+# Standard: Universal Sovereign Threat Reconnaissance Standard
 # Architecture: Pure POSIX /bin/sh - Zero external runtime dependencies.
 # Royalty Mode: Automatically discovers hostile ingress entities on Node 1 / host.
 # Agnostic Mode: Ingests raw IPs, access logs, or piped streams.
@@ -38,9 +38,9 @@ Options:
   -h, --help        Show this help message and exit
   -v, --version     Show version and exit
 
-Context Auto-Discovery ("Royalty Mode"):
+Context Auto-Discovery:
   If no IP or piped log is specified, $SCRIPT_NAME interrogates local
-  system journalctl / rmediatech / matrix / propylea logs for recent 4xx/404 offenders.
+  system journalctl or application / reverse proxy logs for recent 4xx/404 offenders.
 
 Environment:
   ABUSEIPDB_API_KEY Optional API key for AbuseIPDB v2 score check & automated reporting.
@@ -185,8 +185,7 @@ else
         if [ ! -s "$CANDIDATES_FILE" ]; then
             for log_f in \
                 "logs/app.out.log" \
-                "../matrix/logs/app.out.log" \
-                "../rmediatech/logs/app.out.log" \
+                "logs/access.log" \
                 "/var/log/phylax/phylax.log" \
                 "/var/log/propylea/propylea.log" \
                 "/var/log/syslog" \

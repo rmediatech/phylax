@@ -38,8 +38,9 @@ impl Default for InformantConfig {
 
 impl InformantConfig {
     /// Discovers configuration from environment variables or standard reference paths:
-    /// - Checks `ABUSEIPDB_API_KEY` environment variable or `~/Documents/reference/abuse_ip_db/api-key.txt`
-    /// - Checks `PHYLAX_WEBHOOK_URL` / `RMT_WEBHOOK_URL` for generic enterprise sinks
+    /// - Checks `ABUSEIPDB_API_KEY` environment variable
+    /// - Checks `/etc/phylax/abuseipdb.key` or `~/.config/phylax/abuseipdb.key`
+    /// - Checks `PHYLAX_WEBHOOK_URL` for generic enterprise sinks
     ///
     /// If an API key or webhook endpoint is discovered, automated reporting is armed by default.
     pub fn from_env_or_default() -> Self {
@@ -48,6 +49,23 @@ impl InformantConfig {
             .map(|s| s.trim().to_string())
             .filter(|s| !s.is_empty())
             .or_else(|| {
+                // Check standard system location
+                std::fs::read_to_string("/etc/phylax/abuseipdb.key")
+                    .ok()
+                    .map(|s| s.trim().to_string())
+                    .filter(|s| !s.is_empty())
+            })
+            .or_else(|| {
+                // Check user config location
+                let home = std::env::var("HOME").ok()?;
+                let path = format!("{}/.config/phylax/abuseipdb.key", home);
+                std::fs::read_to_string(path)
+                    .ok()
+                    .map(|s| s.trim().to_string())
+                    .filter(|s| !s.is_empty())
+            })
+            .or_else(|| {
+                // Fallback legacy development reference path
                 let home = std::env::var("HOME").ok()?;
                 let path = format!("{}/Documents/reference/abuse_ip_db/api-key.txt", home);
                 std::fs::read_to_string(path)

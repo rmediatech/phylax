@@ -1,7 +1,7 @@
 #!/bin/sh
 # ==============================================================================
 # 🛡️ PHYLAX SOVEREIGN ANALYTICS ENGINE: phylax-analyze-traffic.sh
-# Standard: AGY-RULE-SOVEREIGN-FLAGSHIP-01 & Directive 7 (GEMINI.md)
+# Standard: Universal Sovereign Observability Standard
 # Architecture: Pure POSIX /bin/sh - Zero external runtime dependencies.
 # Royalty Mode: Automatically discovers local project logs if none provided.
 # Agnostic Mode: Ingests any access log or JSON stream via pipe or argument.
@@ -32,9 +32,9 @@ Options:
   -h, --help        Show this help message and exit
   -v, --version     Show version and exit
 
-Context Auto-Discovery ("Royalty Mode"):
+Context Auto-Discovery:
   If no LOG_FILE or pipe is specified, $SCRIPT_NAME checks the current
-  environment for rmediatech, matrix, propylea, or system journalctl logs.
+  environment for local application logs, gateway logs, or system journalctl.
 EOF
     exit 0
 }
@@ -103,26 +103,17 @@ if [ -z "$INPUT_FILE" ]; then
         fi
     fi
 
-    # Royalty Context Auto-Discovery Mode (when stdin is empty or interactive)
+    # Auto-Discovery Mode (when stdin is empty or interactive)
     if [ -z "$INPUT_FILE" ]; then
         if [ -f "logs/app.out.log" ]; then
             INPUT_FILE="logs/app.out.log"
-            AUTO_DISCOVERED_DESC="Matrix-RS Native Log (logs/app.out.log)"
-        elif [ -d "crates/matrix-server" ] && [ -f "../../logs/app.out.log" ]; then
-            INPUT_FILE="../../logs/app.out.log"
-            AUTO_DISCOVERED_DESC="Matrix-RS Workspace Log"
-        elif [ -d "src/routes" ] && [ -f "Cargo.toml" ] && grep -q 'name = "rmediatech"' Cargo.toml 2>/dev/null; then
-            # Inside rmediatech repository: try user journalctl if available
-            if command -v journalctl >/dev/null 2>&1; then
-                TMP_STREAM=$(mktemp)
-                if journalctl --user -u rmediatech -n 2000 --no-pager > "$TMP_STREAM" 2>/dev/null && [ -s "$TMP_STREAM" ]; then
-                    INPUT_FILE="$TMP_STREAM"
-                    AUTO_DISCOVERED_DESC="RMediaTech Production Service Journal (Last 2000 events)"
-                fi
-            fi
+            AUTO_DISCOVERED_DESC="Application Native Log (logs/app.out.log)"
+        elif [ -f "logs/access.log" ]; then
+            INPUT_FILE="logs/access.log"
+            AUTO_DISCOVERED_DESC="Web Server Access Log (logs/access.log)"
         elif [ -f "propylea.log" ]; then
             INPUT_FILE="propylea.log"
-            AUTO_DISCOVERED_DESC="Propylea Edge Gateway Log"
+            AUTO_DISCOVERED_DESC="Edge Gateway Log"
         fi
 
         # Fallback to host journalctl or syslog if running on a live server node
@@ -221,7 +212,7 @@ function extract_subnet(ip) {
     ip = "";
     latency = 0;
 
-    # --- Matcher 1: Sovereign Axum / RMediaTech / Matrix Logger ---
+    # --- Matcher 1: Structured Key-Value Web Service Logger ---
     # Example: status=200 method=GET path=/ ip=1.2.3.4 duration_us=123
     if (line ~ /status=[0-9]+/) {
         if (match(line, /status=([0-9]+)/)) {

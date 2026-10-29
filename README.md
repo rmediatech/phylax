@@ -3,13 +3,13 @@
 <p align="center">
   <a href="https://github.com/rmediatech/phylax/actions/workflows/ci.yml"><img src="https://github.com/rmediatech/phylax/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <img src="https://img.shields.io/badge/Language-Pure%20Rust%202021-orange.svg" alt="Pure Rust" />
-  <img src="https://img.shields.io/badge/TDD%20Tests-122%2F122%20Passed-brightgreen.svg" alt="Tests" />
+  <img src="https://img.shields.io/badge/TDD%20Tests-125%2F125%20Passed-brightgreen.svg" alt="Tests" />
   <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
   <a href="https://github.com/rmediatech/phylax/releases/tag/v0.2.8"><img src="https://img.shields.io/badge/Release-v0.2.8-green.svg" alt="Release" /></a>
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
 </p>
 
-> **φύλαξ** (*phýlax* — ancient Greek for *"watcher, sentinel, guardian"*): A sovereign, 14-layer zero-telemetry edge defense, honeypot tarpit, and autonomous threat neutralization engine written in pure Rust.  
+> **φύλαξ** (*phýlax* — ancient Greek for *"watcher, sentinel, guardian"*): A sovereign, 15-layer zero-telemetry edge defense, honeypot tarpit, and autonomous threat neutralization engine written in pure Rust.  
 > 🛡️ *"From the wire to the RAM / 'Til the kernel drops that spam."*
 
 `phylax` shields web applications, APIs, and authentication endpoints against credential stuffing, automated bot swarms, Tor/datacenter crawlers, Slowloris starvation, and scraping—executing in **sub-microsecond memory operations** without sending a single byte of user telemetry to third parties.
@@ -39,7 +39,7 @@ When critical C-runtime vulnerabilities like **`CVE-2026-109618` and `CVE-2026-1
 > [!TIP]
 > **Already Running `phylax` or `propylea`? Sleep Easy—Zero Action Required:** If you already downloaded and deployed `phylax` and/or [`propylea`](https://github.com/rmediatech/propylea), you are already covered out of the box—**no emergency hotfixes, no signature updates, and no weekend maintenance windows needed**. Your existing binary's built-in decoy traps and TLS/radix filters have been catching and dropping these scanner waves automatically from packet one.
 
-📖 **Read the Full Battlefield Report:** [**Chapter 3: Production Case Study**](docs/03_CASE_STUDY_MATRIX_PRODUCTION.md)
+📖 **Read the Full Battlefield Report:** [**Chapter 3: Production Case Study**](docs/03_CASE_STUDY_WEBRTC_PRODUCTION.md)
 
 ---
 
@@ -94,9 +94,9 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 | Chapter | Document | Focus |
 |---|---|---|
 | **Index** | [**Master Navigation Map**](docs/INDEX.md) | Full architectural map and Optimal Journey Path index. |
-| **01** | [**Architecture & Cost Hierarchy**](docs/01_ARCHITECTURE_AND_COST_HIERARCHY.md) | 14 defensive layers, nanosecond Radix CIDR, Bloom filters, fail-fast mechanics. |
+| **01** | [**Architecture & Cost Hierarchy**](docs/01_ARCHITECTURE_AND_COST_HIERARCHY.md) | 15 defensive layers, nanosecond Radix CIDR, Bloom filters, fail-fast mechanics. |
 | **02** | [**Stealth Deception & Active Defense**](docs/02_STEALTH_DECEPTION_AND_ACTIVE_DEFENSE.md) | Silent neutralization vs 403, Deceptive Black Holes, perimeter ghosting. |
-| **03** | [**Case Study: Matrix WebRTC Mesh**](docs/03_CASE_STUDY_MATRIX_PRODUCTION.md) | Real-world battlefield deployment protecting real-time WebRTC mesh infrastructure. |
+| **03** | [**Case Study: Production WebRTC Media Engine**](docs/03_CASE_STUDY_WEBRTC_PRODUCTION.md) | Real-world battlefield deployment protecting real-time WebRTC mesh infrastructure. |
 | **04** | [**Integration & Framework Guide**](docs/04_INTEGRATION_AND_FRAMEWORK_GUIDE.md) | Axum, Actix-web, Tower, standalone reverse proxy, frontend `phylax.js`. |
 | **05** | [**Autonomous Abuse Intelligence**](docs/05_AUTONOMOUS_ABUSE_INTELLIGENCE.md) | Optional background AbuseIPDB v2 reporting, sliding-window rate governors. |
 | **06** | [**Production Deployment & Runbook**](docs/06_PRODUCTION_DEPLOYMENT_AND_RUNBOOK.md) | Systemd units, Caddyfile reverse proxy recipes, hardware sizing, epilogue. |
@@ -122,7 +122,7 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 
 ---
 
-## Architecture: 14-Layer Fail-Fast Cost Hierarchy
+## Architecture: 15-Layer Fail-Fast Cost Hierarchy
 
 `phylax` organizes defense into a strict **cost-hierarchical pipeline**. Inexpensive bitwise comparisons, radix-tree lookups, and Bloom checks execute first. If a malicious client triggers an early barrier, the request is denied or routed into an asymmetric tarpit before heavier cryptographic or stateful layers are reached.
 
@@ -134,7 +134,8 @@ flowchart LR
         L05 --> L1["1. Honeypot Validator\n(DOM Trap / Tarpit) ~5ns"]
         L1 --> L2["2. Subnet Guard\n(Tor / Scanner CIDR) ~15ns"]
         L2 --> L14["14. Sovereign Bot Guard\n(RFC 9309 UA Filter) ~12ns"]
-        L14 --> L3["3. Email Pattern Guard\n(Canonical / Burner) ~30ns"]
+        L14 --> L15["15. Adversarial Payload Guard\n(SQLi / Traversal / RCE) ~15ns"]
+        L15 --> L3["3. Email Pattern Guard\n(Canonical / Burner) ~30ns"]
     end
 
     subgraph Stage2 ["🔐 Stage II: Crypto & Identity (~25-500ns)"]
@@ -156,6 +157,25 @@ flowchart LR
     Stage1 ==>|"Pass (<85ns)"| Stage2
     Stage2 ==>|"Pass (<900ns)"| Stage3
 ```
+
+---
+
+## Pre-Built Sovereign Binaries (`v0.2.8`)
+
+Single standalone binaries compiled with zero cloud tracking and zero external dependencies. Verified with OpenPGP detached signatures (`SOVEREIGN-SIGN-01`):
+
+| Operating System | Architecture | Target Triplet | Pre-Built Archive | Detached Signature | SHA-256 Digest |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Linux (Static Musl)** | `x86_64` | `x86_64-unknown-linux-musl` | [**`phylax-v0.2.8-...-musl.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-unknown-linux-musl.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-unknown-linux-musl.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-unknown-linux-musl.tar.gz.sha256) |
+| **Linux (glibc)** | `x86_64` | `x86_64-unknown-linux-gnu` | [**`phylax-v0.2.8-...-gnu.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-unknown-linux-gnu.tar.gz.sha256) |
+| **Linux (ARM64)** | `aarch64` | `aarch64-unknown-linux-gnu` | [**`phylax-v0.2.8-...-aarch64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-aarch64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-aarch64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-aarch64-unknown-linux-gnu.tar.gz.sha256) |
+| **Windows** | `x86_64` | `x86_64-pc-windows-msvc` | [**`phylax-v0.2.8-...-windows.zip`**](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-pc-windows-msvc.zip) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-pc-windows-msvc.zip.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-pc-windows-msvc.zip.sha256) |
+| **macOS (Apple Silicon)** | `aarch64` (M1–M4) | `aarch64-apple-darwin` | [**`phylax-v0.2.8-...-darwin-arm64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-aarch64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-aarch64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-aarch64-apple-darwin.tar.gz.sha256) |
+| **macOS (Intel)** | `x86_64` | `x86_64-apple-darwin` | [**`phylax-v0.2.8-...-darwin-x64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/phylax-v0.2.8-x86_64-apple-darwin.tar.gz.sha256) |
+
+> 🔑 **Cryptographic Provenance Verification (`SOVEREIGN-SIGN-01`)**:  
+> All release archives and [`SHA256SUMS`](https://github.com/rmediatech/phylax/releases/download/v0.2.8/SHA256SUMS) manifests are cryptographically signed using the sovereign release key (`Rick Walker <rick@rmediatech.com>`, Key ID: `4E428019A109578B`).  
+> Verify provenance: `curl -sSL https://raw.githubusercontent.com/rmediatech/phylax/main/SOVEREIGN_RELEASE_KEY.asc | gpg --import && gpg --verify SHA256SUMS.asc SHA256SUMS`
 
 ---
 
@@ -598,7 +618,7 @@ Throughput Capacity:                 > 994,934 requests/sec/core
 ## Testing & Verification Suite
 
 ```bash
-# Execute full unit, integration, and adversarial test suite (122 tests)
+# Execute full unit, integration, and adversarial test suite (125 tests)
 $ cargo test --all-targets --all-features
 
 # Verify strict clippy compliance

@@ -1,6 +1,6 @@
 # ==============================================================================
 # [Phylax] PHYLAX THREAT RECONNAISSANCE & ABUSE INTELLIGENCE: phylax-threat-recon.ps1
-# Standard: AGY-RULE-SOVEREIGN-FLAGSHIP-01 & Directive 7 (GEMINI.md)
+# Standard: Universal Sovereign Threat Reconnaissance Standard
 # Cross-Platform Parity: Pure PowerShell Core (Windows / macOS / Linux)
 # ==============================================================================
 [CmdletBinding()]

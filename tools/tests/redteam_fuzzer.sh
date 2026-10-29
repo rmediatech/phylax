@@ -1,7 +1,7 @@
 #!/bin/sh
 # ==============================================================================
 # 🔴 PHYLAX SOVEREIGN RED-TEAM ADVERSARIAL SCRIPT FUZZER: redteam_fuzzer.sh
-# Standard: Directive 7 (GEMINI.md) & Sovereign Red-Team Attack Invariant
+# Standard: Universal Sovereign Red-Team Attack Invariant
 # Purpose: Attacking our own analytics scripts with weaponized log streams.
 # Vectors: Command injection, ANSI terminal hijacking, JSON breakouts, ReDoS.
 # ==============================================================================
@@ -46,7 +46,7 @@ echo "  ✓ DEFENDED: Command injection payloads safely neutralized as inert str
 echo "  [Vector 2] Attempting Terminal Hijack via ANSI Escape Code Poisoning..."
 ESC=$(printf '\033')
 cat << EOF > "$TOXIC_LOG"
-2026-09-26T08:00:00Z WARN matrix_server::middleware::phylax: ⛔ [Phylax] Automated bot or scraper blocked at perimeter., ip: 1.2.3.4, path: /login, ua: ${ESC}[2J${ESC}[H${ESC}[31mPWNED_TERMINAL
+2026-09-26T08:00:00Z WARN api_server::middleware::phylax: ⛔ [Phylax] Automated bot or scraper blocked at perimeter., ip: 1.2.3.4, path: /login, ua: ${ESC}[2J${ESC}[H${ESC}[31mPWNED_TERMINAL
 EOF
 
 OUTPUT=$("$TOOL_PATH" "$TOXIC_LOG")

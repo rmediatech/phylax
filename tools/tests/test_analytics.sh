@@ -1,7 +1,7 @@
 #!/bin/sh
 # ==============================================================================
 # 🧪 PHYLAX SOVEREIGN ANALYTICS TDD BATTERY: test_analytics.sh
-# Standard: Directive 7 (GEMINI.md) & POC TDD Invariant
+# Standard: Universal Adversarial TDD Invariant
 # Tests: File input, stdin pipe, JSON schema validation, ranking limits.
 # ==============================================================================
 set -eu
@@ -32,7 +32,7 @@ cat << 'EOF' > "$FIXTURE_LOG"
 2026-09-26T08:00:02.000000Z  INFO rmediatech::http: ✓ HTTP 3xx Redirect status=303 method=GET path=/downloads ip=2.2.2.2 duration_us=50
 2026-09-26T08:00:03.000000Z  WARN rmediatech::http: ⚠️ HTTP 4xx Client Warning status=404 method=GET path=/api/missing-sdk ip=3.3.3.3 duration_us=25
 2026-09-26T08:00:04.000000Z  WARN rmediatech::http: ⚠️ HTTP 4xx Client Warning status=405 method=POST path=/ ip=4.4.4.4 duration_us=30
-2026-09-26T08:00:05.000000Z  WARN matrix_server::middleware::phylax: ⛔ [Phylax] Automated bot or scraper blocked at perimeter., ip: 5.5.5.5, path: /login, ua: MaliciousBot/2.0
+2026-09-26T08:00:05.000000Z  WARN api_server::middleware::phylax: ⛔ [Phylax] Automated bot or scraper blocked at perimeter., ip: 5.5.5.5, path: /login, ua: MaliciousBot/2.0
 EOF
 
 # Test 1: File Input execution

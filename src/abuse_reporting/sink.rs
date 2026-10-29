@@ -100,11 +100,12 @@ impl IncidentSink for GenericWebhookSink {
     }
 
     async fn dispatch(&self, dossier: &ForensicDossier) -> Result<SinkReceipt, AbuseReportError> {
+        let ua = format!("Phylax-Sovereign-Defense/{}", env!("CARGO_PKG_VERSION"));
         let mut req = self
             .client
             .post(&self.url)
             .header("Content-Type", "application/json")
-            .header("User-Agent", "Phylax-Sovereign-Defense/0.1.0");
+            .header("User-Agent", ua);
 
         for (k, v) in &self.headers {
             req = req.header(k, v);
@@ -166,7 +167,8 @@ impl IncidentSink for SyslogCefSink {
             .unwrap_or_else(|| "none".to_string());
 
         let cef = format!(
-            "CEF:0|Phylax|EdgeDefense|0.1.0|{}|{}|8|src={} requestMethod={} request={} cs1Label=HoneypotField cs1={}",
+            "CEF:0|Phylax|EdgeDefense|{}|{}|{}|8|src={} requestMethod={} request={} cs1Label=HoneypotField cs1={}",
+            env!("CARGO_PKG_VERSION"),
             dossier.category.name(),
             dossier.category.name(),
             safe_ip,

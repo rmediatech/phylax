@@ -284,9 +284,11 @@ async fn test_syslog_cef_sink_formats_standard_cef_payload() {
         .await
         .expect("CEF format should succeed");
     assert_eq!(receipt.sink_name, "SyslogCEF");
-    assert!(receipt.detail.starts_with(
-        "CEF:0|Phylax|EdgeDefense|0.1.0|Web Honeypot Trap|Web Honeypot Trap|8|src=203.0.113.55"
-    ));
+    let expected_prefix = format!(
+        "CEF:0|Phylax|EdgeDefense|{}|Web Honeypot Trap|Web Honeypot Trap|8|src=203.0.113.55",
+        env!("CARGO_PKG_VERSION")
+    );
+    assert!(receipt.detail.starts_with(&expected_prefix));
     assert!(receipt.detail.contains("requestMethod=GET"));
     assert!(receipt.detail.contains("request=/admin"));
     assert!(receipt.detail.contains("cs1=company_fax"));

@@ -18,7 +18,7 @@ Modern edge security frequently relies on third-party cloud intermediaries (Clou
 
 ---
 
-## 2. The 12-Layer Fail-Fast Cost Hierarchy
+## 2. The 15-Layer Fail-Fast Cost Hierarchy
 
 A fundamental vulnerability of naive security systems is **asymmetric compute exhaustion**: an attacker sends inexpensive 100-byte forged requests, forcing the backend to execute expensive database lookups, bcrypt password hashes, or TLS handshakes.
 
@@ -30,7 +30,11 @@ flowchart TD
     L0 -- Quarantined --> STOP["Silent Drop / 404 / Black Hole"]
     L0 -- Pass --> L05["0.5 Decoy URI Honeyroutes (~5-10ns)"]
     L05 -- Trapped --> STOP
-    L05 -- Pass --> L1["1. Honeypot Decoy Trap (~5ns)"]
+    L05 -- Pass --> L14["14. Bot Guard UA & Scrapers (~20ns)"]
+    L14 -- Hostile Automation --> STOP
+    L14 -- Pass --> L15["15. Adversarial Payload Guard (~15ns)"]
+    L15 -- SQLi / Traversal / RCE --> STOP
+    L15 -- Pass --> L1["1. Honeypot Decoy Trap (~5ns)"]
     L1 -- Trapped --> STOP
     L1 -- Pass --> L2["2. Subnet Perimeter Guard (~15ns)"]
     L2 -- Hostile Subnet --> STOP
@@ -77,10 +81,12 @@ flowchart TD
 | **11** | `stream_guard` | L7 Slowloris & chunked trickle mitigation | `~50 ns` | Stream duration & rate quota inspector |
 | **12** | `cache_shield` | Zero-lock atomic memory cache (ETag / 304) | `~20 ns` | Lock-free concurrent atomic cache |
 | **13** | `threat_harvester` | Autonomous Zero-Day & CVE Campaign Correlator | `~25 ns` | Mathematical multi-subnet sliding window |
+| **14** | `bot_guard` | Sub-microsecond AI Scraper & Scanner Interception | `~20 ns` | Zero-copy User-Agent signature matching |
+| **15** | `payload_guard` | Zero-allocation Exploit & Traversal Neutralizer | `~15 ns` | Fast byte scanner with percent-decode |
 
 ### Empirical Execution & Latency Budget Waterfall
 
-The following execution waterfall illustrates how all 13 defensive layers execute in **$< 1\text{ microsecond}$** total combined latency, contrasting with traditional cloud WAFs that introduce 20,000 to 80,000 microseconds (20ms–80ms) of network jitter:
+The following execution waterfall illustrates how all 15 defensive layers execute in **$< 1\text{ microsecond}$** total combined latency, contrasting with traditional cloud WAFs that introduce 20,000 to 80,000 microseconds (20ms–80ms) of network jitter:
 
 ```mermaid
 gantt

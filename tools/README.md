@@ -1,6 +1,6 @@
 # 🛡️ Phylax Sovereign Analytics & Observability Suite
 
-> **Sovereign Ecosystem Standard:** Directive 7 (`GEMINI.md`)  
+> **Sovereign Standard:** High-Performance Zero-Dependency Infrastructure Observability  
 > **Architecture:** Zero-dependency, pure POSIX `/bin/sh` + Native PowerShell Core (`.ps1`).  
 > **Security Invariant:** Defensively hardened against log poisoning, ANSI escape terminal hijacking, command injection, and ReDoS buffer attacks.
 
@@ -11,7 +11,7 @@
 The Phylax Analytics Suite operates in two seamless operational modes:
 
 1. **Universal Agnostic Mode:** Ingests any standard access log, combined web log, or JSON stream via pipe or file argument. Runs on Linux (Musl/Glibc), macOS, FreeBSD, Solaris/illumos, and Windows.
-2. **Native Sovereign Auto-Discovery ("Royalty Mode"):** When executed within a Sovereign Ecosystem project (`rmediatech`, `matrix`, `propylea`, `phylax`) without arguments, it automatically discovers local logs, databases, and telemetry stores to deliver instant forensic intelligence.
+2. **Native Sovereign Auto-Discovery ("Royalty Mode"):** When executed within a service directory without arguments, it automatically discovers local logs, databases, and telemetry stores to deliver instant forensic intelligence.
 
 ---
 
@@ -27,7 +27,7 @@ The Phylax Analytics Suite operates in two seamless operational modes:
 ./tools/analytics/phylax-analyze-traffic.sh
 
 # Ingest live piped stream (e.g. journalctl or log tail)
-journalctl -u rmediatech -n 200 --no-pager | phylax-analyze-traffic.sh
+journalctl -u web-service -n 200 --no-pager | phylax-analyze-traffic.sh
 
 # Analyze a specific access log file
 ./tools/analytics/phylax-analyze-traffic.sh /var/log/access.log

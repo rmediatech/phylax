@@ -1,6 +1,6 @@
 # ==============================================================================
 # [Phylax] PHYLAX SOVEREIGN ANALYTICS ENGINE: phylax-analyze-traffic.ps1
-# Standard: AGY-RULE-SOVEREIGN-FLAGSHIP-01 & Directive 7 (GEMINI.md)
+# Standard: Universal Sovereign Observability Standard
 # Architecture: Native PowerShell Core (Windows & Cross-Platform).
 # Royalty Mode: Automatically discovers local project logs if none provided.
 # Agnostic Mode: Ingests any access log or JSON stream via pipe or argument.
@@ -67,7 +67,7 @@ if ($InputPath -and (Test-Path $InputPath)) {
 } else {
     # Attempt local auto-discovery
     if (Test-Path "logs/app.out.log") {
-        $SourceDesc = "Matrix-RS Native Log (logs/app.out.log)"
+        $SourceDesc = "Application Native Log (logs/app.out.log)"
         $Lines = Get-Content -Path "logs/app.out.log" -Tail 2000
     } elseif (Test-Path "propylea.log") {
         $SourceDesc = "Propylea Gateway Log"
