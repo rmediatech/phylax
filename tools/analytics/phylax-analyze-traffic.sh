@@ -264,7 +264,7 @@ function extract_subnet(ip) {
         }
     }
     # --- Matcher 3: Phylax WAF Perimeter Interceptions ---
-    # Example: ⛔ [Phylax] Automated bot or scraper blocked at perimeter., ip: 96.227.137.21, path: /login, ua: GPTBot/1.4
+    # Example: ⛔ [Phylax] Automated bot or scraper blocked at perimeter., ip: 198.51.100.42, path: /login, ua: GPTBot/1.4
     else if (line ~ /\[Phylax\]/) {
         status = 403;
         method = "BOT_WAF";

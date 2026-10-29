@@ -474,14 +474,14 @@ Zero-allocation sub-microsecond classification engine deflecting aggressive AI m
 
 ```text
 [PHYLAX BOT GUARD] Intercepted automated crawler:
-  Client IP:      96.227.137.21
+  Client IP:      198.51.100.42
   Target Path:    /
   User-Agent:     Claude-SearchBot/1.0
   Classification: BotCategory::AiScraper (Claude-SearchBot)
   Action:         Deflected with HTTP 403 Forbidden (RFC 9309)
 ```
 
-### 8. Adversarial Exploit & Kali Arsenal Deflection (`PayloadGuard` / Layer 15)
+### 8. Adversarial Exploit & Offensive Penetration Arsenal Deflection (`PayloadGuard` / Layer 15)
 Zero-allocation, zero-copy percent-decoding inspection engine inspecting request paths, headers, and query strings against modern automated penetration tools and exploit vectors:
 
 * **SQL Injection (SQLi)**: Deflects union-based, boolean-blind, and time-based injection attacks (`union select`, `' or 1=1`, `exec xp_cmdshell`, `sleep(`, `benchmark(`) favored by `sqlmap`.

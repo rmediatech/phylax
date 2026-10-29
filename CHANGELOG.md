@@ -130,10 +130,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Scrubbed machine-specific paths; supports standard `/var/log` paths and sovereign project roots.
 * **Adversarial Test Assertions (`POC TDD+++++`)**:
   - 114/114 core unit, integration, and active defense tests passing in `< 0.15s`.
-  - Verified on Buffalo NAS KVM VM (`citadel-vm1`) clean-room environment.
+  - Verified across isolated POSIX Linux clean-room environments.
 * **Cross-Platform Windows IOCP Engine & PowerShell 5.1/Core Hardening**:
   - Validated native compilation for `x86_64-pc-windows-gnu` PE32+ 64-bit binaries.
-  - Executed automated 7-test verification suite on Windows Server 2022 KVM VM (`citadel-win1`):
+  - Executed automated 7-test verification suite on isolated Windows Server clean-room testbeds:
     - Sub-microsecond microbenchmark on Windows: Honeypot validation `8.74 ns`, total perimeter evaluation `1005.09 ns` (> 994,000 req/sec/core).
     - In-memory Radix IP CIDR subnet blocking validated (`193.189.100.1` blocked by `193.189.100.0/24`).
   - Hardened `phylax-analyze-traffic.ps1` and `phylax-threat-recon.ps1` for PowerShell 5.1 ANSI (Windows-1252) parser compatibility by enforcing 7-bit ASCII status tokens, explicit positional parameter bindings (`Position = 0`), and `-f` format strings, eliminating emoji byte sequence parsing exceptions on legacy Windows PowerShell engines while preserving 100% parity on PowerShell Core 7+.
