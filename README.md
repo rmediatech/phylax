@@ -6,6 +6,8 @@
   <img src="https://img.shields.io/badge/TDD%20Tests-125%2F125%20Passed-brightgreen.svg" alt="Tests" />
   <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
   <a href="https://github.com/rmediatech/phylax/releases/tag/v0.2.8"><img src="https://img.shields.io/badge/Release-v0.2.8-green.svg" alt="Release" /></a>
+  <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-blue.svg" alt="Platform: Linux | Windows | macOS" />
+  <img src="https://img.shields.io/badge/Arch-x86__64%20%7C%20aarch64-blueviolet.svg" alt="Arch: x86_64 | aarch64" />
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
 </p>
 
