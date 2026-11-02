@@ -11,19 +11,26 @@
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
 </p>
 
+<p align="center">
+  <img src="assets/phylax_emblem.svg" alt="Phylax Mathematical Emblem" width="190" />
+</p>
+
 > **φύλαξ** (*phýlax* — ancient Greek for *"watcher, sentinel, guardian"*): A sovereign, 15-layer zero-telemetry edge defense, honeypot tarpit, and autonomous threat neutralization engine written in pure Rust.  
 > 🛡️ *"From the wire to the RAM / 'Til the kernel drops that spam."*
 
-`phylax` shields web applications, APIs, and authentication endpoints against credential stuffing, automated bot swarms, Tor/datacenter crawlers, Slowloris starvation, and scraping—executing in **sub-microsecond memory operations** without sending a single byte of user telemetry to third parties.
+### 🏛️ Mythological Lineage & Geometric Rationale
+* **The Guardian Sentinel**: In ancient Greece, the **Phylax** (*Φύλαξ*, pl. *Phylakes*) was the vigilant watchman stationed at citadel bastions, city ramparts, and frontier outposts. Uncorrupted by gold and unswayed by fatigue, the phylakes maintained continuous night vigils, signaling alarms against nocturnal stealth incursions, covert saboteurs, and perimeter breaches.
+* **Sovereign Architectural Role**: In our software ecosystem, `phylax` serves as the in-process autonomous perimeter shield and Layer 7 Web Application Firewall (WAF). It detects and neutralizes zero-day web attacks, crawler botnets, and credential stuffers in $<15\text{ns}$ using bitwise Radix Tries, quadratic Proof-of-Work penalties, and socket-hostage reverse Slowloris tarpits.
+* **Mathematical Crest Geometry**: Rendered from pure geometric equations on a transparent background, the crest features a 14-vertex regular star polygon ($\{14/5\}$ heptagrammic barrier), concentric defensive radar rings, a 7-lobed polar rose curve ($r = 110 + 45\cos(7\theta)$), and bitwise radial branch lines with coordinate node vertices—symbolizing an impenetrable algorithmic fortress.
 
 ---
 
-## 🛡️ Proven in Production: Real-Time WebRTC SFU & Sovereign Edge
+## 🛡️ Proven in Production: Sovereign Edge & Real-Time Defense
 
 > **Platform Showcase:** [`rmediatech.com`](https://rmediatech.com)  
-> **Mission:** Commercial control plane, multi-tenant WebRTC SFU media signaling, spatial audio, and encrypted real-time DataChannels.
+> **Mission:** Commercial control plane, sovereign media signaling, spatial audio, and encrypted real-time DataChannels.
 
-`phylax` serves as the native, in-process application shield for **[`rmediatech.com`](https://rmediatech.com)** — working hand-in-hand with **[`propylea`](https://github.com/rmediatech/propylea)** at the outer TLS/L7 perimeter to protect high-throughput WebRTC SFU media pipelines and public authentication endpoints under continuous adversarial load:
+`phylax` serves as the native, in-process application shield for **[`rmediatech.com`](https://rmediatech.com)** — working hand-in-hand with **[`propylea`](https://github.com/rmediatech/propylea)** at the outer TLS/L7 perimeter to protect high-throughput media pipelines and public authentication endpoints under continuous adversarial load:
 
 * **Zero Latency Budget Compromise:** Executes in `<950ns` in memory, adding `0.00ms` of network jitter to WebSockets and WebRTC media streams.
 * **Stealth Deception & Silent Neutralization:** Replaces alerting `403 Forbidden` errors with **Synthetic 201 Created Black Holes** on registration, generic 401s on login, and stealth 404 perimeter ghosting.
