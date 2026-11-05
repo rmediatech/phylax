@@ -37,6 +37,8 @@ pub const STANDARD_EXACT_TRAPS: &[(&str, DecoyCategory)] = &[
     // CMS & Admin Panels
     ("/wp-login.php", DecoyCategory::AdminCmsProbe),
     ("/xmlrpc.php", DecoyCategory::AdminCmsProbe),
+    ("/phpinfo.php", DecoyCategory::AdminCmsProbe),
+    ("/.ds_store", DecoyCategory::VersionControl),
     (
         "/sites/default/settings.php.old",
         DecoyCategory::AdminCmsProbe,
