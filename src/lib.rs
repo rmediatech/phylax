@@ -19,6 +19,8 @@
 //! - Layer 13: Autonomous Zero-Day & Emerging Threat Harvester (`threat_harvester`)
 //! - Layer 14: Sovereign Bot Guard & User-Agent Interception (`bot_guard`)
 //! - Layer 15: Adversarial Exploit & Traversal Payload Guard (`payload_guard`)
+//! - Layer 16: Synthetic Mirage Active Deception & Scanner Poisoning (`mirage`)
+//! - Outside-In Surface Exposure Auditor (`surface_audit`)
 
 pub mod adaptive_pow;
 pub mod autonomous_quarantine;
@@ -30,6 +32,7 @@ pub mod dist_guard;
 pub mod email_guard;
 pub mod honeypot;
 pub mod maintenance;
+pub mod mirage;
 pub mod payload_guard;
 pub mod pipeline;
 pub mod pow;
@@ -37,6 +40,7 @@ pub mod sanitize;
 pub mod session_sentinel;
 pub mod stream_guard;
 pub mod subnet_guard;
+pub mod surface_audit;
 pub mod tarpit;
 pub mod threat_harvester;
 pub mod threat_intel;
@@ -60,6 +64,7 @@ pub use dist_guard::{DistGuard, DistGuardConfig, DistVerdict};
 pub use email_guard::{EmailPatternGuard, EmailVerdict};
 pub use honeypot::{HoneypotValidator, HoneypotVerdict};
 pub use maintenance::{MaintenanceManager, MaintenanceReport};
+pub use mirage::{MirageConfig, MirageEngine, MiragePayload};
 pub use payload_guard::{AdversarialPayload, PayloadGuard};
 pub use pipeline::{
     DenialReason, PhylaxClientContext, PhylaxPipeline, PhylaxPipelineBuilder, PhylaxRequest,
@@ -72,6 +77,10 @@ pub use session_sentinel::{
 };
 pub use stream_guard::{RouteCategory, StreamGuard, StreamGuardConfig, StreamVerdict};
 pub use subnet_guard::{IpRiskCategory, SubnetGuard, SubnetVerdict};
+pub use surface_audit::{
+    ExposureVerdict, ProbeAuditResult, SurfaceAuditEngine, SurfaceExposureReport,
+    SurfaceProbeVector, CANONICAL_SURFACE_VECTORS,
+};
 pub use tarpit::{TarpitConfig, TarpitGovernor, TarpitSlotGuard, TarpitVerdict};
 pub use threat_harvester::{
     CandidatePathRecord, PromotionVerdict, SubnetKey, ThreatHarvesterConfig, ThreatHarvesterEngine,
@@ -96,6 +105,7 @@ pub mod prelude {
     pub use crate::dist_guard::DistGuard;
     pub use crate::email_guard::EmailPatternGuard;
     pub use crate::honeypot::HoneypotValidator;
+    pub use crate::mirage::{MirageConfig, MirageEngine, MiragePayload};
     pub use crate::pipeline::{
         DenialReason, PhylaxClientContext, PhylaxPipeline, PhylaxPipelineBuilder, PhylaxRequest,
         PhylaxVerdict, ShieldClientContext, ShieldPipeline, ShieldRequest, ShieldVerdict,
@@ -104,6 +114,7 @@ pub mod prelude {
     pub use crate::session_sentinel::{GeoCoordinate, SessionSentinel};
     pub use crate::stream_guard::{RouteCategory, StreamGuard};
     pub use crate::subnet_guard::SubnetGuard;
+    pub use crate::surface_audit::{ExposureVerdict, SurfaceAuditEngine, SurfaceExposureReport};
     pub use crate::threat_harvester::{ThreatHarvesterConfig, ThreatHarvesterEngine};
     pub use crate::timing::TimingGuard;
     pub use crate::toll_guard::TollGuard;

@@ -7,6 +7,7 @@ use axum::Router;
 use clap::Args;
 use phylax::adaptive_pow::AdaptivePowConfig;
 use phylax::autonomous_quarantine::QuarantineConfig;
+use phylax::mirage::{MirageConfig, MirageEngine};
 use phylax::pipeline::PhylaxPipeline;
 use phylax::tarpit::TarpitConfig;
 use std::net::SocketAddr;
@@ -23,6 +24,7 @@ struct DefenseConfigToml {
     honeypot_fields: Option<Vec<String>>, timing_min_ms: Option<u64>, pow_difficulty: Option<u8>,
     pow_expiration_ms: Option<u64>, enable_tarpit: Option<bool>, max_concurrent_tarpits: Option<usize>,
     enable_autonomous_quarantine: Option<bool>, quarantine_threshold: Option<u32>, quarantine_duration_ms: Option<u64>,
+    enable_mirage: Option<bool>,
 }
 
 #[rustfmt::skip]
@@ -231,6 +233,14 @@ pub async fn run_serve(args: ServeArgs) -> Result<(), Box<dyn std::error::Error>
     }
 
     let pipeline = Arc::new(builder.build());
+    let mirage_enabled = def.and_then(|d| d.enable_mirage).unwrap_or(true);
+    let mirage = Arc::new(MirageEngine::new(
+        secret.as_bytes(),
+        MirageConfig {
+            enabled: mirage_enabled,
+            ..Default::default()
+        },
+    ));
     let maintenance_handle =
         pipeline.spawn_background_maintenance(Duration::from_secs(maintenance_interval_s));
     let upstream = upstream_url.trim_end_matches('/').to_string();
@@ -240,6 +250,7 @@ pub async fn run_serve(args: ServeArgs) -> Result<(), Box<dyn std::error::Error>
 
     let state = ProxyState {
         pipeline: pipeline.clone(),
+        mirage,
         http_client,
         upstream: upstream.clone(),
         start_time: Instant::now(),
@@ -261,6 +272,14 @@ pub async fn run_serve(args: ServeArgs) -> Result<(), Box<dyn std::error::Error>
     println!(
         "  🔒 Autonomous CIDR:    {}",
         if quarantine_enabled {
+            "ENABLED"
+        } else {
+            "DISABLED"
+        }
+    );
+    println!(
+        "  🎭 Mirage Deception:   {}",
+        if mirage_enabled {
             "ENABLED"
         } else {
             "DISABLED"

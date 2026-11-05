@@ -6,6 +6,7 @@ use axum::extract::{ConnectInfo, State};
 use axum::http::header::HeaderMap;
 use axum::http::{Method, StatusCode, Uri};
 use axum::response::{IntoResponse, Response};
+use phylax::mirage::MirageEngine;
 use phylax::pipeline::{DenialReason, PhylaxPipeline, PhylaxRequest, ShieldVerdict};
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -14,6 +15,7 @@ use std::time::{Instant, SystemTime, UNIX_EPOCH};
 #[derive(Clone)]
 pub struct ProxyState {
     pub pipeline: Arc<PhylaxPipeline>,
+    pub mirage: Arc<MirageEngine>,
     pub http_client: reqwest::Client,
     pub upstream: String,
     pub start_time: Instant,
@@ -134,6 +136,27 @@ pub async fn handle_proxy(
     };
 
     if let ShieldVerdict::Deny(reason) = verdict {
+        if let DenialReason::DecoyUriTrapped { ref category, .. } = reason {
+            if state.mirage.config().enabled {
+                let cat = phylax::decoy_uri::DecoyCategory::from_name(category);
+                let payload = state.mirage.synthesize(cat, target_uri, &client_ip, 1);
+                println!(
+                    "  🎭 [PHYLAX MIRAGE] Poisoned scanner: {} | Probe: {} {} | Canary: {}",
+                    client_ip, http_method, target_uri, payload.canary_fingerprint
+                );
+                let mut builder = Response::builder()
+                    .status(StatusCode::from_u16(payload.status_code).unwrap_or(StatusCode::OK))
+                    .header("Content-Type", payload.content_type)
+                    .header("Server", payload.decoy_server_header);
+                for (k, v) in &payload.extra_headers {
+                    builder = builder.header(k.as_str(), v.as_str());
+                }
+                return builder
+                    .body(axum::body::Body::from(payload.body))
+                    .unwrap_or_else(|_| StatusCode::NOT_FOUND.into_response());
+            }
+        }
+
         println!(
             "  🛡️  [PHYLAX BLOCKED] Source: {} | Endpoint: {} {} | Reason: {}",
             client_ip,

@@ -4,6 +4,20 @@ All notable changes, defense layer releases, and architectural milestones for **
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-11-04 (Layer 16 Synthetic Mirage Active Deception & Outside-In Surface Exposure Auditor)
+
+### 🌟 Added & Fortified
+* **`[Protocol / Active Deception]` Synthetic Mirage Poisoning Engine (`src/mirage.rs` / Layer 16)**:
+  - *Root Cause Dissection*: Returning a dry `403 Forbidden` or uniform `404 Not Found` on decoy honeyroutes (`/.env`, `/.git/config`, `/wp-login.php`, `/actuator/env`, `/dump.sql`, `/id_rsa`, `/terraform.tfstate`) allows automated attack-surface scanners (`fscan`, `cscan`, `nuclei`, `sqlmap`) to rapidly discard the probe in milliseconds and move to the next vector with zero false-positive friction in their C2 loot databases.
+  - *Architectural & Mathematical Resolution*: Engineered `MirageEngine` (`src/mirage.rs`) to synthesize realistic `200 OK` poison artifacts across all 7 `DecoyCategory` classes with authentic MIME types (`text/plain`, `application/json`, `text/html`, `application/sql`, `application/x-pem-file`) and decoy `Server` banners (`nginx/1.24.0`, `Apache/2.4.58`, `AmazonS3`). Every fake credential (`AKIA...`, `sk_live_...`, `ghp_...`, `tok_live_...`) is deterministically derived via `HMAC-SHA256(secret_key, client_ip | label)` so any out-of-band credential replay mathematically unmasks the original scanner IP. Includes quadratic tarpit drip-delay calculation (`compute_drip_delay_ms`) bounded by `max_drip_delay_ms`.
+  - *Empirical Verification*: Verified by `tests/adversarial_mirage_and_surface_tdd.rs` (`test_mirage_synthesizes_all_seven_decoy_categories_with_valid_canaries`, `test_mirage_canary_attribution_is_deterministic_per_ip_and_unique_across_ips`, `test_mirage_neutralizes_ansi_escape_and_control_injection_in_inputs`).
+* **`[Crucible / Diagnostics]` Outside-In Attack Surface Exposure Auditor (`src/surface_audit.rs` & `phylax audit-surface`)**:
+  - *Root Cause Dissection*: Operators deploying multi-node perimeters lacked a built-in, zero-dependency outside-in exposure verifier to confirm that all 12 canonical scanner targets (`/.env`, `/.git/config`, `/.svn/wc.db`, `/terraform.tfstate`, `/.aws/credentials`, `/wp-login.php`, `/actuator/env`, `/phpinfo.php`, `/dump.sql`, `/id_rsa`, `/_sovereign/canary_trap`, `/.DS_Store`) and hardening headers (`Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`) are properly contained.
+  - *Architectural & Mathematical Resolution*: Engineered `SurfaceAuditEngine` (`src/surface_audit.rs`) and the `phylax audit-surface --url <URL> [--json]` CLI subcommand (`src/bin/phylax/audit.rs`) to classify each vector into `ProtectedByMirage`, `ProtectedByBlock`, `CleanGhost404`, or `ExposedRisk` and compute an overall perimeter posture grade (`A+ Sovereign Mirage Fortress` down to `F CRITICAL SURFACE EXPOSURE`).
+  - *Empirical Verification*: Verified by `test_surface_audit_engine_grades_mirage_fortress_vs_exposed_risk` in `tests/adversarial_mirage_and_surface_tdd.rs`.
+
+---
+
 ## [0.2.8] - 2026-10-29 (Path Traversal Signature Precision & Zero False-Positive URL Handling)
 
 ### 🌟 Added & Fortified

@@ -39,6 +39,18 @@ impl DecoyCategory {
             Self::Custom => "Custom Decoy Honeyroute",
         }
     }
+
+    pub fn from_name(name: &str) -> Self {
+        match name {
+            "Environment & Secrets Probe" => Self::EnvironmentSecret,
+            "Version Control Repository Probe" => Self::VersionControl,
+            "Cloud & Infrastructure State Probe" => Self::CloudInfrastructure,
+            "Administrative & CMS Panel Probe" => Self::AdminCmsProbe,
+            "Database & Filesystem Backup Probe" => Self::DatabaseBackup,
+            "Cryptographic Private Key Probe" => Self::PrivateKey,
+            _ => Self::Custom,
+        }
+    }
 }
 
 /// Verdict returned from Decoy URI evaluation

@@ -4,10 +4,12 @@
 //! Run standalone in front of ANY backend stack (Node.js, Python, Go, PHP, Ruby, Java)
 //! or execute administrative and debugging tasks.
 
+mod audit;
 mod commands;
 mod proxy;
 mod serve;
 
+use audit::AuditSurfaceArgs;
 use clap::{Parser, Subcommand};
 use commands::{ChallengeArgs, CheckIpArgs, InitArgs, SolveArgs};
 use serve::ServeArgs;
@@ -17,8 +19,8 @@ use serve::ServeArgs;
     name = "phylax",
     author = "Rick <rick@rmediatech.com>",
     version,
-    about = "Sovereign 15-layer edge defense, honeypot tarpit, and autonomous anti-bot WAF",
-    long_about = "Phylax (φύλαξ) provides sub-microsecond edge security against credential stuffing, automated bots, Tor/datacenter crawlers, and Slowloris attacks with zero external telemetry."
+    about = "Sovereign 16-layer edge defense, synthetic mirage deception, and autonomous anti-bot WAF",
+    long_about = "Phylax (φύλαξ) provides sub-microsecond edge security, active Mirage decoy poisoning, outside-in surface exposure auditing, and autonomous CIDR quarantine with zero external telemetry."
 )]
 struct Cli {
     #[command(subcommand)]
@@ -35,6 +37,8 @@ enum Commands {
     Solve(SolveArgs),
     /// Inspect an IP address against known threat subnets, autonomous quarantine, or AbuseIPDB
     CheckIp(CheckIpArgs),
+    /// Audit an edge target URL against canonical exposure vectors and Mirage deception posture
+    AuditSurface(AuditSurfaceArgs),
     /// Generate a production-ready phylax.toml configuration file
     Init(InitArgs),
     /// Execute the internal sub-microsecond microbenchmark suite
@@ -50,6 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::Challenge(args) => commands::run_challenge(args),
         Commands::Solve(args) => commands::run_solve(args),
         Commands::CheckIp(args) => commands::run_check_ip(args).await?,
+        Commands::AuditSurface(args) => audit::run_audit_surface(args).await?,
         Commands::Init(args) => commands::run_init(args)?,
         Commands::Bench => commands::run_bench(),
     }
