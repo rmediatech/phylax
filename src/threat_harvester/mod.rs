@@ -101,6 +101,16 @@ impl ThreatHarvesterEngine {
         self.candidates.read().get(&normalized).cloned()
     }
 
+    /// Returns a snapshot of all promoted candidate records (zero-day paths elevated to active decoy traps)
+    pub fn promoted_records(&self) -> Vec<CandidatePathRecord> {
+        self.candidates
+            .read()
+            .values()
+            .filter(|rec| rec.promoted)
+            .cloned()
+            .collect()
+    }
+
     /// Ingest an unmapped or anomalous URI probe from an incoming request
     pub fn ingest_anomalous_uri(
         &self,

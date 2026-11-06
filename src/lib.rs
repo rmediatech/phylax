@@ -47,6 +47,7 @@ pub mod threat_intel;
 pub mod timing;
 pub mod toll_guard;
 pub mod turn_guard;
+pub mod xdp_shield;
 
 #[cfg(feature = "abuse-reporting")]
 pub mod abuse_reporting;
@@ -88,6 +89,10 @@ pub use threat_harvester::{
 pub use timing::{TimingGuard, TimingVerdict};
 pub use toll_guard::{TollGuard, TollGuardConfig, TollVerdict};
 pub use turn_guard::{TurnCredentials, TurnGuard, TurnGuardConfig, TurnVerdict};
+pub use xdp_shield::{
+    generate_ebpf_xdp_bytecode, BpfLpmKeyV4, BpfLpmKeyV6, BpfXdpBanValue, EbpfInsn, XdpAction,
+    XdpBanReason, XdpShieldConfig, XdpTelemetryMetrics, XdpVerdict, XdpWireShield,
+};
 
 #[cfg(feature = "abuse-reporting")]
 pub use abuse_reporting::{

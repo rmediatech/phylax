@@ -31,6 +31,7 @@ pub struct ShieldPipelineBuilder {
     quarantine_config: QuarantineConfig,
     decoy_uri_config: DecoyUriConfig,
     threat_harvester_config: crate::threat_harvester::ThreatHarvesterConfig,
+    xdp_shield_config: crate::xdp_shield::XdpShieldConfig,
     #[cfg(feature = "abuse-reporting")]
     informant: Option<Arc<crate::abuse_reporting::InformantEngine>>,
 }
@@ -53,6 +54,7 @@ impl Default for ShieldPipelineBuilder {
             quarantine_config: QuarantineConfig::default(),
             decoy_uri_config: DecoyUriConfig::default(),
             threat_harvester_config: crate::threat_harvester::ThreatHarvesterConfig::default(),
+            xdp_shield_config: crate::xdp_shield::XdpShieldConfig::default(),
             #[cfg(feature = "abuse-reporting")]
             informant: None,
         }
@@ -163,6 +165,11 @@ impl ShieldPipelineBuilder {
         self
     }
 
+    pub fn with_xdp_shield(mut self, config: crate::xdp_shield::XdpShieldConfig) -> Self {
+        self.xdp_shield_config = config;
+        self
+    }
+
     pub fn build(self) -> ShieldPipeline {
         let honeypot = match self.decoy_fields {
             Some(fields) => HoneypotValidator::new(fields),
@@ -185,6 +192,7 @@ impl ShieldPipelineBuilder {
             self.threat_harvester_config,
             decoy_uri.clone(),
         );
+        let xdp_shield = crate::xdp_shield::XdpWireShield::new(self.xdp_shield_config);
 
         ShieldPipeline {
             honeypot,
@@ -197,6 +205,7 @@ impl ShieldPipelineBuilder {
             quarantine,
             decoy_uri,
             threat_harvester,
+            xdp_shield,
             enable_pow: self.enable_pow,
             enable_timing: self.enable_timing,
             enable_subnet: self.enable_subnet,

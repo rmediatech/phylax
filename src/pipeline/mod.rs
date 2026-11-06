@@ -31,6 +31,7 @@ pub struct ShieldPipeline {
     pub(crate) quarantine: AutonomousQuarantine,
     pub(crate) decoy_uri: DecoyUriSentinel,
     pub(crate) threat_harvester: crate::threat_harvester::ThreatHarvesterEngine,
+    pub(crate) xdp_shield: crate::xdp_shield::XdpWireShield,
     pub(crate) enable_pow: bool,
     pub(crate) enable_timing: bool,
     pub(crate) enable_subnet: bool,
@@ -43,11 +44,20 @@ impl ShieldPipeline {
     pub fn builder() -> ShieldPipelineBuilder { ShieldPipelineBuilder::default() }
     pub fn decoy_uri(&self) -> &DecoyUriSentinel { &self.decoy_uri }
     pub fn threat_harvester(&self) -> &crate::threat_harvester::ThreatHarvesterEngine { &self.threat_harvester }
+    pub fn xdp_shield(&self) -> &crate::xdp_shield::XdpWireShield { &self.xdp_shield }
     pub fn record_anomalous_uri(&self, raw_path: &str, client_ip: std::net::IpAddr, now_ms: u64) -> Option<crate::threat_harvester::PromotionVerdict> {
-        self.threat_harvester.ingest_anomalous_uri(raw_path, client_ip, now_ms)
+        let verdict = self.threat_harvester.ingest_anomalous_uri(raw_path, client_ip, now_ms);
+        if verdict.is_some() {
+            let _ = self.xdp_shield.sync_from_harvester(&self.threat_harvester, 86_400_000, now_ms);
+        }
+        verdict
     }
     pub fn record_anomalous_uri_str(&self, raw_path: &str, client_ip_str: &str, now_ms: u64) -> Option<crate::threat_harvester::PromotionVerdict> {
-        self.threat_harvester.ingest_anomalous_uri_str(raw_path, client_ip_str, now_ms)
+        let verdict = self.threat_harvester.ingest_anomalous_uri_str(raw_path, client_ip_str, now_ms);
+        if verdict.is_some() {
+            let _ = self.xdp_shield.sync_from_harvester(&self.threat_harvester, 86_400_000, now_ms);
+        }
+        verdict
     }
     pub fn tarpit(&self) -> &TarpitGovernor { &self.tarpit }
     pub fn adaptive_pow(&self) -> &AdaptivePowEngine { &self.adaptive_pow }
@@ -123,7 +133,11 @@ impl ShieldPipeline {
             } = self.decoy_uri.evaluate(target_uri)
             {
                 if !req.client_ip.is_empty() {
-                    self.quarantine.record_and_check(req.client_ip, req.now_ms);
+                    if self.quarantine.record_and_check(req.client_ip, req.now_ms) {
+                        let _ = self
+                            .xdp_shield
+                            .sync_from_quarantine(&self.quarantine, req.now_ms);
+                    }
                     self.adaptive_pow.record_infraction(
                         req.client_ip,
                         InfractionSeverity::Hostile,
@@ -162,7 +176,11 @@ impl ShieldPipeline {
             self.honeypot.validate(req.submitted_fields)
         {
             if !req.client_ip.is_empty() {
-                self.quarantine.record_and_check(req.client_ip, req.now_ms);
+                if self.quarantine.record_and_check(req.client_ip, req.now_ms) {
+                    let _ = self
+                        .xdp_shield
+                        .sync_from_quarantine(&self.quarantine, req.now_ms);
+                }
                 self.adaptive_pow.record_infraction(
                     req.client_ip,
                     InfractionSeverity::Severe,
