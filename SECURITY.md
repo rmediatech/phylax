@@ -1,31 +1,33 @@
-# Security Policy
+# 🛡️ Security Policy — RMediaTech LLC
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.2.x   | :white_check_mark: |
-| 0.1.x   | :x:                |
+Only the latest active release of this sovereign tool receives active security updates and vulnerability triage.
+
+| Release Branch | Status             |
+| -------------- | ------------------ |
+| Latest Release | :white_check_mark: |
+| Legacy Builds  | :x:                |
 
 ## Reporting a Vulnerability
 
-Security and zero-compromise sovereignty are fundamental to Phylax. We deeply appreciate responsible disclosure.
+Security, privacy, and zero-compromise sovereign autonomy are foundational to RMediaTech. We deeply respect and welcome responsible vulnerability disclosures from ethical hackers, security researchers, and independent engineers.
 
-If you believe you have discovered a vulnerability, bypass, denial-of-service vector, or security issue in Phylax:
+If you believe you have discovered a vulnerability, cryptographic defect, parser bypass, or denial-of-service vector:
 
 1. **Do not open a public GitHub issue.**
-2. Please email details to: **`rick@rmediatech.com`**
-3. In your report, please include:
-   - Description of the vulnerability and its potential impact.
-   - Minimal reproducible test case, curl command, or Rust harness demonstrating the issue.
-   - Any recommended remediation or patches if you have developed one.
+2. Email your detailed findings directly to: **`security@rmediatech.com`**
+3. (Optional) Encrypt your report using Rick Walker's Sovereign Release GPG Key:
+   - **Key ID:** `6BC8DA5E7F1B8B49BE5CD70A4E428019A109578B`
+   - **Fingerprint:** `6BC8 DA5E 7F1B 8B49 BE5C  D70A 4E42 8019 A109 578B`
 
-### Response Timetable
+### What to Include
+* Clear technical description of the vulnerability and its real-world impact.
+* Minimal reproducible test case, raw wire frame, or POC harness.
+* Remediation ideas or patch diffs if you have drafted one.
 
-- **Acknowledgment:** Within 24 hours of receipt.
-- **Triage & Assessment:** Within 72 hours.
-- **Remediation & Patch Release:** Priority release tagged and announced with appropriate credit to the reporter (unless anonymity is requested).
+### Response & Patch Commitment
+* **Initial Acknowledgment:** Within 24 hours.
+* **Triage & Threat Assessment:** Within 72 hours.
+* **Coordinated Patch & Tagged Release:** Expedited patch release with public Hall of Fame attribution (unless anonymity is requested).
 
-### Bounty & Recognition
-
-We publicly credit researchers who responsibly disclose vulnerabilities in our release notes and Hall of Fame.
