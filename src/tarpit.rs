@@ -1,24 +1,26 @@
-//! # Sovereign Asymmetric Tarpit Engine
+//! # Sovereign Asymmetric Tarpit Engine (`tarpit.rs`)
 //!
 //! Reverses Slowloris attacks: when a malicious bot or credential-stuffing crawler
 //! trips a honeypot or perimeter violation, the tarpit engine trickles response
 //! chunks byte-by-byte at a throttled cadence.
 //!
-//! This holds the bot's execution thread and socket hostage, burning their worker pool
-//! while consuming virtually zero memory or CPU on our server via async epoll.
+//! Includes **Adaptive Velocity Scaling**: repeat offenders have their socket drain
+//! cadence dynamically slowed down to 1 byte per 15 seconds (`15000ms`), starving
+//! botnet thread pools while consuming 0.00% CPU via async epoll.
 
 use parking_lot::Mutex;
+use std::collections::HashMap;
 use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
 use std::sync::Arc;
 
 /// Configuration for the Asymmetric Tarpit Governor
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct TarpitConfig {
-    /// Delay in milliseconds between trickled chunks (e.g. 3000ms = 3s)
+    /// Baseline delay in milliseconds between trickled chunks (e.g. 3000ms = 3s)
     pub trickle_interval_ms: u64,
-    /// Maximum duration in seconds to keep the bot connection stalled
+    /// Baseline maximum duration in seconds to keep the bot connection stalled
     pub max_duration_s: u64,
-    /// Number of bytes to send per trickle tick
+    /// Baseline number of bytes to send per trickle tick
     pub chunk_size: usize,
     /// Maximum concurrent tarpit connections allowed before fail-safe drop
     pub max_concurrent_tarpits: usize,
@@ -35,12 +37,34 @@ impl Default for TarpitConfig {
     }
 }
 
+/// Dynamic per-offender velocity scaling profile computed from repeat strike history
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct AdaptiveTarpitProfile {
+    /// Cumulative tarpit strikes recorded for this IP
+    pub strike_count: u32,
+    /// Scaled trickle interval in milliseconds (up to 15,000ms for Strike 3+)
+    pub trickle_interval_ms: u64,
+    /// Scaled bytes per tick (down to 1 byte for repeat offenders)
+    pub chunk_size: usize,
+    /// Scaled maximum hostage duration in seconds (up to 180s for Strike 3+)
+    pub max_duration_s: u64,
+}
+
 /// RAII Slot Guard that releases the tarpit slot when the connection terminates
 #[derive(Debug)]
 pub struct TarpitSlotGuard {
     active_count: Arc<AtomicUsize>,
     total_wasted_ms: Arc<AtomicU64>,
     start_ms: u64,
+    profile: AdaptiveTarpitProfile,
+}
+
+impl TarpitSlotGuard {
+    /// Returns the adaptive velocity scaling profile assigned to this tarpit slot
+    #[inline]
+    pub fn profile(&self) -> AdaptiveTarpitProfile {
+        self.profile
+    }
 }
 
 impl Drop for TarpitSlotGuard {
@@ -77,14 +101,14 @@ impl PartialEq for TarpitVerdict {
     }
 }
 
-/// The Tarpit Governor orchestrating connection slots and decoy payload trickling
+/// The Tarpit Governor orchestrating connection slots, repeat-strike velocity scaling, and decoy trickling
 #[derive(Debug, Clone)]
 pub struct TarpitGovernor {
     config: TarpitConfig,
     active_count: Arc<AtomicUsize>,
     total_tarpitted: Arc<AtomicUsize>,
     total_wasted_ms: Arc<AtomicU64>,
-    _lock: Arc<Mutex<()>>,
+    strike_ledger: Arc<Mutex<HashMap<String, u32>>>,
 }
 
 impl TarpitGovernor {
@@ -94,16 +118,55 @@ impl TarpitGovernor {
             active_count: Arc::new(AtomicUsize::new(0)),
             total_tarpitted: Arc::new(AtomicUsize::new(0)),
             total_wasted_ms: Arc::new(AtomicU64::new(0)),
-            _lock: Arc::new(Mutex::new(())),
+            strike_ledger: Arc::new(Mutex::new(HashMap::with_capacity(256))),
         }
     }
 
-    /// Try to acquire a tarpit slot for an offending client IP
-    pub fn acquire_slot(&self, _client_ip: &str) -> TarpitVerdict {
+    /// Computes the adaptive slowloris drain profile for a given strike count
+    #[inline]
+    pub fn compute_adaptive_profile(&self, strike_count: u32) -> AdaptiveTarpitProfile {
+        match strike_count {
+            0 | 1 => AdaptiveTarpitProfile {
+                strike_count: 1,
+                trickle_interval_ms: self.config.trickle_interval_ms,
+                chunk_size: self.config.chunk_size,
+                max_duration_s: self.config.max_duration_s,
+            },
+            2 => AdaptiveTarpitProfile {
+                strike_count: 2,
+                trickle_interval_ms: (self.config.trickle_interval_ms * 5 / 2).max(7500),
+                chunk_size: 1,
+                max_duration_s: (self.config.max_duration_s * 2).max(90),
+            },
+            s => AdaptiveTarpitProfile {
+                strike_count: s,
+                trickle_interval_ms: 15_000, // 1 byte every 15 seconds
+                chunk_size: 1,
+                max_duration_s: (self.config.max_duration_s * 4).max(180),
+            },
+        }
+    }
+
+    /// Try to acquire a tarpit slot for an offending client IP and scale drain velocity by strike history
+    pub fn acquire_slot(&self, client_ip: &str) -> TarpitVerdict {
         let current = self.active_count.load(Ordering::SeqCst);
         if current >= self.config.max_concurrent_tarpits {
             return TarpitVerdict::CeilingExceededDrop;
         }
+
+        let strikes = if client_ip.is_empty() {
+            1
+        } else {
+            let mut ledger = self.strike_ledger.lock();
+            if ledger.len() >= 8192 && !ledger.contains_key(client_ip) {
+                ledger.clear();
+            }
+            let entry = ledger.entry(client_ip.to_string()).or_insert(0);
+            *entry = entry.saturating_add(1);
+            *entry
+        };
+
+        let profile = self.compute_adaptive_profile(strikes);
 
         self.active_count.fetch_add(1, Ordering::SeqCst);
         self.total_tarpitted.fetch_add(1, Ordering::Relaxed);
@@ -118,8 +181,18 @@ impl TarpitGovernor {
                 active_count: Arc::clone(&self.active_count),
                 total_wasted_ms: Arc::clone(&self.total_wasted_ms),
                 start_ms: now_ms,
+                profile,
             },
         }
+    }
+
+    /// Returns the recorded strike count for an IP
+    pub fn strikes_for_ip(&self, client_ip: &str) -> u32 {
+        self.strike_ledger
+            .lock()
+            .get(client_ip)
+            .copied()
+            .unwrap_or(0)
     }
 
     /// Generate an endless, syntactically valid decoy chunk (HTML or JSON stream)

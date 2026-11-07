@@ -116,10 +116,46 @@ impl PayloadGuard {
         // 1. Raw string inspection
         Self::check_patterns(input, is_path)?;
 
-        // 2. Percent-decoded inspection
-        let decoded = Self::percent_decode(input);
-        if decoded.as_ref() != input {
-            Self::check_patterns(&decoded, is_path)?;
+        // 2. Multi-round recursive canonicalization (peels up to 5 rounds of %XX, %uXXXX, &#x..;, and \..)
+        let canonical = crate::canonicalize::Canonicalizer::canonicalize(input);
+        if canonical.contains_null_byte {
+            return Err(AdversarialPayload::NullByteInjection);
+        }
+        if canonical.text.as_ref() != input {
+            Self::check_patterns(&canonical.text, is_path)?;
+        }
+
+        // 3. Pure-Rust Structural SQLi Tokenizer & Comment De-obfuscator (replaces C libinjection)
+        if let Some(sqli) = crate::sqli_tokenizer::SqliTokenizer::inspect(&canonical.text) {
+            let reason = match sqli {
+                crate::sqli_tokenizer::SqliDetection::BooleanTautology(r) => r,
+                crate::sqli_tokenizer::SqliDetection::UnionExtraction(r) => r,
+                crate::sqli_tokenizer::SqliDetection::StackedQuery(r) => r,
+                crate::sqli_tokenizer::SqliDetection::BlindTimeDelay(r) => r,
+                crate::sqli_tokenizer::SqliDetection::CommentObfuscation(r) => r,
+                crate::sqli_tokenizer::SqliDetection::CatalogOrFileProbe(r) => r,
+            };
+            return Err(AdversarialPayload::SqlInjection(reason));
+        }
+
+        // 4. Hardware SSRF, IMDSv1/v2 & Obfuscated Decimal/Hex/Octal IP Shield
+        match crate::ssrf_shield::SsrfShield::inspect_url_candidate(&canonical.text) {
+            crate::ssrf_shield::SsrfVerdict::Allow => {}
+            crate::ssrf_shield::SsrfVerdict::CloudMetadataTarget(label) => {
+                return Err(AdversarialPayload::SsrfProbe(label));
+            }
+            crate::ssrf_shield::SsrfVerdict::PrivateOrLoopbackIp(_, label) => {
+                return Err(AdversarialPayload::SsrfProbe(label));
+            }
+            crate::ssrf_shield::SsrfVerdict::ObfuscatedIpEncoding(_, label) => {
+                return Err(AdversarialPayload::SsrfProbe(label));
+            }
+            crate::ssrf_shield::SsrfVerdict::ForbiddenScheme(label) => {
+                return Err(AdversarialPayload::SsrfProbe(label));
+            }
+            crate::ssrf_shield::SsrfVerdict::DnsRebindingDetected { .. } => {
+                return Err(AdversarialPayload::SsrfProbe("dns_rebinding_detected"));
+            }
         }
 
         Ok(())

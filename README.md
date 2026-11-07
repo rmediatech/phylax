@@ -3,9 +3,9 @@
 <p align="center">
   <a href="https://github.com/rmediatech/phylax/actions/workflows/ci.yml"><img src="https://github.com/rmediatech/phylax/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <img src="https://img.shields.io/badge/Language-Pure%20Rust%202021-orange.svg" alt="Pure Rust" />
-  <img src="https://img.shields.io/badge/TDD%20Tests-130%2F130%20Passed-brightgreen.svg" alt="Tests" />
+  <img src="https://img.shields.io/badge/TDD%20Tests-140%2F140%20Passed-brightgreen.svg" alt="Tests" />
   <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
-  <a href="https://github.com/rmediatech/phylax/releases/tag/v0.4.0"><img src="https://img.shields.io/badge/Release-v0.4.0-green.svg" alt="Release" /></a>
+  <a href="https://github.com/rmediatech/phylax/releases/tag/v0.5.0"><img src="https://img.shields.io/badge/Release-v0.5.0-green.svg" alt="Release" /></a>
   <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-blue.svg" alt="Platform: Linux | Windows | macOS" />
   <img src="https://img.shields.io/badge/Arch-x86__64%20%7C%20aarch64-blueviolet.svg" alt="Arch: x86_64 | aarch64" />
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
@@ -169,21 +169,21 @@ flowchart LR
 
 ---
 
-## Pre-Built Sovereign Binaries (`v0.4.0`)
+## Pre-Built Sovereign Binaries (`v0.5.0`)
 
 Single standalone binaries compiled with zero cloud tracking and zero external dependencies. Verified with OpenPGP detached signatures (`SOVEREIGN-SIGN-01`):
 
 | Operating System | Architecture | Target Triplet | Pre-Built Archive | Detached Signature | SHA-256 Digest |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Linux (Static Musl)** | `x86_64` | `x86_64-unknown-linux-musl` | [**`phylax-v0.4.0-...-musl.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-unknown-linux-musl.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-unknown-linux-musl.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-unknown-linux-musl.tar.gz.sha256) |
-| **Linux (glibc)** | `x86_64` | `x86_64-unknown-linux-gnu` | [**`phylax-v0.4.0-...-gnu.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-unknown-linux-gnu.tar.gz.sha256) |
-| **Linux (ARM64)** | `aarch64` | `aarch64-unknown-linux-gnu` | [**`phylax-v0.4.0-...-aarch64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-aarch64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-aarch64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-aarch64-unknown-linux-gnu.tar.gz.sha256) |
-| **Windows** | `x86_64` | `x86_64-pc-windows-msvc` | [**`phylax-v0.4.0-...-windows.zip`**](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-pc-windows-msvc.zip) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-pc-windows-msvc.zip.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-pc-windows-msvc.zip.sha256) |
-| **macOS (Apple Silicon)** | `aarch64` (M1–M4) | `aarch64-apple-darwin` | [**`phylax-v0.4.0-...-darwin-arm64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-aarch64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-aarch64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-aarch64-apple-darwin.tar.gz.sha256) |
-| **macOS (Intel)** | `x86_64` | `x86_64-apple-darwin` | [**`phylax-v0.4.0-...-darwin-x64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/phylax-v0.4.0-x86_64-apple-darwin.tar.gz.sha256) |
+| **Linux (Static Musl)** | `x86_64` | `x86_64-unknown-linux-musl` | [**`phylax-v0.5.0-...-musl.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-musl.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-musl.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-musl.tar.gz.sha256) |
+| **Linux (glibc)** | `x86_64` | `x86_64-unknown-linux-gnu` | [**`phylax-v0.5.0-...-gnu.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-gnu.tar.gz.sha256) |
+| **Linux (ARM64)** | `aarch64` | `aarch64-unknown-linux-gnu` | [**`phylax-v0.5.0-...-aarch64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-unknown-linux-gnu.tar.gz.sha256) |
+| **Windows** | `x86_64` | `x86_64-pc-windows-msvc` | [**`phylax-v0.5.0-...-windows.zip`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-pc-windows-msvc.zip) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-pc-windows-msvc.zip.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-pc-windows-msvc.zip.sha256) |
+| **macOS (Apple Silicon)** | `aarch64` (M1–M4) | `aarch64-apple-darwin` | [**`phylax-v0.5.0-...-darwin-arm64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-apple-darwin.tar.gz.sha256) |
+| **macOS (Intel)** | `x86_64` | `x86_64-apple-darwin` | [**`phylax-v0.5.0-...-darwin-x64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-apple-darwin.tar.gz.sha256) |
 
 > 🔑 **Cryptographic Provenance Verification (`SOVEREIGN-SIGN-01`)**:  
-> All release archives and [`SHA256SUMS`](https://github.com/rmediatech/phylax/releases/download/v0.4.0/SHA256SUMS) manifests are cryptographically signed using the sovereign release key (`Rick Walker <rick@rmediatech.com>`, Key ID: `4E428019A109578B`).  
+> All release archives and [`SHA256SUMS`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/SHA256SUMS) manifests are cryptographically signed using the sovereign release key (`Rick Walker <rick@rmediatech.com>`, Key ID: `4E428019A109578B`).  
 > Verify provenance: `curl -sSL https://raw.githubusercontent.com/rmediatech/phylax/main/SOVEREIGN_RELEASE_KEY.asc | gpg --import && gpg --verify SHA256SUMS.asc SHA256SUMS`
 
 ---

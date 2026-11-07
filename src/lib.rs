@@ -26,6 +26,7 @@ pub mod adaptive_pow;
 pub mod autonomous_quarantine;
 pub mod bot_guard;
 pub mod cache_shield;
+pub mod canonicalize;
 pub mod credential_guard;
 pub mod decoy_uri;
 pub mod dist_guard;
@@ -38,6 +39,8 @@ pub mod pipeline;
 pub mod pow;
 pub mod sanitize;
 pub mod session_sentinel;
+pub mod sqli_tokenizer;
+pub mod ssrf_shield;
 pub mod stream_guard;
 pub mod subnet_guard;
 pub mod surface_audit;
@@ -59,6 +62,7 @@ pub use bot_guard::{
     AUTOMATION_TOOL_SIGNATURES, LEGITIMATE_SEARCH_SIGNATURES, RECON_SCANNER_SIGNATURES,
 };
 pub use cache_shield::{CacheShield, CacheShieldConfig, CacheVerdict, CachedResponse};
+pub use canonicalize::{CanonicalizedInput, Canonicalizer, MAX_DECODE_ROUNDS};
 pub use credential_guard::{BreachedPasswordBloomFilter, CredentialGuard, CredentialVerdict};
 pub use decoy_uri::{DecoyCategory, DecoyUriConfig, DecoyUriSentinel, DecoyUriVerdict};
 pub use dist_guard::{DistGuard, DistGuardConfig, DistVerdict};
@@ -76,13 +80,17 @@ pub use pow::{PowEngine, PowVerdict};
 pub use session_sentinel::{
     GeoCoordinate, SessionCheckpoint, SessionSentinel, SessionSentinelConfig, SessionVerdict,
 };
+pub use sqli_tokenizer::{SqlTokenKind, SqliDetection, SqliTokenizer};
+pub use ssrf_shield::{SsrfShield, SsrfVerdict};
 pub use stream_guard::{RouteCategory, StreamGuard, StreamGuardConfig, StreamVerdict};
 pub use subnet_guard::{IpRiskCategory, SubnetGuard, SubnetVerdict};
 pub use surface_audit::{
     ExposureVerdict, ProbeAuditResult, SurfaceAuditEngine, SurfaceExposureReport,
     SurfaceProbeVector, CANONICAL_SURFACE_VECTORS,
 };
-pub use tarpit::{TarpitConfig, TarpitGovernor, TarpitSlotGuard, TarpitVerdict};
+pub use tarpit::{
+    AdaptiveTarpitProfile, TarpitConfig, TarpitGovernor, TarpitSlotGuard, TarpitVerdict,
+};
 pub use threat_harvester::{
     CandidatePathRecord, PromotionVerdict, SubnetKey, ThreatHarvesterConfig, ThreatHarvesterEngine,
 };

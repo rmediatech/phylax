@@ -4,6 +4,28 @@ All notable changes, defense layer releases, and architectural milestones for **
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-11-06 (Multi-Round Canonicalizer, Pure-Rust SQLi Tokenizer, SSRF/DNS-Rebinding Shield & Adaptive Tarpit Velocity Scaling)
+
+### 🌟 Added & Fortified
+* **`[Protocol / De-Obfuscation]` Iterative Multi-Round Canonicalization Engine (`src/canonicalize.rs`)**:
+  - *Root Cause Dissection*: Single-pass percent decoders (`%XX`) are trivially bypassed by double/triple percent-encoding (`%25252e%25252e%25252f` $\to$ `../`), non-standard IIS Unicode homoglyphs (`%u002e`, `%u2215`), and HTML numeric character entities (`&#x2e;`, `&#46;`) embedded in query strings.
+  - *Architectural & Mathematical Resolution*: Engineered `Canonicalizer` (`src/canonicalize.rs`) with a zero-allocation `Cow::Borrowed` fast path for clean inputs and bounded iterative peeling (up to `MAX_DECODE_ROUNDS = 5`) that unwraps nested `%XX`, IIS `%uXXXX`, HTML hex/decimal entities, backslash-to-slash conversions, and redundant `//` compaction while preserving `://` scheme delimiters.
+  - *Empirical Verification*: Verified by `tests/adversarial_canonicalize_sqli_ssrf_tarpit_tests.rs` (`test_adversarial_multi_round_nested_encoding_traversal_blocked`).
+* **`[State / Lexical WAF]` Pure Safe-Rust Zero-Copy SQLi & Comment De-Obfuscation Tokenizer (`src/sqli_tokenizer.rs`)**:
+  - *Root Cause Dissection*: Competitor WAFs rely on unsafe legacy C `libinjection` FFI or static substring tables that fail against inline SQL comment splitting (`UN/**/ION/**/SEL/**/ECT`), MySQL versioned comments (`/*!50000UNION*/`), and novel parenthesized/hex boolean tautologies (`admin') OR ('x')=('x`, `1 OR 0x7a=0x7a--`).
+  - *Architectural & Mathematical Resolution*: Engineered `SqliTokenizer` (`src/sqli_tokenizer.rs`) in 100% safe Rust with zero heap allocations on the token stream (`[SqlTokenKind; 64]`), dual-mode inline comment stripping (`collapsed` + `spaced`), and structural token folding across boolean tautologies, `UNION SELECT` extractions, stacked queries, and blind time-delay functions (`SLEEP`, `PG_SLEEP`, `BENCHMARK`, `WAITFOR DELAY`).
+  - *Empirical Verification*: Verified by `test_adversarial_pure_rust_sqli_tokenizer_vs_comment_and_tautology_bypasses`.
+* **`[Wire / Perimeter]` Sub-Microsecond SSRF, IMDSv1/v2, Numeric IP De-Obfuscation & DNS Rebinding Shield (`src/ssrf_shield.rs`)**:
+  - *Root Cause Dissection*: Naive SSRF filters only match dotted-quad `169.254.169.254` or `127.0.0.1` strings, allowing attackers to reach cloud metadata and loopback services via 32-bit decimal integers (`http://2852039166/`), hexadecimal (`http://0x7f000001/`), octal (`http://0177.0.0.1/`), IPv4-mapped IPv6 (`[::ffff:169.254.169.254]`), AWS IPv6 IMDS (`[fd00:ec2::254]`), or mid-session DNS rebinding.
+  - *Architectural & Mathematical Resolution*: Engineered `SsrfShield` (`src/ssrf_shield.rs`) enforcing sub-5ns bitwise IPv4/IPv6 classification across Cloud IMDS (AWS, GCP, Azure, Alibaba, Oracle), RFC 1918, RFC 6598 CGNAT, RFC 3927 Link-Local, non-standard numeric IP de-obfuscation, and stateful DNS resolution pinning (`verify_and_pin_resolution`).
+  - *Empirical Verification*: Verified by `test_adversarial_ssrf_imds_numeric_ip_obfuscation_and_dns_rebinding`.
+* **`[Active Defense / Tarpit]` Adaptive Tarpit Velocity Scaling (`src/tarpit.rs`)**:
+  - *Root Cause Dissection*: Static tarpit trickle rates treat first-time anomalous probes identically to persistent multi-strike botnet crawlers.
+  - *Architectural & Mathematical Resolution*: Upgraded `TarpitGovernor` with per-IP repeat-strike tracking (`compute_adaptive_profile`), scaling socket-hostage slowloris trickle intervals from `3,000ms` (2 bytes/tick, 45s max) on Strike 1 $\to$ `7,500ms` (1 byte/tick, 90s max) on Strike 2 $\to$ `15,000ms` (1 byte per 15s, 180s max) on Strike 3+.
+  - *Empirical Verification*: Verified by `test_adversarial_adaptive_tarpit_velocity_scaling`.
+
+---
+
 ## [0.4.0] - 2026-11-06 (eBPF / XDP Sub-Kernel Wire Shield & Shared BPF Map Integration)
 
 ### 🌟 Added & Fortified
