@@ -134,10 +134,8 @@ impl Canonicalizer {
                     from_hex(bytes[i + 4]),
                     from_hex(bytes[i + 5]),
                 ) {
-                    let codepoint = ((d1 as u32) << 12)
-                        | ((d2 as u32) << 8)
-                        | ((d3 as u32) << 4)
-                        | (d4 as u32);
+                    let codepoint =
+                        ((d1 as u32) << 12) | ((d2 as u32) << 8) | ((d3 as u32) << 4) | (d4 as u32);
                     changed = true;
                     found_iis = true;
                     if codepoint == 0 {

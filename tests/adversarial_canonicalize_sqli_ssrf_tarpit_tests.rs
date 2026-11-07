@@ -21,7 +21,10 @@ use std::net::{IpAddr, Ipv4Addr};
 fn test_adversarial_multi_round_nested_encoding_traversal_blocked() {
     // 1. Triple-encoded directory traversal (%25252e%25252e%25252f -> ../):
     // Naive 1-pass decoders leave "%252e%252e%252f" which bypasses single-decode WAFs.
-    let res = PayloadGuard::inspect("/assets/%25252e%25252e%25252f%25252e%25252e%25252fetc/passwd", "");
+    let res = PayloadGuard::inspect(
+        "/assets/%25252e%25252e%25252f%25252e%25252e%25252fetc/passwd",
+        "",
+    );
     assert!(
         matches!(res, Err(AdversarialPayload::PathTraversal(_))),
         "Triple-encoded traversal must be unmasked and blocked: {:?}",
@@ -29,7 +32,10 @@ fn test_adversarial_multi_round_nested_encoding_traversal_blocked() {
     );
 
     // 2. IIS %u002e%u002e%u2215 Unicode homoglyph traversal
-    let iis_res = PayloadGuard::inspect("/download/%u002e%u002e%u2215%u002e%u002e%u2215etc/shadow", "");
+    let iis_res = PayloadGuard::inspect(
+        "/download/%u002e%u002e%u2215%u002e%u002e%u2215etc/shadow",
+        "",
+    );
     assert!(
         matches!(iis_res, Err(AdversarialPayload::PathTraversal(_))),
         "IIS %uXXXX Unicode traversal must be blocked: {:?}",
@@ -96,7 +102,8 @@ fn test_adversarial_pure_rust_sqli_tokenizer_vs_comment_and_tautology_bypasses()
 #[test]
 fn test_adversarial_ssrf_imds_numeric_ip_obfuscation_and_dns_rebinding() {
     // 1. Decimal 32-bit integer IP for AWS IMDS (169.254.169.254 == 2852039166)
-    let dec_imds = PayloadGuard::inspect("/webhook", "callback=http://2852039166/latest/meta-data/");
+    let dec_imds =
+        PayloadGuard::inspect("/webhook", "callback=http://2852039166/latest/meta-data/");
     assert!(
         matches!(dec_imds, Err(AdversarialPayload::SsrfProbe(_))),
         "32-bit decimal IMDS IP must be blocked: {:?}",
@@ -123,7 +130,10 @@ fn test_adversarial_ssrf_imds_numeric_ip_obfuscation_and_dns_rebinding() {
 
     // 4. IPv4-mapped IPv6 IMDS (`[::ffff:169.254.169.254]`) and AWS IPv6 IMDS (`[fd00:ec2::254]`)
     assert!(matches!(
-        PayloadGuard::inspect("/avatar", "url=http://[::ffff:169.254.169.254]/latest/api/token"),
+        PayloadGuard::inspect(
+            "/avatar",
+            "url=http://[::ffff:169.254.169.254]/latest/api/token"
+        ),
         Err(AdversarialPayload::SsrfProbe(_))
     ));
     assert!(matches!(

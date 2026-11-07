@@ -77,7 +77,14 @@ impl SqliTokenizer {
 
         if had_inline_comment {
             let lower_collapsed = collapsed.to_ascii_lowercase();
-            for kw in ["union", "select", "sleep(", "pg_sleep(", "benchmark(", "waitfor"] {
+            for kw in [
+                "union",
+                "select",
+                "sleep(",
+                "pg_sleep(",
+                "benchmark(",
+                "waitfor",
+            ] {
                 if lower_collapsed.contains(kw) {
                     return Some(SqliDetection::CommentObfuscation(
                         "inline_comment_keyword_split",
@@ -189,7 +196,8 @@ impl SqliTokenizer {
 
                 // If preceded immediately by an identifier/number (e.g. `1'` or `admin'`) or unclosed,
                 // treat the quote itself as a string-escape boundary token so following keywords are exposed!
-                let preceded_by_word = i > 0 && (bytes[i - 1].is_ascii_alphanumeric() || bytes[i - 1] == b')');
+                let preceded_by_word =
+                    i > 0 && (bytes[i - 1].is_ascii_alphanumeric() || bytes[i - 1] == b')');
                 if preceded_by_word || close_idx.is_none() {
                     out[count] = SqlTokenKind::StringLiteral;
                     count += 1;
@@ -247,7 +255,10 @@ impl SqliTokenizer {
             if b.is_ascii_digit() {
                 i += 1;
                 while i < bytes.len()
-                    && (bytes[i].is_ascii_hexdigit() || bytes[i] == b'x' || bytes[i] == b'X' || bytes[i] == b'.')
+                    && (bytes[i].is_ascii_hexdigit()
+                        || bytes[i] == b'x'
+                        || bytes[i] == b'X'
+                        || bytes[i] == b'.')
                 {
                     i += 1;
                 }
@@ -315,19 +326,31 @@ impl SqliTokenizer {
             SqlTokenKind::NumberLiteral
         } else if word.eq_ignore_ascii_case("null") {
             SqlTokenKind::NumberLiteral
-        } else if word.eq_ignore_ascii_case("like") || word.eq_ignore_ascii_case("rlike") || word.eq_ignore_ascii_case("is") {
+        } else if word.eq_ignore_ascii_case("like")
+            || word.eq_ignore_ascii_case("rlike")
+            || word.eq_ignore_ascii_case("is")
+        {
             SqlTokenKind::Operator
         } else if word.eq_ignore_ascii_case("waitfor") {
             SqlTokenKind::Keyword("WAITFOR")
         } else if word.eq_ignore_ascii_case("delay") {
             SqlTokenKind::Keyword("DELAY")
-        } else if word.eq_ignore_ascii_case("drop") || word.eq_ignore_ascii_case("truncate") || word.eq_ignore_ascii_case("alter") {
+        } else if word.eq_ignore_ascii_case("drop")
+            || word.eq_ignore_ascii_case("truncate")
+            || word.eq_ignore_ascii_case("alter")
+        {
             SqlTokenKind::Keyword("DROP")
         } else if word.eq_ignore_ascii_case("table") || word.eq_ignore_ascii_case("database") {
             SqlTokenKind::Keyword("TABLE")
-        } else if word.eq_ignore_ascii_case("exec") || word.eq_ignore_ascii_case("execute") || word.eq_ignore_ascii_case("xp_cmdshell") {
+        } else if word.eq_ignore_ascii_case("exec")
+            || word.eq_ignore_ascii_case("execute")
+            || word.eq_ignore_ascii_case("xp_cmdshell")
+        {
             SqlTokenKind::Keyword("EXEC")
-        } else if word.eq_ignore_ascii_case("information_schema") || word.eq_ignore_ascii_case("pg_catalog") || word.eq_ignore_ascii_case("sqlite_master") {
+        } else if word.eq_ignore_ascii_case("information_schema")
+            || word.eq_ignore_ascii_case("pg_catalog")
+            || word.eq_ignore_ascii_case("sqlite_master")
+        {
             SqlTokenKind::Keyword("CATALOG")
         } else if word.eq_ignore_ascii_case("outfile") || word.eq_ignore_ascii_case("dumpfile") {
             SqlTokenKind::Keyword("OUTFILE")
@@ -495,7 +518,13 @@ mod tests {
 
     #[test]
     fn test_benign_queries_pass() {
-        assert_eq!(SqliTokenizer::inspect("search=select+your+plan+or+contact+us"), None);
-        assert_eq!(SqliTokenizer::inspect("page=1&sort=asc&filter=active"), None);
+        assert_eq!(
+            SqliTokenizer::inspect("search=select+your+plan+or+contact+us"),
+            None
+        );
+        assert_eq!(
+            SqliTokenizer::inspect("page=1&sort=asc&filter=active"),
+            None
+        );
     }
 }

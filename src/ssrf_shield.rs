@@ -85,36 +85,60 @@ impl SsrfShield {
 
         // 2. Loopback 127.0.0.0/8 and Unspecified 0.0.0.0/8
         if octets[0] == 127 {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V4(v4), "RFC 1122 Loopback (127.0.0.0/8)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V4(v4),
+                "RFC 1122 Loopback (127.0.0.0/8)",
+            );
         }
         if octets[0] == 0 {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V4(v4), "RFC 1122 Local Network (0.0.0.0/8)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V4(v4),
+                "RFC 1122 Local Network (0.0.0.0/8)",
+            );
         }
 
         // 3. Link-Local 169.254.0.0/16
         if octets[0] == 169 && octets[1] == 254 {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V4(v4), "RFC 3927 Link-Local (169.254.0.0/16)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V4(v4),
+                "RFC 3927 Link-Local (169.254.0.0/16)",
+            );
         }
 
         // 4. RFC 1918 Private Internals (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)
         if octets[0] == 10 {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V4(v4), "RFC 1918 Private (10.0.0.0/8)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V4(v4),
+                "RFC 1918 Private (10.0.0.0/8)",
+            );
         }
         if octets[0] == 172 && (16..=31).contains(&octets[1]) {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V4(v4), "RFC 1918 Private (172.16.0.0/12)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V4(v4),
+                "RFC 1918 Private (172.16.0.0/12)",
+            );
         }
         if octets[0] == 192 && octets[1] == 168 {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V4(v4), "RFC 1918 Private (192.168.0.0/16)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V4(v4),
+                "RFC 1918 Private (192.168.0.0/16)",
+            );
         }
 
         // 5. RFC 6598 Carrier-Grade NAT (100.64.0.0/10)
         if (u & 0xFFC0_0000) == 0x6440_0000 {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V4(v4), "RFC 6598 Carrier-Grade NAT (100.64.0.0/10)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V4(v4),
+                "RFC 6598 Carrier-Grade NAT (100.64.0.0/10)",
+            );
         }
 
         // 6. Broadcast & Multicast (224.0.0.0/4+)
         if octets[0] >= 224 {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V4(v4), "Multicast / Reserved (224.0.0.0/3)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V4(v4),
+                "Multicast / Reserved (224.0.0.0/3)",
+            );
         }
 
         SsrfVerdict::Allow
@@ -134,12 +158,18 @@ impl SsrfShield {
         }
 
         if v6.is_loopback() || v6.is_unspecified() {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V6(v6), "IPv6 Loopback / Unspecified (::1 / ::)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V6(v6),
+                "IPv6 Loopback / Unspecified (::1 / ::)",
+            );
         }
 
         // Unique Local (fc00::/7) or Link-Local (fe80::/10)
         if (segs[0] & 0xfe00) == 0xfc00 || (segs[0] & 0xffc0) == 0xfe80 {
-            return SsrfVerdict::PrivateOrLoopbackIp(IpAddr::V6(v6), "IPv6 Unique/Link-Local (fc00::/7 | fe80::/10)");
+            return SsrfVerdict::PrivateOrLoopbackIp(
+                IpAddr::V6(v6),
+                "IPv6 Unique/Link-Local (fc00::/7 | fe80::/10)",
+            );
         }
 
         SsrfVerdict::Allow
@@ -168,7 +198,9 @@ impl SsrfShield {
 
         // 2. Cloud metadata hostnames
         if lower.contains("metadata.google.internal") || lower.contains("metadata.goog") {
-            return SsrfVerdict::CloudMetadataTarget("GCP Metadata Host (metadata.google.internal)");
+            return SsrfVerdict::CloudMetadataTarget(
+                "GCP Metadata Host (metadata.google.internal)",
+            );
         }
         if lower.contains("instance-data.ec2.internal") {
             return SsrfVerdict::CloudMetadataTarget("AWS EC2 Internal Metadata Host");
@@ -268,7 +300,10 @@ impl SsrfShield {
                 if let Some(h) = part.strip_prefix("0x").or_else(|| part.strip_prefix("0X")) {
                     octets[idx] = u8::from_str_radix(h, 16).ok()?;
                     used_non_decimal = true;
-                } else if part.len() > 1 && part.starts_with('0') && part.bytes().all(|b| (b'0'..=b'7').contains(&b)) {
+                } else if part.len() > 1
+                    && part.starts_with('0')
+                    && part.bytes().all(|b| (b'0'..=b'7').contains(&b))
+                {
                     octets[idx] = u8::from_str_radix(part, 8).ok()?;
                     used_non_decimal = true;
                 } else {
