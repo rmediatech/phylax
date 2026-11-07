@@ -322,9 +322,10 @@ impl SqliTokenizer {
             SqlTokenKind::Keyword("FROM")
         } else if word.eq_ignore_ascii_case("where") {
             SqlTokenKind::Keyword("WHERE")
-        } else if word.eq_ignore_ascii_case("true") || word.eq_ignore_ascii_case("false") {
-            SqlTokenKind::NumberLiteral
-        } else if word.eq_ignore_ascii_case("null") {
+        } else if word.eq_ignore_ascii_case("true")
+            || word.eq_ignore_ascii_case("false")
+            || word.eq_ignore_ascii_case("null")
+        {
             SqlTokenKind::NumberLiteral
         } else if word.eq_ignore_ascii_case("like")
             || word.eq_ignore_ascii_case("rlike")
@@ -396,11 +397,10 @@ impl SqliTokenizer {
                 // 4. Stacked Queries: `; SELECT`, `; DROP`, `; EXEC`, `; WAITFOR`
                 SqlTokenKind::Semicolon => {
                     if i + 1 < len {
-                        match stream[i + 1] {
-                            SqlTokenKind::Keyword("SELECT" | "DROP" | "EXEC" | "WAITFOR") => {
-                                return Some(SqliDetection::StackedQuery("stacked_sql_statement"));
-                            }
-                            _ => {}
+                        if let SqlTokenKind::Keyword("SELECT" | "DROP" | "EXEC" | "WAITFOR") =
+                            stream[i + 1]
+                        {
+                            return Some(SqliDetection::StackedQuery("stacked_sql_statement"));
                         }
                     }
                 }
