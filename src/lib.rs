@@ -37,6 +37,7 @@ pub mod mirage;
 pub mod payload_guard;
 pub mod pipeline;
 pub mod pow;
+pub mod provenance;
 pub mod sanitize;
 pub mod session_sentinel;
 pub mod sqli_tokenizer;

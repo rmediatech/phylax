@@ -43,6 +43,8 @@ enum Commands {
     Init(InitArgs),
     /// Execute the internal sub-microsecond microbenchmark suite
     Bench,
+    /// Verify sovereign cryptographic provenance seal (SOVEREIGN-SIGN-01)
+    Verify,
 }
 
 #[tokio::main]
@@ -57,6 +59,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Commands::AuditSurface(args) => audit::run_audit_surface(args).await?,
         Commands::Init(args) => commands::run_init(args)?,
         Commands::Bench => commands::run_bench(),
+        Commands::Verify => {
+            println!("🛡️  Verifying Sovereign Cryptographic Provenance...");
+            if phylax::provenance::verify_sovereign_watermark() {
+                println!("✓ Provenance Integrity Verified: Master Key 4E428019A109578B");
+                println!("  Preimage: {}", phylax::provenance::CANARY_PREIMAGE);
+                println!("  Attestation: {}", phylax::provenance::format_provenance_attestation());
+            } else {
+                eprintln!("❌ Provenance verification failed: Canary hash mismatch!");
+                std::process::exit(1);
+            }
+        }
     }
 
     Ok(())
