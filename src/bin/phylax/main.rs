@@ -64,7 +64,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if phylax::provenance::verify_sovereign_watermark() {
                 println!("✓ Provenance Integrity Verified: Master Key 4E428019A109578B");
                 println!("  Preimage: {}", phylax::provenance::CANARY_PREIMAGE);
-                println!("  Attestation: {}", phylax::provenance::format_provenance_attestation());
+                println!(
+                    "  Attestation: {}",
+                    phylax::provenance::format_provenance_attestation()
+                );
             } else {
                 eprintln!("❌ Provenance verification failed: Canary hash mismatch!");
                 std::process::exit(1);

@@ -184,7 +184,9 @@ async fn test_ssh_tarpit_listener_stalls_client() {
     tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
 
     // Connect mock client
-    let mut client = TcpStream::connect(&bind_addr).await.expect("Must connect to SSH tarpit");
+    let mut client = TcpStream::connect(&bind_addr)
+        .await
+        .expect("Must connect to SSH tarpit");
     let mut reader = tokio::io::BufReader::new(&mut client);
     let mut line = String::new();
 

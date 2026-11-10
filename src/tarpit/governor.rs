@@ -176,14 +176,22 @@ impl TarpitGovernor {
     }
 
     pub fn strikes_for_ip(&self, client_ip: &str) -> u32 {
-        self.strike_ledger.lock().get(client_ip).copied().unwrap_or(0)
+        self.strike_ledger
+            .lock()
+            .get(client_ip)
+            .copied()
+            .unwrap_or(0)
     }
 
     pub fn generate_decoy_chunk(&self, chunk_index: usize) -> Vec<u8> {
         if chunk_index == 0 {
             b"<!DOCTYPE html><html><head><title>Authentication Verification In Progress</title></head><body><!-- init -->\n".to_vec()
         } else {
-            format!("<!-- chunk_{:04x}: verifying security telemetry parameters... -->\n", chunk_index).into_bytes()
+            format!(
+                "<!-- chunk_{:04x}: verifying security telemetry parameters... -->\n",
+                chunk_index
+            )
+            .into_bytes()
         }
     }
 

@@ -23,7 +23,7 @@ impl Default for SshTarpitConfig {
         Self {
             bind_addr: "0.0.0.0:2222".to_string(),
             delay_ms: 10_000, // 10 seconds per banner line
-            max_lines: 3600,   // up to 10 hours per hostile scanner
+            max_lines: 3600,  // up to 10 hours per hostile scanner
             max_clients: 512,
         }
     }
@@ -109,7 +109,11 @@ impl SshTarpitServer {
     ) {
         for line_idx in 0..max_lines {
             // RFC 4253 allows arbitrary lines of pre-banner text before the SSH-2.0 identifier
-            let banner_line = format!("OpenSSH-Banner-Padding_{:08x}_{:04x}\r\n", line_idx, line_idx * 31 % 65535);
+            let banner_line = format!(
+                "OpenSSH-Banner-Padding_{:08x}_{:04x}\r\n",
+                line_idx,
+                line_idx * 31 % 65535
+            );
             if stream.write_all(banner_line.as_bytes()).await.is_err() {
                 break;
             }

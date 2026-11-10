@@ -24,9 +24,11 @@ impl Default for TcpTarpitConfig {
         Self {
             bind_addr: "0.0.0.0:2525".to_string(), // e.g. Decoy SMTP
             tick_ms: 5000,                         // 1 byte every 5 seconds
-            max_duration_s: 300,                    // 5 minutes
+            max_duration_s: 300,                   // 5 minutes
             max_clients: 256,
-            initial_greeting: Some("220-sovereign-perimeter.local SMTP Service Ready\r\n".to_string()),
+            initial_greeting: Some(
+                "220-sovereign-perimeter.local SMTP Service Ready\r\n".to_string(),
+            ),
         }
     }
 }
