@@ -649,3 +649,14 @@ Dual-licensed under either of:
 - [MIT License](LICENSE-MIT)
 
 at your option.
+
+---
+
+## 🏛️ The Sovereign Ecosystem & Emancipation Architecture
+
+`phylax` is the perimeter shield engine of the **RMediaTech Sovereign Architecture**—built to liberate independent engineers, bootstrappers, startups, and small orgs from extractive cloud gatekeeping and enterprise paywalls.
+
+* **100% Sovereign & Standalone**: Pure zero-allocation Rust defense with zero external telemetry, zero surveillance SDKs, and zero cloud lock-in.
+* **Production-Grade Managed Media & Defense**: For teams deploying production apps requiring low-latency WebRTC media relays (`thoth`) and managed ingress with **flat, predictable monthly pricing ($19 / $49 / $99 — zero per-minute tolls, zero metered bill shock)**, visit [rmediatech.com](https://rmediatech.com).
+* **Pre-Compiled Binaries & Tooling**: Certified standalone binaries and inspection tools are distributed directly via the [Sovereign Arsenal](https://rmediatech.com/downloads).
+
