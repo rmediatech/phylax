@@ -35,7 +35,7 @@ ipnet = "2.10"
 base64 = "0.22"
 parking_lot = "0.12"
 thiserror = "1.0"
-tokio = { version = "1.38", features = ["sync", "time", "rt", "net", "io-util"] }
+tokio = { version = "1.38", features = ["sync", "time", "rt", "net", "io-util", "macros"] }
 
 # Optional Dependencies for Collaborative Abuse Reporting
 reqwest = { version = "0.12", optional = true, default-features = false, features = ["json", "rustls-tls", "stream"] }
