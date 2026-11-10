@@ -1,6 +1,6 @@
 [package]
 name = "phylax"
-version = "0.5.0"
+version = "0.6.0"
 edition = "2021"
 authors = ["Rick <rick@rmediatech.com>", "RMediaTech Contributors"]
 license = "MIT OR Apache-2.0"
@@ -35,7 +35,7 @@ ipnet = "2.10"
 base64 = "0.22"
 parking_lot = "0.12"
 thiserror = "1.0"
-tokio = { version = "1.38", features = ["sync", "time", "rt"] }
+tokio = { version = "1.38", features = ["sync", "time", "rt", "net", "io-util"] }
 
 # Optional Dependencies for Collaborative Abuse Reporting
 reqwest = { version = "0.12", optional = true, default-features = false, features = ["json", "rustls-tls", "stream"] }

@@ -90,7 +90,8 @@ pub use surface_audit::{
     SurfaceProbeVector, CANONICAL_SURFACE_VECTORS,
 };
 pub use tarpit::{
-    AdaptiveTarpitProfile, TarpitConfig, TarpitGovernor, TarpitSlotGuard, TarpitVerdict,
+    AdaptiveTarpitProfile, SshTarpitConfig, SshTarpitServer, TarpitConfig, TarpitGovernor,
+    TarpitSlotGuard, TarpitVerdict, TcpTarpitConfig, TcpTarpitServer,
 };
 pub use threat_harvester::{
     CandidatePathRecord, PromotionVerdict, SubnetKey, ThreatHarvesterConfig, ThreatHarvesterEngine,

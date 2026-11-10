@@ -4,6 +4,21 @@ All notable changes, defense layer releases, and architectural milestones for **
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-11-10 (Multi-Protocol Endless SSH & TCP Tarpit Engine & Deconstructed Tarpit Suite)
+
+### 🌟 Added & Fortified
+* **`[Active Defense / Tarpit]` Multi-Protocol Endless SSH & Decoy Port Tarpit Suite (`src/tarpit/ssh_tarpit.rs`, `src/tarpit/tcp_tarpit.rs`)**:
+  - *Root Cause Dissection*: HTTP-only tarpits cannot defend against automated SSH brute-forcers (hydra, medusa, Mirai botnets) and low-and-slow port scanners probing decoy ports (2222, 2525, 8080).
+  - *Architectural & Mathematical Resolution*: Synthesized multi-protocol tarpit engines in pure async Tokio:
+    - *Endless SSH Tarpit (`SshTarpitServer`)*: Exploits RFC 4253 arbitrary pre-banner padding by trickling infinite formatted banner lines at configurable intervals (10 seconds per line) to keep botnet SSH clients hostage for hours with zero CPU usage.
+    - *Decoy Port TCP Tarpit (`TcpTarpitServer`)*: Slowly drips single bytes at configurable cadences (e.g. 5s per byte) with protocol greeting banners (e.g. decoy SMTP 220) to exhaust scanner thread pools.
+    - *Bounded RAII Concurrency*: Integrates seamlessly with `TarpitGovernor` per-IP strike scaling and bounded concurrency ceilings.
+  - *Empirical Verification*: Verified by `test_ssh_tarpit_listener_stalls_client` in `tests/tarpit_and_active_deception_tdd.rs`.
+* **`[Architecture / Anti-Monolith]` Modular Deconstruction of `tarpit` (`AGY-RULE-SOVEREIGN-FLAGSHIP-01`)**:
+  - Modularized `src/tarpit.rs` into `src/tarpit/` (`governor.rs`, `ssh_tarpit.rs`, `tcp_tarpit.rs`, `mod.rs`), with every file strictly bounded $\le 205$ lines.
+
+---
+
 ## [0.5.0] - 2026-11-06 (Multi-Round Canonicalizer, Pure-Rust SQLi Tokenizer, SSRF/DNS-Rebinding Shield & Adaptive Tarpit Velocity Scaling)
 
 ### 🌟 Added & Fortified

@@ -1,12 +1,5 @@
-//! # Sovereign Asymmetric Tarpit Engine (`tarpit.rs`)
-//!
-//! Reverses Slowloris attacks: when a malicious bot or credential-stuffing crawler
-//! trips a honeypot or perimeter violation, the tarpit engine trickles response
-//! chunks byte-by-byte at a throttled cadence.
-//!
-//! Includes **Adaptive Velocity Scaling**: repeat offenders have their socket drain
-//! cadence dynamically slowed down to 1 byte per 15 seconds (`15000ms`), starving
-//! botnet thread pools while consuming 0.00% CPU via async epoll.
+//! # Sovereign Asymmetric Tarpit Governor (`tarpit/governor.rs`)
+//! Reverses Slowloris attacks: trickles response chunks byte-by-byte at throttled cadence.
 
 use parking_lot::Mutex;
 use std::collections::HashMap;
@@ -60,7 +53,6 @@ pub struct TarpitSlotGuard {
 }
 
 impl TarpitSlotGuard {
-    /// Returns the adaptive velocity scaling profile assigned to this tarpit slot
     #[inline]
     pub fn profile(&self) -> AdaptiveTarpitProfile {
         self.profile
@@ -122,7 +114,6 @@ impl TarpitGovernor {
         }
     }
 
-    /// Computes the adaptive slowloris drain profile for a given strike count
     #[inline]
     pub fn compute_adaptive_profile(&self, strike_count: u32) -> AdaptiveTarpitProfile {
         match strike_count {
@@ -140,14 +131,13 @@ impl TarpitGovernor {
             },
             s => AdaptiveTarpitProfile {
                 strike_count: s,
-                trickle_interval_ms: 15_000, // 1 byte every 15 seconds
+                trickle_interval_ms: 15_000,
                 chunk_size: 1,
                 max_duration_s: (self.config.max_duration_s * 4).max(180),
             },
         }
     }
 
-    /// Try to acquire a tarpit slot for an offending client IP and scale drain velocity by strike history
     pub fn acquire_slot(&self, client_ip: &str) -> TarpitVerdict {
         let current = self.active_count.load(Ordering::SeqCst);
         if current >= self.config.max_concurrent_tarpits {
@@ -167,7 +157,6 @@ impl TarpitGovernor {
         };
 
         let profile = self.compute_adaptive_profile(strikes);
-
         self.active_count.fetch_add(1, Ordering::SeqCst);
         self.total_tarpitted.fetch_add(1, Ordering::Relaxed);
 
@@ -186,25 +175,15 @@ impl TarpitGovernor {
         }
     }
 
-    /// Returns the recorded strike count for an IP
     pub fn strikes_for_ip(&self, client_ip: &str) -> u32 {
-        self.strike_ledger
-            .lock()
-            .get(client_ip)
-            .copied()
-            .unwrap_or(0)
+        self.strike_ledger.lock().get(client_ip).copied().unwrap_or(0)
     }
 
-    /// Generate an endless, syntactically valid decoy chunk (HTML or JSON stream)
     pub fn generate_decoy_chunk(&self, chunk_index: usize) -> Vec<u8> {
         if chunk_index == 0 {
             b"<!DOCTYPE html><html><head><title>Authentication Verification In Progress</title></head><body><!-- init -->\n".to_vec()
         } else {
-            format!(
-                "<!-- chunk_{:04x}: verifying security telemetry parameters... -->\n",
-                chunk_index
-            )
-            .into_bytes()
+            format!("<!-- chunk_{:04x}: verifying security telemetry parameters... -->\n", chunk_index).into_bytes()
         }
     }
 

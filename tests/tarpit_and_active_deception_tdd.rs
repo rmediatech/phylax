@@ -154,3 +154,50 @@ fn test_autonomous_quarantine_auto_subnets_ipv4_and_ipv6() {
     assert!(!quarantine.is_quarantined(ip, now + 3_601_500));
     assert!(!quarantine.is_quarantined(sister_ip, now + 3_601_500));
 }
+
+#[tokio::test]
+async fn test_ssh_tarpit_listener_stalls_client() {
+    use phylax::tarpit::{SshTarpitConfig, SshTarpitServer};
+    use tokio::io::AsyncBufReadExt;
+    use tokio::net::TcpStream;
+    use tokio::sync::watch;
+
+    let port = 24892;
+    let bind_addr = format!("127.0.0.1:{}", port);
+    let gov = TarpitGovernor::new(TarpitConfig::default());
+    let server = SshTarpitServer::new(
+        SshTarpitConfig {
+            bind_addr: bind_addr.clone(),
+            delay_ms: 20, // Fast 20ms for test
+            max_lines: 5,
+            max_clients: 10,
+        },
+        gov,
+    );
+
+    let (shutdown_tx, shutdown_rx) = watch::channel(false);
+    tokio::spawn(async move {
+        let _ = server.run(shutdown_rx).await;
+    });
+
+    // Give listener time to bind
+    tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+
+    // Connect mock client
+    let mut client = TcpStream::connect(&bind_addr).await.expect("Must connect to SSH tarpit");
+    let mut reader = tokio::io::BufReader::new(&mut client);
+    let mut line = String::new();
+
+    // Read first trickled banner line
+    let n = reader.read_line(&mut line).await.expect("Must read line");
+    assert!(n > 0);
+    assert!(line.starts_with("OpenSSH-Banner-Padding_00000000_"));
+
+    // Read second trickled banner line
+    line.clear();
+    let n2 = reader.read_line(&mut line).await.expect("Must read line");
+    assert!(n2 > 0);
+    assert!(line.starts_with("OpenSSH-Banner-Padding_00000001_"));
+
+    let _ = shutdown_tx.send(true);
+}
