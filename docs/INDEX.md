@@ -1,7 +1,7 @@
 # Phylax Sovereign Edge Defense — Documentation & OJP Master Index
 
 > **φύλαξ** (*phýlax* — ancient Greek for *"watcher, sentinel, guardian"*)  
-> Sovereign 15-layer zero-telemetry edge defense, honeypot tarpit, and autonomous threat neutralization engine written in pure Rust.
+> Sovereign 16-layer zero-telemetry edge defense, honeypot tarpit, and autonomous threat neutralization engine written in pure Rust.
 
 Welcome to the **Phylax Optimal Journey Path (OJP)** documentation suite. This documentation is organized progressively—from fundamental architecture and core security paradigms to battle-tested production case studies, runnable integration guides, and operational runbooks.
 
@@ -35,7 +35,7 @@ flowchart TD
 
 | # | Chapter | Key Topics | Target Audience |
 |---|---|---|---|
-| **01** | [**Architecture & Cost Hierarchy**](01_ARCHITECTURE_AND_COST_HIERARCHY.md) | 15 defensive layers (Quarantine, Decoys, Honeypots, Radix Subnets, Email Sanitizer, Timing, PoW, Credential Bloom, Velocity, Session, TurnGuard, DistGuard, StreamGuard, Cache, Threat Harvester, BotGuard, and PayloadGuard). | Architects, Security Engineers |
+| **01** | [**Architecture & Cost Hierarchy**](01_ARCHITECTURE_AND_COST_HIERARCHY.md) | 16 defensive layers (Quarantine, Decoys, Honeypots, Radix Subnets, Email Sanitizer, Timing, PoW, Credential Bloom, Velocity, Session, TurnGuard, DistGuard, StreamGuard, Cache, Threat Harvester, BotGuard, PayloadGuard, and Synthetic Mirage Deception). | Architects, Security Engineers |
 | **02** | [**Stealth Deception & Active Defense**](02_STEALTH_DECEPTION_AND_ACTIVE_DEFENSE.md) | Why 403 Forbidden leaks intel, Deceptive Black Holes (`201 Created`), login timing equalization, reverse Slowloris socket-hostage mode, quadratic PoW ratcheting. | Security Researchers, App Developers |
 | **03** | [**Case Study: Production WebRTC Media Engine**](03_CASE_STUDY_WEBRTC_PRODUCTION.md) | Battle-tested production deployment protecting real-time WebRTC media pipelines. Dual-Shield edge topology with reverse proxy, zero-latency WebRTC `TurnGuard`, real-world crawler telemetry. | Engineering Leads, CTOs |
 | **04** | [**Integration & Framework Guide**](04_INTEGRATION_AND_FRAMEWORK_GUIDE.md) | 3 deployment paths: In-process Axum/Actix middleware, Propylea L7 reverse proxy gateway, standalone WAF daemon; frontend `phylax.js` helper. | Full-Stack Developers, SREs |

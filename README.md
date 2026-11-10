@@ -131,7 +131,7 @@ When human discipline guides an AI collaborator with genuine systems reasoning, 
 
 ---
 
-## Architecture: 15-Layer Fail-Fast Cost Hierarchy
+## Architecture: 16-Layer Fail-Fast Cost Hierarchy
 
 `phylax` organizes defense into a strict **cost-hierarchical pipeline**. Inexpensive bitwise comparisons, radix-tree lookups, and Bloom checks execute first. If a malicious client triggers an early barrier, the request is denied or routed into an asymmetric tarpit before heavier cryptographic or stateful layers are reached.
 
@@ -155,12 +155,13 @@ flowchart LR
         L7 --> L8["8. Session Sentinel\n(Impossible Travel) ~150ns"]
     end
 
-    subgraph Stage3 ["🛡️ Stage III: Quotas & Harvester (~20-100ns)"]
+    subgraph Stage3 ["🛡️ Stage III: Quotas, Mirage & Harvester (~20-100ns)"]
         direction TB
         L9["9. WebRTC TurnGuard\n(COTURN Quota) ~100ns"] --> L10["10. Download DistGuard\n(Single-Use Voucher) ~100ns"]
         L10 --> L11["11. Stream Guard\n(Anti-Slowloris) ~50ns"]
         L11 --> L12["12. Atomic CacheShield\n(Zero-Lock ETag) ~20ns"]
-        L12 --> L13["13. Threat Harvester\n(3-Subnet Zero-Day) ~25ns"]
+        L12 --> L16["16. Synthetic Mirage\n(Scanner Poisoning) ~50ns"]
+        L16 --> L13["13. Threat Harvester\n(3-Subnet Zero-Day) ~25ns"]
     end
 
     Stage1 ==>|"Pass (<85ns)"| Stage2
@@ -169,21 +170,21 @@ flowchart LR
 
 ---
 
-## Pre-Built Sovereign Binaries (`v0.5.0`)
+## Pre-Built Sovereign Binaries (`v0.6.0`)
 
 Single standalone binaries compiled with zero cloud tracking and zero external dependencies. Verified with OpenPGP detached signatures (`SOVEREIGN-SIGN-01`):
 
 | Operating System | Architecture | Target Triplet | Pre-Built Archive | Detached Signature | SHA-256 Digest |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Linux (Static Musl)** | `x86_64` | `x86_64-unknown-linux-musl` | [**`phylax-v0.5.0-...-musl.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-musl.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-musl.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-musl.tar.gz.sha256) |
-| **Linux (glibc)** | `x86_64` | `x86_64-unknown-linux-gnu` | [**`phylax-v0.5.0-...-gnu.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-unknown-linux-gnu.tar.gz.sha256) |
-| **Linux (ARM64)** | `aarch64` | `aarch64-unknown-linux-gnu` | [**`phylax-v0.5.0-...-aarch64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-unknown-linux-gnu.tar.gz.sha256) |
-| **Windows** | `x86_64` | `x86_64-pc-windows-msvc` | [**`phylax-v0.5.0-...-windows.zip`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-pc-windows-msvc.zip) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-pc-windows-msvc.zip.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-pc-windows-msvc.zip.sha256) |
-| **macOS (Apple Silicon)** | `aarch64` (M1–M4) | `aarch64-apple-darwin` | [**`phylax-v0.5.0-...-darwin-arm64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-aarch64-apple-darwin.tar.gz.sha256) |
-| **macOS (Intel)** | `x86_64` | `x86_64-apple-darwin` | [**`phylax-v0.5.0-...-darwin-x64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/phylax-v0.5.0-x86_64-apple-darwin.tar.gz.sha256) |
+| **Linux (Static Musl)** | `x86_64` | `x86_64-unknown-linux-musl` | [**`phylax-v0.6.0-...-musl.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-unknown-linux-musl.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-unknown-linux-musl.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-unknown-linux-musl.tar.gz.sha256) |
+| **Linux (glibc)** | `x86_64` | `x86_64-unknown-linux-gnu` | [**`phylax-v0.6.0-...-gnu.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-unknown-linux-gnu.tar.gz.sha256) |
+| **Linux (ARM64)** | `aarch64` | `aarch64-unknown-linux-gnu` | [**`phylax-v0.6.0-...-aarch64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-aarch64-unknown-linux-gnu.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-aarch64-unknown-linux-gnu.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-aarch64-unknown-linux-gnu.tar.gz.sha256) |
+| **Windows** | `x86_64` | `x86_64-pc-windows-msvc` | [**`phylax-v0.6.0-...-windows.zip`**](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-pc-windows-msvc.zip) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-pc-windows-msvc.zip.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-pc-windows-msvc.zip.sha256) |
+| **macOS (Apple Silicon)** | `aarch64` (M1–M4) | `aarch64-apple-darwin` | [**`phylax-v0.6.0-...-darwin-arm64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-aarch64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-aarch64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-aarch64-apple-darwin.tar.gz.sha256) |
+| **macOS (Intel)** | `x86_64` | `x86_64-apple-darwin` | [**`phylax-v0.6.0-...-darwin-x64.tar.gz`**](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-apple-darwin.tar.gz) | [`.asc`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-apple-darwin.tar.gz.asc) | [`.sha256`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/phylax-v0.6.0-x86_64-apple-darwin.tar.gz.sha256) |
 
 > 🔑 **Cryptographic Provenance Verification (`SOVEREIGN-SIGN-01`)**:  
-> All release archives and [`SHA256SUMS`](https://github.com/rmediatech/phylax/releases/download/v0.5.0/SHA256SUMS) manifests are cryptographically signed using the sovereign release key (`Rick Walker <rick@rmediatech.com>`, Key ID: `4E428019A109578B`).  
+> All release archives and [`SHA256SUMS`](https://github.com/rmediatech/phylax/releases/download/v0.6.0/SHA256SUMS) manifests are cryptographically signed using the sovereign release key (`Rick Walker <rick@rmediatech.com>`, Key ID: `4E428019A109578B`).  
 > Verify provenance: `curl -sSL https://raw.githubusercontent.com/rmediatech/phylax/main/SOVEREIGN_RELEASE_KEY.asc | gpg --import && gpg --verify SHA256SUMS.asc SHA256SUMS`
 
 ---
@@ -628,7 +629,7 @@ Throughput Capacity:                 > 994,934 requests/sec/core
 ## Testing & Verification Suite
 
 ```bash
-# Execute full unit, integration, and adversarial test suite (125 tests)
+# Execute full unit, integration, and adversarial test suite (150 tests)
 $ cargo test --all-targets --all-features
 
 # Verify strict clippy compliance

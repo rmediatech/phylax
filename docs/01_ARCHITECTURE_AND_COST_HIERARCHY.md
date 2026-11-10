@@ -18,7 +18,7 @@ Modern edge security frequently relies on third-party cloud intermediaries (Clou
 
 ---
 
-## 2. The 15-Layer Fail-Fast Cost Hierarchy
+## 2. The 16-Layer Fail-Fast Cost Hierarchy
 
 A fundamental vulnerability of naive security systems is **asymmetric compute exhaustion**: an attacker sends inexpensive 100-byte forged requests, forcing the backend to execute expensive database lookups, bcrypt password hashes, or TLS handshakes.
 
@@ -57,7 +57,9 @@ flowchart TD
     L10 -- Pass --> L11["11. Stream & Slowloris Guard (~50ns)"]
     L11 -- Trickle Flood --> STOP
     L11 -- Pass --> L12["12. Zero-Lock Atomic Cache (~20ns)"]
-    L12 -- Pass / 304 --> APP["Application Business Logic"]
+    L12 -- Pass / 304 --> L16["16. Synthetic Mirage Deception (~50ns)"]
+    L16 -- Mirage Triggered --> POISON["Poisoned 200 OK Canary"]
+    L16 -- Clean --> APP["Application Business Logic"]
     APP -- Unmapped 404 --> L13["13. Emerging Threat Harvester (~25ns)"]
     L13 -- Multi-Subnet Correlated (≥3 Subnets) --> ELEVATE["Elevate to Live Decoy Traps!"]
 ```
@@ -83,10 +85,11 @@ flowchart TD
 | **13** | `threat_harvester` | Autonomous Zero-Day & CVE Campaign Correlator | `~25 ns` | Mathematical multi-subnet sliding window |
 | **14** | `bot_guard` | Sub-microsecond AI Scraper & Scanner Interception | `~20 ns` | Zero-copy User-Agent signature matching |
 | **15** | `payload_guard` | Zero-allocation Exploit & Traversal Neutralizer | `~15 ns` | Fast byte scanner with percent-decode |
+| **16** | `mirage` | Synthetic Mirage Active Deception & Scanner Poisoning | `~50 ns` | In-memory canary payload generator |
 
 ### Empirical Execution & Latency Budget Waterfall
 
-The following execution waterfall illustrates how all 15 defensive layers execute in **$< 1\text{ microsecond}$** total combined latency, contrasting with traditional cloud WAFs that introduce 20,000 to 80,000 microseconds (20ms–80ms) of network jitter:
+The following execution waterfall illustrates how all 16 defensive layers execute in **$< 1\text{ microsecond}$** total combined latency, contrasting with traditional cloud WAFs that introduce 20,000 to 80,000 microseconds (20ms–80ms) of network jitter:
 
 ```mermaid
 gantt
