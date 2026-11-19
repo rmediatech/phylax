@@ -40,6 +40,7 @@ pub mod pow;
 pub mod provenance;
 pub mod sanitize;
 pub mod session_sentinel;
+pub mod snare;
 pub mod sqli_tokenizer;
 pub mod ssrf_shield;
 pub mod stream_guard;
