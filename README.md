@@ -3,9 +3,9 @@
 <p align="center">
   <a href="https://github.com/rmediatech/phylax/actions/workflows/ci.yml"><img src="https://github.com/rmediatech/phylax/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
   <img src="https://img.shields.io/badge/Language-Pure%20Rust%202021-orange.svg" alt="Pure Rust" />
-  <img src="https://img.shields.io/badge/TDD%20Tests-150%2F150%20Passed-brightgreen.svg" alt="Tests" />
+  <img src="https://img.shields.io/badge/TDD%20Tests-132%2F132%20Passed-brightgreen.svg" alt="Tests" />
   <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
-  <a href="https://github.com/rmediatech/phylax/releases/tag/v0.6.0"><img src="https://img.shields.io/badge/Release-v0.6.0-green.svg" alt="Release" /></a>
+  <a href="https://github.com/rmediatech/phylax/releases/tag/v0.7.0"><img src="https://img.shields.io/badge/Release-v0.7.0-green.svg" alt="Release" /></a>
   <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-blue.svg" alt="Platform: Linux | Windows | macOS" />
   <img src="https://img.shields.io/badge/Arch-x86__64%20%7C%20aarch64-blueviolet.svg" alt="Arch: x86_64 | aarch64" />
   <a href="LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blueviolet.svg" alt="License" /></a>
@@ -15,7 +15,7 @@
   <img src="assets/phylax_emblem.svg" alt="Phylax Mathematical Emblem" width="190" />
 </p>
 
-> **φύλαξ** (*phýlax* — ancient Greek for *"watcher, sentinel, guardian"*): A sovereign, 16-layer zero-telemetry edge defense, synthetic mirage deception, honeypot tarpit, and autonomous threat neutralization engine written in pure Rust.  
+> **φύλαξ** (*phýlax* — ancient Greek for *"watcher, sentinel, guardian"*): A sovereign, 17-layer zero-telemetry edge defense, synthetic mirage deception, honeypot tarpit, active weaponized snares, and autonomous threat neutralization engine written in pure Rust.  
 > 🛡️ *"From the wire to the RAM / 'Til the kernel drops that spam."*
 
 ### 🏛️ Mythological Lineage & Geometric Rationale

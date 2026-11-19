@@ -1,10 +1,10 @@
 [package]
 name = "phylax"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 authors = ["Rick <rick@rmediatech.com>", "RMediaTech Contributors"]
 license = "MIT OR Apache-2.0"
-description = "Sovereign 16-layer zero-telemetry edge defense, synthetic mirage deception, honeypot traps, and anti-bot engine for Rust."
+description = "Sovereign 17-layer zero-telemetry edge defense, synthetic mirage deception, honeypot traps, active weaponized snares, and anti-bot engine for Rust."
 repository = "https://github.com/rmediatech/phylax"
 readme = "README.md"
 keywords = ["security", "anti-bot", "honeypot", "proof-of-work", "waf"]
