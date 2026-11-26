@@ -119,6 +119,17 @@ impl ShieldPipeline {
         require_timing: bool,
         require_pow: bool,
     ) -> ShieldVerdict {
+        // Fast-path Layer -1: Sibling Attestation Protocol (SOVEREIGN-SIBLING-01)
+        // Verified bloodline peers instantly bypass quarantine, decoys, timing, and PoW.
+        if let Some(ref proof) = req.sibling_proof {
+            if crate::sibling::SiblingVerifier::verify_proof(proof, req.now_ms).is_ok() {
+                return ShieldVerdict::AllowSibling {
+                    caller: proof.caller_name.clone(),
+                    elapsed_timing_ms: 0,
+                };
+            }
+        }
+
         if !req.client_ip.is_empty() && self.quarantine.is_quarantined(req.client_ip, req.now_ms) {
             return ShieldVerdict::Deny(DenialReason::SubnetBlocked {
                 ip: req.client_ip.to_string(),

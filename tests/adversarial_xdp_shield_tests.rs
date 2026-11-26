@@ -140,6 +140,7 @@ fn test_shared_bpf_map_integration_with_threat_harvester_and_quarantine() {
             timing_token: None,
             pow_challenge_token: None,
             pow_nonce: None,
+            sibling_proof: None,
             now_ms: now_ms + i * 10,
         };
         assert!(matches!(pipeline.evaluate(&req), ShieldVerdict::Deny(_)));

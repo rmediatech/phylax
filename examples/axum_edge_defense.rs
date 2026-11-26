@@ -121,6 +121,15 @@ async fn register_handler(
                 "username": payload.username
             })),
         ),
+        PhylaxVerdict::AllowSibling { caller, .. } => (
+            StatusCode::CREATED,
+            Json(serde_json::json!({
+                "status": "SUCCESS",
+                "message": format!("Sovereign sibling [{}] verified with diplomatic immunity.", caller),
+                "canonical_email": None::<String>,
+                "username": payload.username
+            })),
+        ),
         PhylaxVerdict::Deny(reason) => (
             StatusCode::FORBIDDEN,
             Json(serde_json::json!({

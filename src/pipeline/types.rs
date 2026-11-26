@@ -15,6 +15,7 @@ pub struct ShieldRequest<'a> {
     pub target_uri: Option<&'a str>,
     pub http_method: Option<&'a str>,
     pub user_agent: Option<&'a str>,
+    pub sibling_proof: Option<crate::sibling::SiblingProof>,
     pub now_ms: u64,
 }
 
@@ -82,6 +83,11 @@ pub enum ShieldVerdict {
         canonical_email: Option<String>,
         elapsed_timing_ms: Option<u64>,
     },
+    /// Elevated sovereign sibling pass-through. Bypasses all edge tarpits and rate limiters.
+    AllowSibling {
+        caller: String,
+        elapsed_timing_ms: u64,
+    },
     /// One of the defense layers failed.
     Deny(DenialReason),
 }
@@ -89,7 +95,12 @@ pub enum ShieldVerdict {
 impl ShieldVerdict {
     #[inline]
     pub fn is_allowed(&self) -> bool {
-        matches!(self, ShieldVerdict::Allow { .. })
+        matches!(self, ShieldVerdict::Allow { .. } | ShieldVerdict::AllowSibling { .. })
+    }
+
+    #[inline]
+    pub fn is_sibling(&self) -> bool {
+        matches!(self, ShieldVerdict::AllowSibling { .. })
     }
 
     #[inline]

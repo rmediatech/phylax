@@ -214,6 +214,7 @@ fn test_simulator_legitimate_human_operator_end_to_end() {
             assert_eq!(canonical_email, Some("rick@rmediatech.com".to_string()));
             assert_eq!(elapsed_timing_ms, Some(4200));
         }
+        ShieldVerdict::AllowSibling { .. } => panic!("Expected standard Allow, got AllowSibling"),
         ShieldVerdict::Deny(r) => panic!("Expected Allow, got Deny: {:?}", r),
     }
 }

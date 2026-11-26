@@ -245,6 +245,16 @@ async fn register_handler(
                 "message": "Legitimate registration accepted."
             })),
         ),
+        PhylaxVerdict::AllowSibling { caller, .. } => (
+            StatusCode::CREATED,
+            Json(serde_json::json!({
+                "status": "SUCCESS",
+                "user_id": 1001,
+                "username": payload.username,
+                "email": payload.email,
+                "message": format!("Sovereign sibling [{}] accepted.", caller)
+            })),
+        ),
         PhylaxVerdict::Deny(_) => {
             // Stealth response: plain generic error without revealing Phylax rules
             (

@@ -40,6 +40,7 @@ pub mod pow;
 pub mod provenance;
 pub mod sanitize;
 pub mod session_sentinel;
+pub mod sibling;
 pub mod snare;
 pub mod sqli_tokenizer;
 pub mod ssrf_shield;
@@ -81,6 +82,10 @@ pub use pipeline::{
 pub use pow::{PowEngine, PowVerdict};
 pub use session_sentinel::{
     GeoCoordinate, SessionCheckpoint, SessionSentinel, SessionSentinelConfig, SessionVerdict,
+};
+pub use sibling::{
+    SiblingChallenge, SiblingError, SiblingProof, SiblingVerifier, LINEAGE_CANARY_PREIMAGE,
+    MAX_TIMESTAMP_DRIFT_MS,
 };
 pub use sqli_tokenizer::{SqlTokenKind, SqliDetection, SqliTokenizer};
 pub use ssrf_shield::{SsrfShield, SsrfVerdict};
