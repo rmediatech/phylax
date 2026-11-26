@@ -20,7 +20,7 @@ fn test_adversarial_sibling_bypasses_quarantined_ip_and_decoys() {
 
     // Hostile IP is quarantined
     let net: ipnet::IpNet = "198.51.100.0/24".parse().unwrap();
-    pipeline.quarantine().add_ban(net, now_ms + 3600_000);
+    pipeline.quarantine().add_ban(net, now_ms + 3_600_000);
     assert!(pipeline.quarantine().is_quarantined(quarantined_ip, now_ms));
 
     // A wild stranger from this IP hits a honeypot field or decoy path -> Denied immediately

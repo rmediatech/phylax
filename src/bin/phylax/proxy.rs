@@ -126,6 +126,9 @@ pub async fn handle_proxy(
         target_uri: Some(target_uri),
         http_method: Some(http_method),
         user_agent: headers.get("user-agent").and_then(|v| v.to_str().ok()),
+        sibling_proof: phylax::sibling::SiblingProof::extract_from_headers(|k| {
+            headers.get(k).and_then(|v| v.to_str().ok())
+        }),
         now_ms,
     };
 

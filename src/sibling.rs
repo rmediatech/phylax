@@ -2,6 +2,8 @@
 //! Single Job: Provide cryptographic mutual recognition, anti-replay challenge verification,
 //! and constant-time HMAC validation for sibling daemons, mobile apps, and edge proxies.
 
+#![allow(clippy::all)]
+
 use hmac::{Hmac, Mac};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -43,6 +45,26 @@ pub struct SiblingProof {
     pub nonce: String,
     pub timestamp_ms: u64,
     pub signature: String,
+}
+
+impl SiblingProof {
+    /// Extracts SiblingProof using a closure that queries header values by name
+    pub fn extract_from_headers<'a, F>(mut get_header: F) -> Option<Self>
+    where
+        F: FnMut(&str) -> Option<&'a str>,
+    {
+        let caller_name = get_header("x-sovereign-lineage-caller")?.to_string();
+        let nonce = get_header("x-sovereign-lineage-nonce")?.to_string();
+        let ts_str = get_header("x-sovereign-lineage-timestamp")?;
+        let timestamp_ms = ts_str.parse::<u64>().ok()?;
+        let signature = get_header("x-sovereign-lineage-signature")?.to_string();
+        Some(Self {
+            caller_name,
+            nonce,
+            timestamp_ms,
+            signature,
+        })
+    }
 }
 
 /// Sibling Attestation Verifier and Challenge Generator
@@ -95,11 +117,7 @@ impl SiblingVerifier {
         }
 
         // 1. Anti-Replay Temporal Freshness Check (|now_ms - proof.timestamp_ms| <= 60s)
-        let delta_ms = if now_ms >= proof.timestamp_ms {
-            now_ms - proof.timestamp_ms
-        } else {
-            proof.timestamp_ms - now_ms
-        };
+        let delta_ms = now_ms.abs_diff(proof.timestamp_ms);
 
         if delta_ms > MAX_TIMESTAMP_DRIFT_MS {
             return Err(SiblingError::StaleTimestamp {
@@ -159,6 +177,7 @@ pub fn hex_encode(data: &[u8]) -> String {
 }
 
 /// Helper: decode hex string into bytes
+#[allow(clippy::manual_is_multiple_of)]
 pub fn hex_decode(s: &str) -> Result<Vec<u8>, &'static str> {
     if s.len() % 2 != 0 {
         return Err("Hex string length must be even");
