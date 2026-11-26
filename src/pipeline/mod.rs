@@ -170,10 +170,12 @@ impl ShieldPipeline {
                                 category.name()
                             ),
                         };
-                        let informant_cloned = informant.clone();
-                        tokio::spawn(async move {
-                            informant_cloned.process_incident(&dossier).await;
-                        });
+                        if let Ok(handle) = tokio::runtime::Handle::try_current() {
+                            let informant_cloned = informant.clone();
+                            handle.spawn(async move {
+                                informant_cloned.process_incident(&dossier).await;
+                            });
+                        }
                     }
                 }
                 return ShieldVerdict::Deny(DenialReason::DecoyUriTrapped {
@@ -212,10 +214,12 @@ impl ShieldPipeline {
                             field_name
                         ),
                     };
-                    let informant_cloned = informant.clone();
-                    tokio::spawn(async move {
-                        informant_cloned.process_incident(&dossier).await;
-                    });
+                    if let Ok(handle) = tokio::runtime::Handle::try_current() {
+                        let informant_cloned = informant.clone();
+                        handle.spawn(async move {
+                            informant_cloned.process_incident(&dossier).await;
+                        });
+                    }
                 }
             }
             return ShieldVerdict::Deny(DenialReason::HoneypotTrapped { field: field_name });
