@@ -109,15 +109,16 @@ impl SiblingVerifier {
         }
 
         // 2. Decode received signature bytes
-        let sig_bytes = hex_decode(&proof.signature)
-            .map_err(|e| SiblingError::MalformedHex(e.to_string()))?;
+        let sig_bytes =
+            hex_decode(&proof.signature).map_err(|e| SiblingError::MalformedHex(e.to_string()))?;
         if sig_bytes.len() != 32 {
             return Err(SiblingError::InvalidSignature);
         }
 
         // 3. Recompute expected HMAC-SHA256 signature
         let key = Self::derive_lineage_key();
-        let expected_bytes = Self::compute_hmac(&key, &proof.caller_name, &proof.nonce, proof.timestamp_ms);
+        let expected_bytes =
+            Self::compute_hmac(&key, &proof.caller_name, &proof.nonce, proof.timestamp_ms);
 
         // 4. Constant-Time Verification to prevent instruction-timing leakage
         if bool::from(sig_bytes.ct_eq(&expected_bytes)) {
@@ -129,9 +130,14 @@ impl SiblingVerifier {
 
     /// Computes RFC 2104 HMAC-SHA256 over: caller_name || nonce || timestamp_be_bytes
     #[inline]
-    pub fn compute_hmac(key: &[u8; 32], caller_name: &str, nonce: &str, timestamp_ms: u64) -> [u8; 32] {
-        let mut mac = HmacSha256::new_from_slice(key)
-            .expect("HMAC-SHA256 should support 32-byte keys");
+    pub fn compute_hmac(
+        key: &[u8; 32],
+        caller_name: &str,
+        nonce: &str,
+        timestamp_ms: u64,
+    ) -> [u8; 32] {
+        let mut mac =
+            HmacSha256::new_from_slice(key).expect("HMAC-SHA256 should support 32-byte keys");
         mac.update(caller_name.as_bytes());
         mac.update(nonce.as_bytes());
         mac.update(&timestamp_ms.to_be_bytes());

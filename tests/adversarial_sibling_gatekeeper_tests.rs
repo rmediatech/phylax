@@ -59,14 +59,15 @@ fn test_adversarial_sibling_bypasses_quarantined_ip_and_decoys() {
     }
 
     // Sub-microsecond requirement assertion (< 200µs in debug test mode)
-    assert!(elapsed.as_micros() < 200, "Sibling fast-path must be instantaneous");
+    assert!(
+        elapsed.as_micros() < 200,
+        "Sibling fast-path must be instantaneous"
+    );
 }
 
 #[test]
 fn test_adversarial_sibling_stale_replay_fails_elevation() {
-    let pipeline = ShieldPipeline::builder()
-        .with_timing(1500, 300_000)
-        .build();
+    let pipeline = ShieldPipeline::builder().with_timing(1500, 300_000).build();
 
     let now_ms = 1_700_000_000_000;
     let old_timestamp = now_ms - 60_001; // 60.001 seconds ago (stale)

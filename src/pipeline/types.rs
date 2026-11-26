@@ -95,7 +95,10 @@ pub enum ShieldVerdict {
 impl ShieldVerdict {
     #[inline]
     pub fn is_allowed(&self) -> bool {
-        matches!(self, ShieldVerdict::Allow { .. } | ShieldVerdict::AllowSibling { .. })
+        matches!(
+            self,
+            ShieldVerdict::Allow { .. } | ShieldVerdict::AllowSibling { .. }
+        )
     }
 
     #[inline]
