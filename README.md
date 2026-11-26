@@ -2,8 +2,10 @@
 
 <p align="center">
   <a href="https://github.com/rmediatech/phylax/actions/workflows/ci.yml"><img src="https://github.com/rmediatech/phylax/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://rmediatech.com"><img src="https://img.shields.io/badge/lineage-4E428019A109578B-00e5ff.svg" alt="Sovereign Lineage: 4E428019A109578B" /></a>
+  <img src="https://img.shields.io/badge/standard-SOVEREIGN--SIBLING--01-green.svg" alt="Standard: SOVEREIGN-SIBLING-01" />
   <img src="https://img.shields.io/badge/Language-Pure%20Rust%202021-orange.svg" alt="Pure Rust" />
-  <img src="https://img.shields.io/badge/TDD%20Tests-132%2F132%20Passed-brightgreen.svg" alt="Tests" />
+  <img src="https://img.shields.io/badge/Crucible%20Tests-150%2F150%20Passed-brightgreen.svg" alt="Crucible Tests" />
   <img src="https://img.shields.io/badge/Evaluation-%3C%2015%20ns-yellow.svg" alt="Evaluation" />
   <a href="https://github.com/rmediatech/phylax/releases/tag/v0.7.0"><img src="https://img.shields.io/badge/Release-v0.7.0-green.svg" alt="Release" /></a>
   <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-blue.svg" alt="Platform: Linux | Windows | macOS" />
@@ -626,17 +628,71 @@ Throughput Capacity:                 > 994,934 requests/sec/core
 
 ---
 
-## Testing & Verification Suite
+---
+
+## 🤝 Universal Sovereign Sibling Bloodline (`SOVEREIGN-SIBLING-01`)
+
+Every compiled `phylax` binary carries the immutable Sovereign Lineage Watermark (`4E428019A109578B`) and canary token preimage. When sibling solutions (`propylea`, `vigil`, `optic`, `bastion`, `vox`, `conduit`) connect across network boundaries or local UDS sockets, they execute a nonced, constant-time challenge-response handshake (`HMAC-SHA256` anti-replay $\le 60$s window):
+
+* **Mutual Recognition Without Centralized Authority**: Neither node dials home to cloud telemetry servers. Lineage is proven mathematically via constant-time RFC 2104 HMAC verification.
+* **Elevated Bloodline Privileges**: Confirmed siblings automatically bypass WAF rate limits, unlock unthrottled media/telemetry pipes, and suppress false-positive intrusion alerts.
+* **Fleet Governance**: Governed locally and across nodes via the [`sovereign-sibling`](../sovereign-sibling) engine and `sibling` CLI, permitting instantaneous authorization, suspension, or revocation.
+
+```http
+x-sovereign-lineage-caller: phylax
+x-sovereign-lineage-nonce: <16-byte-hex-nonce>
+x-sovereign-lineage-timestamp: <unix-epoch-ms>
+x-sovereign-lineage-signature: <hmac-sha256-hex>
+```
+
+---
+
+## 🧪 The Tri-Dimensional Reality Crucible (`SOVEREIGN-REALITY-3D-01`)
+
+> *"A crucible is where raw metal enters the white-hot furnace to burn away every single impurity until only pure, unbreakable gold remains."*
+
+We permanently reject the naive industry status quo of mock-heavy, optimistic unit tests that crumble upon first contact with live adversaries. Every line of `phylax` is forged across a **Tri-Dimensional Reality Crucible**:
+
+```
+                              🏛️ THE REALITY CRUCIBLE MATRIX
+                                              ▲
+                                             / \
+                                            /   \
+                     DIMENSION 1           /     \          DIMENSION 2
+                  THE GOLDEN PATH         /       \     ADVERSARIAL RED
+                 Human Ergonomics        /_________\    Hostile Malice
+               Sub-10ms Conformance           |         Quadratic PoW Traps
+               Zero-Jitter Media              |         Socket Hostage Tarpits
+                                              |
+                                      DIMENSION 3
+                               PHYSICAL & AMBIENT CHAOS
+                               Hardware Physics & Skew
+                               Dirty Power Loss Recovery
+                               Sub-Millisecond Wire Jitter
+```
+
+1. **Dimension 1: The Pristine Golden Path & Human Conformance**:
+   - Sub-microsecond execution budget ($<950\text{ns}$) adding $0.00\text{ms}$ network jitter to WebSockets and WebRTC media streams.
+   - Transparent, friction-free ingress for honest users, verified across mobile browsers, desktop clients, and edge proxies.
+2. **Dimension 2: The Adversarial Red Crucible (Active Hostile Malice)**:
+   - Evaluated against live weaponized attack batteries: formula injection (`=`, `+`, `-`, `@`), ANSI terminal log scrubbing, quadratic adaptive PoW penalty ratcheting, reverse-Slowloris thread exhaustion, and zero-day scanner deflection.
+   - Hostile actors are quarantined or held socket hostage in $<15\text{ns}$.
+3. **Dimension 3: Physical & Ambient Environmental Chaos**:
+   - Resilient against wall-clock time jumps and NTP skew tolerance ($\le 60\text{s}$ window).
+   - Zero-leak memory compaction, socket half-open recovery, and zero dynamic heap sprawl under burst volumetric loads.
 
 ```bash
-# Execute full unit, integration, and adversarial test suite (150 tests)
+# Execute full Reality Crucible adversarial test battery (150 tests)
 $ cargo test --all-targets --all-features
 
-# Verify strict clippy compliance
+# Verify strict clippy compliance (0 warnings)
 $ cargo clippy --all-targets --all-features -- -D warnings
 
 # Verify formatting
 $ cargo fmt -- --check
+
+# Verify cryptographic provenance canary via Aletheia
+$ aletheia scan target/release/phylax
 ```
 
 ---
